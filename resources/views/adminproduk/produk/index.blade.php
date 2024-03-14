@@ -7,7 +7,7 @@
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 " style="color:black;">Produk</h1>
 
-                <p style="color:black;">Unggah file untuk membuat produk baru, atau tambahkan ke kumpulan data produk yang sudah ada. <br> Anda dapat mengunggah file Excel</p>
+                <p style="color:black;">Unggah file untuk menambahkan produk baru, atau tambahkan ke kumpulan data produk yang sudah ada. <br> Anda dapat mengunggah file Excel</p>
                 <div class="button mt-2 mb-4">
                 <a href="{{route('adminproduk.produk.create')}}" class="btn btn-pd btn-sm">Tambah Data</a>
                     <a href="{{ route('download.template') }}" class="btn btn-info btn-sm" download>Download Template</a>
@@ -16,7 +16,7 @@
 <div class="importdata mb-3">
 <form action="{{ route('import.products') }}" method="post" enctype="multipart/form-data" style="display: flex; align-items: center;">
     @csrf
-    <input type="file" name="file" accept=".xlsx, .xls" style="margin-right: 10px;">
+    <input type="file" name="file" accept=".xlsx, .xls" style="margin-right: 10px;" required>
     <button class="btn btn-warning btn-sm" type="submit">Import Data</button>
 </form>
 

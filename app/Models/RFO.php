@@ -19,12 +19,19 @@ class RFO extends Model
         'created_by',
         'status',
         'status_rfo',
+        'no_rfo',
     ];
 
     public function customer()
     {
 
         return $this->belongsTo(Customer::class);
+    }
+
+    public function salesorder()
+    {
+
+        return $this->hasMany(SalesOrder::class);
     }
 
     public function detailrfo()

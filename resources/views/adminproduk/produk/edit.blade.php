@@ -7,7 +7,7 @@
                     
                                 <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
-                                        Tambahkan Produk Baru
+                                        Edit Produk 
                                     </div>
                                     <div class="card-body">
                                     <form name="saveform" action="/updateproduk/{{$data->id}}" method="post" onsubmit="return validateForm()">

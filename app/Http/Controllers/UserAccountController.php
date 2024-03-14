@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\UserRole;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserAccountController extends Controller
 {
@@ -35,21 +36,22 @@ class UserAccountController extends Controller
 
     public function superadminstore(Request $request){
       
+     
         $roleid = $request->role_id;
         $namauser = $request->nama_user;
         $username = $request->username;
         $email = $request->email;
-        $password = $request->password; // Ambil password dari inputan form
 
         // Buat hash dari password
-        $password_hashed = password_hash($password, PASSWORD_DEFAULT);
        
+     
         User::create([
             'role_id' => $roleid,
             'nama' => $namauser,
             'username' => $username,
             'email' => $email,
-            'password' => $password_hashed,
+            'password' => Hash::make('12345678'),
+            'no_hp' => $request->no_hp,
         ]);
 
         $request->session()->flash('success', 'Akun User berhasil ditambahkan');
@@ -78,6 +80,7 @@ class UserAccountController extends Controller
         $data->nama = $request->nama_user;
         $data->username = $request->username;
         $data->email = $request->email;
+        $data->no_hp = $request->no_hp;
 
         $data->save();
 

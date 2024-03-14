@@ -11,6 +11,10 @@ class PurchaseOrder extends Model
     protected $fillable = [
         'no_po',
         'po_date',
+        'nama_user',
+        'email',
+        'user_id',
+        'no_hp',
         'created_by',
         'updated_by',
     ];

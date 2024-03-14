@@ -20,7 +20,7 @@ class DetailInvoice extends Model
      public function produk()
      {
  
-         return $this->belongsTo(Produk::class);
+         return $this->belongsTo(Produk::class,'product_id');
      }
 
      public function invoice()

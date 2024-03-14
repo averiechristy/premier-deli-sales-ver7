@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RFO;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -26,7 +27,22 @@ class DashboardController extends Controller
 
     public function salesindex()
     {
-        return view ('sales.dashboard');
+        $rfo = RFO::orderBy('created_at', 'desc')->get();
+        
+        return view ('sales.dashboard',[
+            'rfo' => $rfo,
+        ]);
+    }
+
+    public function leaderindex()
+    {
+        return view('leader.dashboard');
+    }
+
+    public function admininvoiceindex()
+    {
+        
+        return view ('admininvoice.dashboard');
     }
 
     /**

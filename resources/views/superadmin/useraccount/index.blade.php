@@ -43,6 +43,7 @@ entries
                                             <th>Role</th>
                                             <th>Username</th>
                                             <th>Email</th>
+                                            <th>No Hp</th>
                                             <th>Created At </th>
                                             <th>Created By </th>
                                             <th>Updated At </th>
@@ -58,6 +59,7 @@ entries
                                             <td>{{$data -> Role -> jenis_role}}</td>
                                             <td>{{$data -> username}}</td>
                                             <td>{{$data -> email}}</td>
+                                            <td>{{$data -> no_hp}}</td>
                                             <td>{{$data-> created_at}}</td>
                                             <td></td>
                                             <td></td>

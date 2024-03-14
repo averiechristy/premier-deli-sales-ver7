@@ -16,13 +16,27 @@ class SalesOrder extends Model
         'created_by',
         'updated_by',
         'so_price',
+        'is_persen',
+        'discount',
+        'ppn',
+        'pembayaran',
+        'rfo_id',
+        'status_so'
     ];
 
     public function customer()
     {
 
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Customer::class, 'cust_id');
     }
+
+    public function rfo()
+    {
+
+        return $this->belongsTo(RFO::class, 'rfo_id');
+    }
+
+
 
     public function detailso()
     {
@@ -33,5 +47,11 @@ class SalesOrder extends Model
     {
 
         return $this->hasMany(DetailSoPo::class);
+    }
+
+    public function invoice()
+    {
+
+        return $this->hasMany(Inovice::class);
     }
 }

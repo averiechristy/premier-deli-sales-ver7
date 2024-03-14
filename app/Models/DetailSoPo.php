@@ -11,6 +11,7 @@ class DetailSoPo extends Model
     protected $fillable = [
         'po_id',
         'so_id',
+        'rfo_id',
     ];
     public function salesorder()
     {

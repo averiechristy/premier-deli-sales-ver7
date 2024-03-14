@@ -10,17 +10,18 @@
         </div>
       
     </a>
-
-    
-           
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
 
-              
-
             <li class="nav-item">
-        <a class="nav-link" style="color:#9B5718;" href="">
+        <a class="nav-link" style="color:#9B5718;" href="{{route('sales.createrfo')}}">
             Request Form Order
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" style="color:#9B5718;" href="">
+            Quotation
         </a>
     </li>
              
@@ -29,7 +30,7 @@
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">Welcome, Nama User</span>
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">Welcome, {{ auth()->user()->nama }}</span>
                         <img class="img-profile rounded-circle"
                             src="{{asset('img/undraw_profile.svg')}}">
                     </a>

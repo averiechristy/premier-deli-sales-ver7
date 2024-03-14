@@ -25,7 +25,7 @@ class ProdukController extends Controller
     public function download()
     {
         // Panggil class export Anda, sesuaikan dengan struktur data Anda
-        return Excel::download(new TemplateExport(), 'template.xlsx');
+        return Excel::download(new TemplateExport(), 'templateproduk.xlsx');
     }
 
 
@@ -74,7 +74,7 @@ class ProdukController extends Controller
           'harga_jual' => $hargajual,
         ]);
 
-        $request->session()->flash('success', "Data produk berhasil diunggah.");
+        $request->session()->flash('success', "Data produk berhasil ditambahkan.");
 
         return redirect()->route('adminproduk.produk.index');
 

@@ -34,6 +34,8 @@
     <input name="harga_jual" type="number"  class="form-control " style="border-color: #01004C;" value="" oninput="validasiNumber(this)"/>
 </div>
 
+
+
                                                 <button type="submit" class="btn btn-pd " style="">Simpan</button>
                                             </div>
 

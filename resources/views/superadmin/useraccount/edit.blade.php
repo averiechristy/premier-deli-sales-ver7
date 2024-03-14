@@ -37,7 +37,10 @@
     <input name="email" type="email"  class="form-control " style="border-color: #01004C;" value="{{$data->email}}" />
 </div>
 
-
+<div class="form-group mb-4">
+        <label for="" class="form-label" style="color:black;">No Handphone</label>
+    <input name="no_hp" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->no_hp}}" />
+</div>
 
         <div class="form-group mb-4">
                                                 <button type="submit" class="btn btn-pd " style="">Simpan</button>

@@ -16,17 +16,18 @@ class DetailSO extends Model
        'nama_produk',
        'qty',
        'so_price',
+       'total_price',
     ];
 
     public function produk()
     {
 
-        return $this->belongsTo(Produk::class);
+        return $this->belongsTo(Produk::class,'product_id');
     }
 
     public function salesorder()
     {
 
-        return $this->belongsTo(SalesOrder::class);
+        return $this->belongsTo(SalesOrder::class, 'so_id');
     }
 }

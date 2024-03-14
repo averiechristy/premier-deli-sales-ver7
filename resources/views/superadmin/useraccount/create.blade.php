@@ -38,6 +38,11 @@
 </div>
 
 <div class="form-group mb-4">
+        <label for="" class="form-label" style="color:black;">No Handphone</label>
+    <input name="no_hp" type="text"  class="form-control " style="border-color: #01004C;" value="" />
+</div>
+
+<div class="form-group mb-4">
         <label for="" class="form-label" style="color:black;">Password</label>
         <input name= "password" type="text"  class="form-control "  value="12345678" readonly></div>
 

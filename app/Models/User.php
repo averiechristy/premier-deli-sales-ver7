@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'creted_by',
+        'no_hp',
         'updated_by',
     ];
 
@@ -48,11 +49,40 @@ class User extends Authenticatable
     ];
 
 
-    
+  
+
     public function Role()
     {
 
-        return $this->belongsTo(UserRole::class);
+        return $this->belongsTo(UserRole::class, 'role_id');
+    }
+    public function isSuperAdmin()
+    {
+        $jenis_role = $this->Role->jenis_role;
+        return strtoupper($jenis_role) === 'SUPER ADMIN';
     }
 
+    public function isAdminInvoice()
+    {
+        $jenis_role = $this->Role->jenis_role;
+        return strtoupper($jenis_role) === 'ADMIN INVOICE';
+    }
+
+    public function isAdminProduk()
+    {
+        $jenis_role = $this->Role->jenis_role;
+        return strtoupper($jenis_role) === 'ADMIN PRODUK';
+    }
+
+    public function isLeader()
+    {
+        $jenis_role = $this->Role->jenis_role;
+        return strtoupper($jenis_role) === 'LEADER';
+    }
+
+    public function isSales()
+    {
+        $jenis_role = $this->Role->jenis_role;
+        return strtoupper($jenis_role) === 'SALES';
+    }
 }

@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Login</title>
+    <title>Premier Deli - Login</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -41,11 +41,13 @@
                                         <img src="img/logo.png" alt="" height="50%" width="50%">
                                         
                                     </div>
-                                    <form class="user">
+                                    @include('components.alert')
+                                    <form action="{{route('login')}}" method="post" class="user">
+                                    @csrf
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
+                                            <input type="email" name="email" class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Masukan Username">
+                                                placeholder="Masukan Email">
                                         </div>
                                         <div class="form-group mb-4">
                                         <div class="password-container" style="position: relative;">
@@ -57,11 +59,8 @@
     cursor: pointer;"></i>
 </div>
 </div>         
-                                        <hr>
-                                        <a href="index.html" class="btn btn-pd btn-user btn-block">
-                                            Login
-                                        </a>
-                                      
+                                        
+                                        <button type="submit" class="btn btn-pd btn-user btn-block">Login</button>
                                       
                                        
                                     </form>
