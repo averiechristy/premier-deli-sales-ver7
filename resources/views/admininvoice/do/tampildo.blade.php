@@ -3,10 +3,10 @@
 @section('content')
 <div class="buttons">
 <!-- Di bagian bawah tampilan -->
-<button id="exportPdfButton" style="float: right;" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-3" ><i
+<button id="exportPdfButton" style="float: right;" class=" d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-3" ><i
                                 class="fas fa-download fa-sm text-white-50"></i> Download Delivery Order</button>
 
-                                <button id="printButton" style="float: right;" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-3" ><i
+                                <button id="printButton" style="float: right;" class=" d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-3" ><i
                                 class="fas fa-print fa-sm text-white-50"></i> Print Sales Order</button>
 
 </div>
@@ -146,32 +146,44 @@
 
 
 
+
+
+
 <script>
-    document.getElementById('exportPdfButton').addEventListener('click', function() {
-        // Select the chart container element
-        var chartContainer = document.getElementById('container-fluid').cloneNode(true); // Clone the container
-        
-        // Remove any buttons from the cloned container (optional)
-        var buttons = chartContainer.querySelectorAll('button');
-        buttons.forEach(function(button) {
-            button.remove();
-        });
-       
-        var noinvoice = '<?php echo $invoice->invoice_no; ?>';
-        var namacust = '<?php echo $invoice->customer->nama_customer; ?>';
+   document.getElementById('exportPdfButton').addEventListener('click', function() {
+    var salesOrderId = '<?php echo $invoice->id; ?>'; // Ganti ini dengan cara yang sesuai untuk mendapatkan ID sales order
+    var url = '{{ route("do.download", ":id") }}'; // Ganti 'sales-order.download' dengan nama rute yang sesuai jika perlu
 
-        // Set options for html2pdf
-        var options = {
-            margin: [5, 5, 5, 5], // Adjust margins as needed (top, left, bottom, right)     
-            filename:  'DO ' + noinvoice + ' - ' + namacust + '.pdf',
-            image: { type: 'jpeg', quality: 0.98 }, // Set image quality
-            html2canvas: { scale: 3 }, // Adjust scale as needed
-            jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' } // Adjust format and orientation as needed
-        };
-
-        // Use html2pdf to export the cloned chart container as PDF with specified options
-        html2pdf(chartContainer, options);
+    // Mengirim permintaan AJAX untuk menandai sales order telah diunduh
+    fetch(url.replace(':id', salesOrderId), {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            noinvoice: '<?php echo $invoice->invoice_no; ?>',
+            namacust: '<?php echo $invoice->nama_customer; ?>',
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            // Jika permintaan berhasil, lanjutkan dengan membuat dan mengunduh PDF
+            var chartContainer = document.getElementById('container-fluid').cloneNode(true);
+            var options = {
+                filename: 'DO - ' + '<?php echo $invoice->invoice_no; ?>' + ' - ' + '<?php echo $invoice->nama_customer; ?>' + '.pdf',
+                margin: [5, 5, 5, 5],
+                // konfigurasi untuk unduhan PDF
+            };
+            html2pdf(chartContainer, options);
+        } else {
+            console.error('Failed to mark sales order as downloaded');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
     });
+});
 
     document.getElementById('printButton').addEventListener('click', function() {
         // Select the chart container element

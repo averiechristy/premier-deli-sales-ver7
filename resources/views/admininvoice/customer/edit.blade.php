@@ -57,9 +57,7 @@
 
 <div class="form-group mb-4">
         <label for="" class="form-label" style="color:black;">Alamat</label>
-    <textarea name="lokasi" type="text"  class="form-control " style="border-color: #01004C;" value="" >
-{{$data -> lokasi}}
-</textarea>
+    <textarea name="lokasi" type="text"  class="form-control " style="border-color: #01004C;" value="" >{{$data -> lokasi}}</textarea>
 </div>
 
 
@@ -75,6 +73,60 @@
 
             </div>
       
-           
+             
+            <script>
+    function validateForm() {
+        let namaCustomer = document.forms["saveform"]["nama_customer"].value;
+        let kategori = document.forms["saveform"]["kategori"].value;
+        let sumber = document.forms["saveform"]["sumber"].value;
+        let namaPIC = document.forms["saveform"]["nama_pic"].value;
+        let jabatanPIC = document.forms["saveform"]["jabatan_pic"].value;
+        let noHP = document.forms["saveform"]["no_hp"].value;
+        let email = document.forms["saveform"]["email"].value;
+        let lokasi = document.forms["saveform"]["lokasi"].value;
+
+       if (namaCustomer == "") {
+            alert("Nama Customer harus diisi");
+            return false;
+        }
+        if (kategori == "") {
+            alert("Kategori harus dipilih");
+            return false;
+        }
+
+        if (sumber == "") {
+            alert("Sumber harus diisi");
+            return false;
+        }
+
+        if (namaPIC == "") {
+            alert("Nama PIC harus diisi");
+            return false;
+        }
+
+        if (jabatanPIC == "") {
+            alert("Jabatan PIC harus diisi");
+            return false;
+        }
+
+        if (noHP == "") {
+            alert("Nomor Handphone harus diisi");
+            return false;
+        }
+
+        if (email == "") {
+            alert("Email harus diisi");
+            return false;
+        }
+
+        if (lokasi == "") {
+            alert("Alamat harus diisi");
+            return false;
+        }
+
+        // Jika semua validasi terpenuhi, form akan disubmit
+        return true;
+    }
+</script>
 
 @endsection

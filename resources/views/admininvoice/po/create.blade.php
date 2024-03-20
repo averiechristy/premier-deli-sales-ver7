@@ -15,13 +15,15 @@
 
                                         <input type="hidden" name="selected_so" value="{{ json_encode($selectedSOs) }}">
 
+                                        <input type="hidden" name="selected_quote" value="{{ json_encode($selectedQuote) }}">
+
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">No Purchase Order</label>
     <input name="no_po" type="text" class="form-control" style="border-color: #01004C; width:50%;" value="{{ $ponumber }}" readonly />
 </div>
 
 <div class="form-group mb-4">
-    <label for="" class="form-label" style="color:black;">Tanggal SO</label>
+    <label for="" class="form-label" style="color:black;">Tanggal PO</label>
     <input name="po_date" id="po_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
@@ -43,8 +45,9 @@
 
 
 <div id="product-fields">
-    
-@foreach ($soDetail as $index => $detaildata)
+
+
+@foreach ($mergedDetail as $index => $detaildata)
     <div class="row product-field">
         <div class="col-md-4">
             <div class="form-group mb-4">
@@ -234,8 +237,50 @@ $(document).on('change', '.product-select', function() {
             </div>
       
   
-<script>
-    
+            <script>
+    function validateForm() {
+        // Menghitung jumlah field produk
+        var productFields = document.querySelectorAll('.product-field');
+        var numProducts = productFields.length;
+
+        // Jika hanya ada satu produk
+        if (numProducts === 1) {
+            var productSelect = document.querySelector('select[name="product[]"]');
+            var priceInput = document.querySelector('input[name="price[]"]');
+            var quantityInput = document.querySelector('input[name="quantity[]"]');
+
+            // Validasi produk
+            if (productSelect.value === null || productSelect.value === '') {
+                alert('Produk harus dipilih');
+                closeModal()
+                return false;
+                
+            }
+
+            // Validasi harga
+            if (priceInput.value === '' || isNaN(priceInput.value) || priceInput.value <= 0) {
+                alert('Harga harus diisi ');
+                closeModal()
+                return false;
+            }
+
+            // Validasi quantity
+            if (quantityInput.value === '' || isNaN(quantityInput.value) || quantityInput.value <= 0) {
+                alert('Quantity harus diisi');
+                closeModal()
+                return false;
+            }
+        }
+
+        // Jika produk lebih dari satu atau tidak ada validasi lainnya yang dibutuhkan, kembalikan true
+        return true;
+    }
+
+    function closeModal() {
+        // Tutup modal secara manual
+        $('#confirmModal').modal('hide');
+    }
 </script>
+
 
 @endsection

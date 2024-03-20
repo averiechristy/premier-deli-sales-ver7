@@ -4,7 +4,7 @@
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
             <!-- Sidebar Toggle (Topbar) -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center mt-3 mb-3" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center mt-3 mb-3" href="{{route('leader.dashboard')}}">
         <div class="sidebar-brand-icon ">
         <img src="{{asset('img/logopremier.png')}}" style="height: 118px;">
         </div>
@@ -12,25 +12,7 @@
     </a>
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-        <a class="nav-link" style="color:#9B5718;" href="">
-           Approval
-        </a>
-    </li>
-            <li class="nav-item">
-        <a class="nav-link" style="color:#9B5718;" href="">
-            Request Form Order
-        </a>
-    </li>
-
-    
-
-    <li class="nav-item">
-        <a class="nav-link" style="color:#9B5718;" href="">
-            Quotation
-        </a>
-    </li>
-             
+                       
 
                 <!-- Nav Item - User Information -->
                 <li class="nav-item dropdown no-arrow">
@@ -43,7 +25,7 @@
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                         aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="{{route('leaderpassword')}}">
                             <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
                             Change Password
                         </a>

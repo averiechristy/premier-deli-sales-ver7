@@ -11,10 +11,15 @@ class Inovice extends Model
     protected $fillable = [
         'invoice_no',
         'so_id',
+        'quote_id',
+        'no_so',
+        'no_quote',
         'cust_id',
         'invoice_date',
         'created_by',
         'updated_by',
+        'status_invoice',
+        'is_closing',
     ];
 
     public function customer()

@@ -9,13 +9,28 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2" style="color:black;">Sales Order</h1>
+                    
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                        <a href="{{route('admininvoice.so.showrfo')}}" class="btn btn-pd btn-sm">Tambah Sales Order</a>
+                        <a href="{{route('admininvoice.so.showrfo')}}" class="btn btn-pd btn-sm" id="buatSalesOrder">Buat Sales Order</a>
+                        <span id="notificationBadge" class="badge badge-pill badge-danger"></span>
 
-                       
+                        <script>
+    // Ambil elemen tombol
+    var button = document.getElementById('buatSalesOrder');
+    
+    // Fungsi untuk menampilkan notifikasi dengan jumlah yang diinginkan
+    function showNotification(number) {
+        var badge = document.getElementById('notificationBadge');
+        badge.innerText = number;
+        badge.style.display = 'inline';
+    }
+    
+    // Panggil fungsi showNotification dengan jumlah yang diinginkan
+    showNotification({{$rfo}}); // Ubah angka 5 sesuai dengan jumlah notifikasi yang diinginkan
+</script>
                         </div>
                         <div class="card-body">
                         <div class="dataTables_length mb-3" id="myDataTable_length">
@@ -49,11 +64,13 @@ entries
                         <th>Tanggal SO</th>
                         <th>Produk</th>
                         <th>Status</th>
+                        
                         <th>Status Update</th>
                         <th>Action</th>
+                        <th></th>
+                        <!-- <th></th> -->
                     </tr>
                 </thead>
-                
                 <tbody>
              @foreach ($so as $data)
             <tr>
@@ -63,39 +80,95 @@ entries
                 <td>{{$data-> no_rfo}}</td>
                 <td>{{$data -> customer -> nama_customer}}</td>
                 <td>{{ \Carbon\Carbon::parse($data->so_date)->format('d-m-Y') }}</td>                <td>    
-                <a href="">
+                <a href="{{route('tampilpesananso', $data->id)}}"><button type="button" class="btn btn-link">
          Lihat Detail Pesanan
                 
             </a>
 </td>
 <td>
-    @if ($data->status_so == "PO Belum Dikerjakan")
-    PO Belum Dikerjakan
-        <i class="fas fa-exclamation-triangle" style="color:orange;"></i> <!-- Icon warning dari Font Awesome -->
-    @elseif ($data->status_so == "Terbit PO")
-        PO Sudah Dikerjakan
-        <i class="fas fa-check" style="color:green;"></i> <!-- Icon centang dari Font Awesome -->
-        @elseif ($data->status_so == "Terbit Invoice")
-        Invoice Sudah Dikerjakan
-        <i class="fas fa-check" style="color:green;"></i> <!-- Icon centang dari Font Awesome -->
-        @elseif ($data->status_so == "Cancelled")
-        Cancel
-        <i class="fas fa-times" style="color:red;"></i> <!-- Icon centang dari Font Awesome -->
-    @endif
+{{$data->status_so}}
 </td>
 <td>{{$data -> updated_at}}</td>
-<td>    
-                    <a href="{{route('tampilso',$data->id)}}">
-    Cetak Sales Order
-</a>
-<br>
+<td>
+    <a id="cetakSalesOrder{{$data->id}}" href="{{route('tampilso',$data->id)}}">
+        Cetak Sales Order
+    </a>
 
+  
+</td>
+<script>
+    $(document).ready(function(){
+        // Cek apakah cookie sudah ada
+        if (document.cookie.indexOf('salesOrderClicked{{$data->id}}=true') !== -1) {
+            $('#cetakSalesOrder{{$data->id}}').html('Cetak Sales Order <i class="fas fa-check-circle" style="color:green"></i> ');
+        }
 
+        $('#cetakSalesOrder{{$data->id}}').click(function(){
+            $(this).html(' Cetak Sales Order <i class="fas fa-check-circle" style="color:green"></i>');
+            // Set cookie saat tombol diklik
+            document.cookie = 'salesOrderClicked{{$data->id}}=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+        });
+    });
+</script>
+
+<td>
+    @if($data->is_download == "Yes")
+      <span>Sudah didownload </span> <i class="fas fa-check-circle" style="color:green;"></i> 
+    @else
+        Belum didownload
+    @endif
 </td>
 
 
+<!-- <td>
+    @if($data->cancel_approval == "Yes")
+
+    Pengajuan Cancel
+
+    ({{$data->alasan}})
+    @endif
+
+</td> -->
+<!-- 
+<td>    
+@if($data->status_so =="Terbit Invoice")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel SO
+</button>
+@elseif($data->status_so =="Cancelled")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel SO
+</button>
+    @else
+<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
+      Cancel SO
+</button>
+@endif
+</td> -->
+
             </tr>
-                 
+            <div class="modal fade" id="exampleModal{{$data->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Cancel SO - {{$data->no_so}}</h5>
+       
+      </div>
+      <div class="modal-body">
+      <form action="{{route('cancelorderadmin')}}" method="post">
+        @csrf
+      <input type="hidden" name="so_id" value="{{$data->id}}">
+                   <h5>Apakah anda yakin melakukan pembatalan?</h5>
+                
+      </div>
+      <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <button type="submit" class="btn btn-primary">Yakin</button>
+            </div>
+            </form>
+    </div>
+  </div>
+</div>     
 @endforeach
    
                 </tbody>

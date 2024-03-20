@@ -21,6 +21,16 @@ class DOController extends Controller
             'detailinvoice' => $detailinvoice,
         ]);
      }
+
+     public function superadmintampildo($id){
+        $invoice = Inovice::find($id);
+        $detailinvoice = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
+
+        return view('superadmin.do.tampildo',[
+            'invoice' => $invoice,
+            'detailinvoice' => $detailinvoice,
+        ]);
+     }
     public function index()
     {
         //

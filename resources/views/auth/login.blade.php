@@ -22,7 +22,6 @@
 </head>
 
 <body style="background-color: #9B5718;" class="body">
-<img src="img/logopremier.png" alt="" height="100px" width="100px">
     <div class="container">
 
         <!-- Outer Row -->
@@ -30,15 +29,15 @@
 
             <div class="col-xl-10 col-lg-12 col-md-9">
 
-                <div class="card o-hidden border-0 shadow-lg my-5" style="height: 500px;">
-                    <div class="card-body p-0" style="margin-top:50px;">
+                <div class="card  border-0 shadow-lg my-5" style="height: 500px;">
+                    <div class="card-body p-0" >
                         <!-- Nested Row within Card Body -->
                        
                       
                             <div class="">
                                 <div class="p-5">
-                                    <div class="text-center mb-5" >
-                                        <img src="img/logo.png" alt="" height="50%" width="50%">
+                                    <div class="text-center" >
+                                        <img src="img/logopremiernew.png" alt="" height="20%" width="20%">
                                         
                                     </div>
                                     @include('components.alert')

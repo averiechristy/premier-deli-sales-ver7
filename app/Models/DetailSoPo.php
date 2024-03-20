@@ -12,6 +12,11 @@ class DetailSoPo extends Model
         'po_id',
         'so_id',
         'rfo_id',
+        'quote_id',
+        'no_po',
+        'no_so',
+        'no_rfo',
+        'no_quote',
     ];
     public function salesorder()
     {

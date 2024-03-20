@@ -31,11 +31,10 @@ entries
     <label for="search">Search
         <input id="search" placeholder>
     </label>
-</div>
-                            
+</div>                            
                             <div class="table-responsive">
                             @include('components.alert')
-
+                            
                                 <table  class="table table-bordered"  width="100%" cellspacing="0" style="border-radius: 10px;">
                                     <thead>
                                         <tr>                                       
@@ -43,15 +42,10 @@ entries
                                             <th>Role</th>
                                             <th>Username</th>
                                             <th>Email</th>
-                                            <th>No Hp</th>
-                                            <th>Created At </th>
-                                            <th>Created By </th>
-                                            <th>Updated At </th>
-                                            <th>Updated By </th>
+                                            <th>No Hp</th>                                          
                                             <th>Action</th>
                                         </tr>
-                                    </thead>
-                                    
+                                    </thead>                                    
                                     <tbody>
                                   @foreach ($User as $data)
                                           <tr>
@@ -59,15 +53,9 @@ entries
                                             <td>{{$data -> Role -> jenis_role}}</td>
                                             <td>{{$data -> username}}</td>
                                             <td>{{$data -> email}}</td>
-                                            <td>{{$data -> no_hp}}</td>
-                                            <td>{{$data-> created_at}}</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>{{$data->updated_at}}</td>
+                                            <td>{{$data -> no_hp}}</td>                                           
                                             <td> 
-
-                                              
-                                               <form action="" method="POST">
+                <form action="{{ route('superadmin.reset-password', ['user' => $data->id]) }}" method="POST">
                 @csrf
                 <button type="submit" class="btn show_confirm2" data-toggle="tooltip" title='Reset Password'><i class="fas fa-fw fa-redo"  style="color:#06234F" ></i></button>
             </form>

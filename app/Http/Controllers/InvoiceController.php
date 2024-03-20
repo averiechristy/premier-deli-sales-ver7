@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CancelApprovalSA;
 use App\Models\Customer;
 use App\Models\DetailInvoice;
+use App\Models\DetailQuotation;
 use App\Models\DetailSO;
 use App\Models\Inovice;
 use App\Models\Produk;
+use App\Models\Quotation;
 use App\Models\RFO;
 use App\Models\SalesOrder;
 use Illuminate\Http\Request;
@@ -20,23 +23,208 @@ class InvoiceController extends Controller
 
         $invoice = Inovice::orderBy('created_at', 'desc')->get();
     
-    
+        $so = SalesOrder::where('status_so','Terbit PO')->orderBy('created_at', 'desc')->count();
+
+        $quote = Quotation::where('status_quote','Proses PO')->orderBy('created_at', 'desc')->count();
+
+        $total = $so + $quote;
         return view ('admininvoice.invoice.index',[
             'invoice' => $invoice,
+            'total' => $total,
         ]);
     }
+
+    public function superadminindex(){
+
+        $invoice = Inovice::orderBy('created_at', 'desc')->get();
+    
+        $so = SalesOrder::where('status_so','Terbit PO')->orderBy('created_at', 'desc')->count();
+
+        $quote = Quotation::where('status_quote','Proses PO')->orderBy('created_at', 'desc')->count();
+
+        $total = $so + $quote;
+        return view ('superadmin.invoice.index',[
+            'invoice' => $invoice,
+            'total' => $total,
+        ]);
+    }
+
+    public function download(Request $request, $id)
+    {
+        // Mengambil sales order dari database berdasarkan ID
+        $invoice = Inovice::findOrFail($id);
+    
+        // Menandai bahwa sales order telah diunduh
+        $invoice->is_download = true;
+
+       
+    
+        // Menyimpan sales order tanpa mempengaruhi updated_at
+        $invoice->save(['timestamps' => false]);
+    
+        // Mengembalikan respons sebagai JSON jika diperlukan
+        return response()->json(['message' => 'Invoice has been downloaded successfully']);
+    }
+
+    public function downloaddo(Request $request, $id)
+    {
+        // Mengambil sales order dari database berdasarkan ID
+        $invoice = Inovice::findOrFail($id);
+    
+        // Menandai bahwa sales order telah diunduh
+        $invoice->is_download_do = true;
+
+       
+    
+        // Menyimpan sales order tanpa mempengaruhi updated_at
+        $invoice->save(['timestamps' => false]);
+    
+        // Mengembalikan respons sebagai JSON jika diperlukan
+        return response()->json(['message' => 'Invoice has been downloaded successfully']);
+    }
+    
      public function index()
     {
         //
     }
+    public function cancelinvoice(Request $request){
+        $invoice = Inovice::orderBy('created_at', 'desc')->get();
+        
 
+        $invid = $request->invoice_id;
+        $loggedInUser = auth()->user();
+        $invoicedata = Inovice::find($request->invoice_id);
+
+
+        if ($invoicedata) {
+            $invoicedata->status_invoice = 'Menunggu Persetujuan Cancel'; // Ganti dengan status yang sesuai
+            $invoicedata->save();
+        }
+
+
+
+        $roleid = $loggedInUser -> role_id;
+        $report = $loggedInUser -> report_to;
+        
+        
+        $cancelreq = new CancelApprovalSA;
+        $cancelreq -> invoice_id = $request->invoice_id;
+        $cancelreq -> role_id = $roleid;
+        $cancelreq -> alasan = $request->alasan;
+        $cancelreq -> report_to = "1";
+    
+        $cancelreq -> save();
+
+        $request->session()->flash('success', "Request Cancel terkirim");
+        return redirect(route('admininvoice.invoice.index',[
+            'invoice' => $invoice,
+        ]));
+
+     }
+
+     public function closinginvoice(Request $request)
+     {
+        $invoice = Inovice::orderBy('created_at', 'desc')->get();
+        $invid = $request->invoice_id;
+
+        $datainv = Inovice::find($invid);
+
+        $datainv -> is_closing = "Yes";
+        $datainv -> save();
+        $request->session()->flash('success', "Invoice berhasil closing");
+        return redirect(route('admininvoice.invoice.index',[
+            'invoice' => $invoice,
+        ]));
+
+     }
+     public function superadminclosinginvoice(Request $request)
+     {
+       
+        $invoice = Inovice::orderBy('created_at', 'desc')->get();
+        $invid = $request->invoice_id;
+
+        $datainv = Inovice::find($invid);
+
+        $datainv -> is_closing = "Yes";
+        $datainv -> save();
+        $request->session()->flash('success', "Invoice berhasil closing");
+        return redirect(route('superadmin.invoice.index',[
+            'invoice' => $invoice,
+        ]));
+
+     }
+     public function superadmincancelinvoice(Request $request){
+        $invoice = Inovice::orderBy('created_at', 'desc')->get();
+        $invid = $request->invoice_id;
+
+        $datainvoice = Inovice::find($invid);
+        
+        $quoteid = $datainvoice->quote_id;
+        $soid = $datainvoice -> so_id;
+
+    
+
+        $datainvoice->status_invoice = "Cancelled";
+       $datainvoice -> save();
+
+        if($quoteid){
+        $dataQuote = Quotation::where('id', $quoteid)->get();
+
+        foreach($dataQuote as $item){
+            dd($item);
+            $item -> status_quote ="Cancelled";
+            $item->save();
+        }
+        }
+
+        if($soid){
+            $dataSO = SalesOrder::where('id', $soid)->get();
+
+            foreach($dataSO as $item){
+                $item -> status_so ="Cancelled";
+                $item->save();
+            }
+        }
+
+        $request->session()->flash('success', "Invoice berhasil dibatalkan");
+        return redirect(route('superadmin.invoice.index',[
+            'invoice' => $invoice,
+        ]));
+     }
     /**
      * Show the form for creating a new resource.
      */
+    public function tampilpesananinvoice($id)
+    {
+    
+       $pesanan = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
+       $invoice = Inovice::find($id);
+       $noInvoice = $invoice->invoice_no;
+      
+       return view('admininvoice.invoice.tampilpesanan',[
+           'pesanan' =>$pesanan,
+           'noInvoice' => $noInvoice,
+       ]);
 
+    }
+
+    public function superadmintampilpesananinvoice($id)
+    {
+    
+       $pesanan = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
+       $invoice = Inovice::find($id);
+       $noInvoice = $invoice->invoice_no;
+      
+       return view('superadmin.invoice.tampilpesanan',[
+           'pesanan' =>$pesanan,
+           'noInvoice' => $noInvoice,
+       ]);
+
+    }
 
      public function admininvoicecreate($id)
      {
+
         $data = SalesOrder::find($id);
         $customer = Customer::orderBy('nama_customer', 'asc')->get();
         $so = DetailSO::with('salesorder')->where('so_id', $id)->get();
@@ -102,6 +290,208 @@ class InvoiceController extends Controller
         ]);
      }
 
+     public function superadmincreate($id)
+     {
+
+        $data = SalesOrder::find($id);
+        $customer = Customer::orderBy('nama_customer', 'asc')->get();
+        $so = DetailSO::with('salesorder')->where('so_id', $id)->get();
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
+
+        $lastInvoice = Inovice::latest()->first(); // Mendapatkan data invoice terakhir dari database
+
+        $year = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+        $month = now()->format('m'); // Mendapatkan dua digit bulan saat ini
+        $lastOrder = $lastInvoice ? substr($lastInvoice->invoice_no, 4, 4) : 0; 
+       // Mendapatkan nomor urutan terakhir dari nomor invoice terakhir
+        $invoicenumber = 'INV/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $month . '/' . $year; // Menggabungkan nomor invoice dengan tahun dan bulan
+
+        $discountasli = $data->discount;
+        $tipe = $data->is_persen;
+
+      
+        
+    $subtotal = 0;
+    foreach ($so as $detail) {
+        $subtotal += $detail->total_price;
+    }
+
+    if ($tipe == 'persen') {
+        $discount =  ($discountasli / 100) * $subtotal;
+    } elseif ($tipe == 'amount'){
+        $discount = $data->discount;
+    }
+
+    $subtotalafterdiscount = $subtotal - $discount;
+
+
+
+  $ppnpersen = $data -> ppn;
+  
+  $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
+
+
+    $pembayaran = $data->pembayaran;
+
+    $total = $subtotalafterdiscount + $ppn;
+    
+
+    $sisatagihan = $total - $pembayaran;
+ 
+  
+        
+        return view('superadmin.invoice.create',[
+            'invoicenumber' => $invoicenumber,
+            'data' => $data,
+            'customer' => $customer,
+            'produk' => $produk,
+            'so' => $so,
+            'subtotal' => $subtotal,
+            'discount' => $discount,
+            'ppn' => $ppn,
+            'total' => $total,
+            'sisatagihan' => $sisatagihan,
+            'pembayaran' => $pembayaran,
+            'tipe' => $tipe,
+            'discountasli' => $discountasli,
+           
+        ]);
+     }
+     public function admininvoicecreatequote($id)
+     {
+
+        $data = Quotation::find($id);
+        $customer = Customer::orderBy('nama_customer', 'asc')->get();
+        $so = DetailQuotation::with('quotation')->where('quote_id', $id)->get();
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
+
+        $lastInvoice = Inovice::latest()->first(); // Mendapatkan data invoice terakhir dari database
+
+        $year = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+        $month = now()->format('m'); // Mendapatkan dua digit bulan saat ini
+        $lastOrder = $lastInvoice ? substr($lastInvoice->invoice_no, 4, 4) : 0; 
+       // Mendapatkan nomor urutan terakhir dari nomor invoice terakhir
+        $invoicenumber = 'INV/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $month . '/' . $year; // Menggabungkan nomor invoice dengan tahun dan bulan
+
+        $discountasli = $data->discount;
+        $tipe = $data->is_persen;
+
+      
+        
+    $subtotal = 0;
+    foreach ($so as $detail) {
+        $subtotal += $detail->total_price;
+    }
+
+    if ($tipe == 'persen') {
+        $discount =  ($discountasli / 100) * $subtotal;
+    } elseif ($tipe == 'amount'){
+        $discount = $data->discount;
+    }
+
+    $subtotalafterdiscount = $subtotal - $discount;
+
+
+
+  $ppnpersen = $data -> ppn;
+  
+  $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
+
+
+    $pembayaran = $data->pembayaran;
+
+    $total = $subtotalafterdiscount + $ppn;
+    
+
+    $sisatagihan = $total - $pembayaran;
+ 
+  
+        
+        return view('admininvoice.invoice.createquote',[
+            'invoicenumber' => $invoicenumber,
+            'data' => $data,
+            'customer' => $customer,
+            'produk' => $produk,
+            'so' => $so,
+            'subtotal' => $subtotal,
+            'discount' => $discount,
+            'ppn' => $ppn,
+            'total' => $total,
+            'sisatagihan' => $sisatagihan,
+            'pembayaran' => $pembayaran,
+            'tipe' => $tipe,
+            'discountasli' => $discountasli,
+           
+        ]);
+     }
+
+     public function superadmincreatequote($id)
+     {
+
+        $data = Quotation::find($id);
+        $customer = Customer::orderBy('nama_customer', 'asc')->get();
+        $so = DetailQuotation::with('quotation')->where('quote_id', $id)->get();
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
+
+        $lastInvoice = Inovice::latest()->first(); // Mendapatkan data invoice terakhir dari database
+
+        $year = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+        $month = now()->format('m'); // Mendapatkan dua digit bulan saat ini
+        $lastOrder = $lastInvoice ? substr($lastInvoice->invoice_no, 4, 4) : 0; 
+       // Mendapatkan nomor urutan terakhir dari nomor invoice terakhir
+        $invoicenumber = 'INV/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $month . '/' . $year; // Menggabungkan nomor invoice dengan tahun dan bulan
+
+        $discountasli = $data->discount;
+        $tipe = $data->is_persen;
+
+      
+        
+    $subtotal = 0;
+    foreach ($so as $detail) {
+        $subtotal += $detail->total_price;
+    }
+
+    if ($tipe == 'persen') {
+        $discount =  ($discountasli / 100) * $subtotal;
+    } elseif ($tipe == 'amount'){
+        $discount = $data->discount;
+    }
+
+    $subtotalafterdiscount = $subtotal - $discount;
+
+
+
+  $ppnpersen = $data -> ppn;
+  
+  $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
+
+
+    $pembayaran = $data->pembayaran;
+
+    $total = $subtotalafterdiscount + $ppn;
+    
+
+    $sisatagihan = $total - $pembayaran;
+ 
+  
+        
+        return view('superadmin.invoice.createquote',[
+            'invoicenumber' => $invoicenumber,
+            'data' => $data,
+            'customer' => $customer,
+            'produk' => $produk,
+            'so' => $so,
+            'subtotal' => $subtotal,
+            'discount' => $discount,
+            'ppn' => $ppn,
+            'total' => $total,
+            'sisatagihan' => $sisatagihan,
+            'pembayaran' => $pembayaran,
+            'tipe' => $tipe,
+            'discountasli' => $discountasli,
+           
+        ]);
+     }
 public function tampilinvoice($id){
     $invoice = Inovice::find($id);
     $detailinvoice = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
@@ -113,7 +503,17 @@ public function tampilinvoice($id){
         'detailinvoice' => $detailinvoice,
     ]);
 }
+public function superadmintampilinvoice($id){
+    $invoice = Inovice::find($id);
+    $detailinvoice = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
 
+   
+
+    return view('superadmin.invoice.tampilinvoice',[
+        'invoice' => $invoice,
+        'detailinvoice' => $detailinvoice,
+    ]);
+}
 
 
      public function admininvoicestore(Request $request)
@@ -184,11 +584,228 @@ public function tampilinvoice($id){
 
         return redirect()->route('admininvoice.invoice.index');
      }
+
+     public function superadminstore(Request $request)
+     {
+    
+     
+        $custid = $request -> cust_id;
+
+        $customer = Customer::find($custid);
+
+        $namacust = $customer->nama_customer;
+
+        $so = SalesOrder::find($request->so_id);
+        $so->status_so = "Terbit Invoice";
+        $so->save();
+    
+        // 2. Dari so_id, ambil rfo_id dan update status_rfo menjadi "Terbit Invoice"
+        $rfo_id = $so->rfo_id;
+        $rfo = RFO::find($rfo_id);
+        $rfo->status_rfo = "Terbit Invoice";
+        $rfo->save();
+
+        $invoice = new Inovice;
+        $invoice->so_id = $request->so_id;
+        $invoice->invoice_no = $request -> invoice_no;
+        $invoice->invoice_date = $request -> invoice_date;
+        $invoice -> cust_id = $request -> cust_id;
+        $invoice -> nama_customer = $namacust;
+        $invoice -> no_so = $so->no_so;
+        $invoice -> alamat = $request -> alamat;
+        $invoice -> subtotal = $request -> subtotal;
+        $invoice -> is_persen = $request->is_persen;
+        $invoice -> discount = $request -> discount;
+        $invoice -> ppn = $request -> ppn;
+        $invoice -> total = $request->total;
+
+       
+        $invoice -> save();
+
+        $invoiceDetails = [];
+
+        if ($request->has('product') && $request->has('quantity') && $request->has('price') && $request->has('totalprice')) {
+            foreach ($request->product as $index => $productId) {
+                $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+
+                $qty = $request->quantity[$index];
+                $harga = $product -> harga_jual;
+                $totalprice = $qty * $harga;
+
+                if ($product) {
+                    $invoiceDetails[] = [
+                        'invoice_id' => $invoice->id,
+                        'product_id' => $productId,
+                        'qty' => $request->quantity[$index],
+                        'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                        'invoice_price' => $product->harga_jual, // Menyimpan kode_produk
+                        'total_price' => $totalprice,
+                    ];
+                }
+            }
+            DetailInvoice::insert($invoiceDetails); 
+            
+          
+        }
+
+        $request->session()->flash('success', "Invoice berhasil dibuat");
+
+        return redirect()->route('superadmin.invoice.index');
+     }
+
+     public function admininvoicestorequote(Request $request)
+     {
+    
+     
+        $custid = $request -> cust_id;
+
+        $customer = Customer::find($custid);
+
+        $namacust = $customer->nama_customer;
+
+        $quote = Quotation::find($request->quote_id);
+        $quote->status_quote = "Terbit Invoice";
+        $quote->save();
+    
+    
+
+        $invoice = new Inovice;
+        $invoice->quote_id = $request->quote_id;
+        $invoice->invoice_no = $request -> invoice_no;
+        $invoice->invoice_date = $request -> invoice_date;
+        $invoice -> cust_id = $request -> cust_id;
+        $invoice -> nama_customer = $namacust;
+        $invoice -> no_quote = $quote->no_quote;
+        $invoice -> alamat = $request -> alamat;
+        $invoice -> subtotal = $request -> subtotal;
+        $invoice -> is_persen = $request->is_persen;
+        $invoice -> discount = $request -> discount;
+        $invoice -> ppn = $request -> ppn;
+        $invoice -> total = $request->total;
+
+       
+        $invoice -> save();
+
+        $invoiceDetails = [];
+
+        if ($request->has('product') && $request->has('quantity') && $request->has('price') && $request->has('totalprice')) {
+            foreach ($request->product as $index => $productId) {
+                $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+
+                $qty = $request->quantity[$index];
+                $harga = $product -> harga_jual;
+                $totalprice = $qty * $harga;
+
+                if ($product) {
+                    $invoiceDetails[] = [
+                        'invoice_id' => $invoice->id,
+                        'product_id' => $productId,
+                        'qty' => $request->quantity[$index],
+                        'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                        'invoice_price' => $product->harga_jual, // Menyimpan kode_produk
+                        'total_price' => $totalprice,
+                    ];
+                }
+            }
+            DetailInvoice::insert($invoiceDetails); 
+            
+          
+        }
+
+        $request->session()->flash('success', "Invoice berhasil dibuat");
+
+        return redirect()->route('admininvoice.invoice.index');
+     }
+
+     public function superadminstorequote(Request $request)
+     {
+    
+     
+        $custid = $request -> cust_id;
+
+        $customer = Customer::find($custid);
+
+        $namacust = $customer->nama_customer;
+
+        $quote = Quotation::find($request->quote_id);
+        $quote->status_quote = "Terbit Invoice";
+        $quote->save();
+    
+    
+
+        $invoice = new Inovice;
+        $invoice->quote_id = $request->quote_id;
+        $invoice->invoice_no = $request -> invoice_no;
+        $invoice->invoice_date = $request -> invoice_date;
+        $invoice -> cust_id = $request -> cust_id;
+        $invoice -> nama_customer = $namacust;
+        $invoice -> no_quote = $quote->no_quote;
+        $invoice -> alamat = $request -> alamat;
+        $invoice -> subtotal = $request -> subtotal;
+        $invoice -> is_persen = $request->is_persen;
+        $invoice -> discount = $request -> discount;
+        $invoice -> ppn = $request -> ppn;
+        $invoice -> total = $request->total;
+
+       
+        $invoice -> save();
+
+        $invoiceDetails = [];
+
+        if ($request->has('product') && $request->has('quantity') && $request->has('price') && $request->has('totalprice')) {
+            foreach ($request->product as $index => $productId) {
+                $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+
+                $qty = $request->quantity[$index];
+                $harga = $product -> harga_jual;
+                $totalprice = $qty * $harga;
+
+                if ($product) {
+                    $invoiceDetails[] = [
+                        'invoice_id' => $invoice->id,
+                        'product_id' => $productId,
+                        'qty' => $request->quantity[$index],
+                        'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                        'invoice_price' => $product->harga_jual, // Menyimpan kode_produk
+                        'total_price' => $totalprice,
+                    ];
+                }
+            }
+            DetailInvoice::insert($invoiceDetails); 
+            
+          
+        }
+
+        $request->session()->flash('success', "Invoice berhasil dibuat");
+
+        return redirect()->route('superadmin.invoice.index');
+     }
      public function showso()
      {
         $so = SalesOrder::where('status_so','Terbit PO')->orderBy('created_at', 'desc')->get();
+
+        $quote = Quotation::where('status_quote','Proses PO')->orderBy('created_at', 'desc')->get();
+
+
         return view('admininvoice.invoice.showso',[
             'so' => $so,
+            'quote' => $quote,
+        ]);
+     }
+
+     public function superadminshowso()
+     {
+        $so = SalesOrder::where('status_so','Terbit PO')->orderBy('created_at', 'desc')->get();
+
+        $quote = Quotation::where('status_quote','Proses PO')->orderBy('created_at', 'desc')->get();
+
+
+        return view('superadmin.invoice.showso',[
+            'so' => $so,
+            'quote' => $quote,
         ]);
      }
     public function create()

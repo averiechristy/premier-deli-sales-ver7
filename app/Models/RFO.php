@@ -19,6 +19,7 @@ class RFO extends Model
         'created_by',
         'status',
         'status_rfo',
+        'nama_pembuat',
         'no_rfo',
     ];
 
@@ -26,6 +27,12 @@ class RFO extends Model
     {
 
         return $this->belongsTo(Customer::class);
+    }
+
+    public function user()
+    {
+
+        return $this->belongsTo(User::class,'created_by');
     }
 
     public function salesorder()

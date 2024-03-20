@@ -15,7 +15,7 @@
                                        
                                         <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">No RFO</label>
-    <input name="no_rfo" type="text" class="form-control" style="border-color: #01004C; width:50%;" value="{{$orderNumber}}" />
+    <input name="no_rfo" type="text" class="form-control" style="border-color: #01004C; width:50%;" value="{{$orderNumber}}" readonly/>
 </div>                              
                                         <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Tanggal Order</label>
@@ -59,7 +59,8 @@
         @foreach ($customer as $item)
             customerInfo[{{$item->id}}] = {
                 nama: "{{$item->nama_customer}}",
-                alamat: "{{$item->lokasi}}"
+                alamat: "{{$item->lokasi}}",
+                namapenerima: "{{$item->nama_pic}}"
             };
         @endforeach
 
@@ -68,10 +69,12 @@
             var customerId = $(this).val();
             var namaCustomer = customerInfo[customerId].nama;
             var alamatCustomer = customerInfo[customerId].alamat;
+            var namapenerima = customerInfo[customerId].namapenerima;
             
             // Isikan nilai ke input nama_customer dan alamat
             $('input[name="nama_customer"]').val(namaCustomer);
             $('textarea[name="alamat"]').val(alamatCustomer);
+            $('input[name="nama_penerima"]').val(namapenerima);
         });
     });
 </script>
@@ -87,7 +90,7 @@
 </div>
 
 <div class="form-group mb-4">
-    <label for="" class="form-label" style="color:black;" >Nama Penerima</label>
+    <label for="" class="form-label" style="color:black;" >Nama PIC</label>
     <input  name="nama_penerima" type="text"  class="form-control " style="border-color: #01004C;" value="" />
 </div>
 
@@ -119,9 +122,20 @@
         <div class="col-md-5">
             <div class="form-group mb-4">
                 <label for="" class="form-label" style="color:black;">Quantity</label>
-                <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" />
+                <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" oninput="validasiNumber(this)" />
             </div>
         </div>
+
+        <script>
+function validasiNumber(input) {
+    // Hapus karakter titik (.) dari nilai input
+    input.value = input.value.replace(/\./g, '');
+
+    // Pastikan hanya karakter angka yang diterima
+    input.value = input.value.replace(/\D/g, '');
+}
+</script>
+
         <div class="col-md-1">
         <label for="" class="form-label" style="color:black;">Action</label>
             <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Remove</button>
@@ -151,7 +165,7 @@
                     <div class="col-md-5">
                         <div class="form-group mb-4">
                             <label for="" class="form-label" style="color:black;">Quantity</label>
-                            <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" />
+                            <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" oninput="validasiNumber(this)"/>
                         </div>
                     </div>
                     <div class="col-md-1">
@@ -224,6 +238,102 @@
             </div>
       
 
+<script>
+    function validateForm() {
+        // Mendapatkan nilai dari input Customer ID
+        var customerId = document.forms["saveform"]["customer_id"].value;
+
+        // Validasi Customer ID
+        if (customerId == "") {
+            alert("Customer harus dipilih");
+            closeModal();
+            return false;
+            
+        }
+
+        var alamat = document.forms["saveform"]["alamat"].value;
+        if (alamat == "") {
+            alert("Alamat harus diisi");
+            closeModal();
+            return false;
+            
+        }
+
+        var namapenerima = document.forms["saveform"]["nama_penerima"].value;
+
+        if (namapenerima == "") {
+            alert("Nama Penerima harus diisi");
+            closeModal();
+            return false;
+            
+        }
+        // Mendapatkan nilai dari input Tanggal Order
+        var orderDate = document.forms["saveform"]["order_date"].value;
+        
+        // Mendapatkan nilai dari input Tanggal Pengiriman
+        var shippingDate = document.forms["saveform"]["shipping_date"].value;
+
+        // Mendapatkan nilai dari input Tanggal Pembayaran
+        var paymentDate = document.forms["saveform"]["payment_date"].value;
+
+        // Validasi Tanggal Order
+        if (orderDate == "") {
+            alert("Tanggal Order harus diisi");
+            closeModal();
+            return false;
+        }
+
+        // Validasi Tanggal Pengiriman
+        if (shippingDate == "") {
+            alert("Tanggal Pengiriman harus diisi");
+            closeModal();
+            return false;
+        }
+
+        // Validasi Tanggal Pembayaran
+        if (paymentDate == "") {
+            alert("Tanggal Pembayaran harus diisi");
+            closeModal();
+            return false;
+        }
+
+        // Validasi jumlah produk minimal satu
+        var products = document.getElementsByName('product[]');
+        var quantities = document.getElementsByName('quantity[]');
+        var isValidProduct = false;
+        for (var i = 0; i < products.length; i++) {
+            if (products[i].value != "") {
+                isValidProduct = true;
+                // Validasi jumlah produk
+                if (quantities[i].value == "") {
+                    alert("Harap isi jumlah untuk setiap produk yang dipilih");
+                    closeModal();
+                    return false;
+                }
+            }
+        }
+        if (!isValidProduct) {
+            alert("Minimal satu produk harus dipilih");
+            closeModal();
+            return false;
+        }
+
+
+
+        // Tutup modal secara langsung
+      
+
+        // Jika semua validasi berhasil, return true
+        return true;
+    }
+
+    function closeModal() {
+        // Tutup modal secara manual
+        $('#confirmModal').modal('hide');
+    }
+
+    
+</script>
 
 
 @endsection

@@ -12,8 +12,23 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                        <a href="{{route('admininvoice.invoice.showso')}}" class="btn btn-pd btn-sm">Tambah Invoice</a>
+                        <a href="{{route('admininvoice.invoice.showso')}}" class="btn btn-pd btn-sm">Buat Invoice</a>
+                        <span id="notificationBadge" class="badge badge-pill badge-danger"></span>
 
+<script>
+// Ambil elemen tombol
+var button = document.getElementById('buatSalesOrder');
+
+// Fungsi untuk menampilkan notifikasi dengan jumlah yang diinginkan
+function showNotification(number) {
+var badge = document.getElementById('notificationBadge');
+badge.innerText = number;
+badge.style.display = 'inline';
+}
+
+// Panggil fungsi showNotification dengan jumlah yang diinginkan
+showNotification({{$total}}); // Ubah angka 5 sesuai dengan jumlah notifikasi yang diinginkan
+</script>
                         </div>
                         <div class="card-body">
                         <div class="dataTables_length mb-3" id="myDataTable_length">
@@ -41,11 +56,15 @@ entries
                 <thead>
                     <tr>                                       
                     <th>No Invoice</th>
-                    <th>SO</th>
+                    <th>SO / Quotation</th>
                     <th>Nama Customer</th>
                     <th>Tanggal Invoice</th>
                     <th>Produk</th>
+                    <th>Status</th>
                       <th>Action</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
                     </tr>
                 </thead>
                 
@@ -53,30 +72,193 @@ entries
              @foreach ($invoice as $data)
             <tr>
                 <td>{{$data->invoice_no}}</td>
-                <td>{{$data->no_so}}</td>
+                <td>{{$data->no_so}} {{$data-> no_quote}}</td>
                 <td>{{$data -> nama_customer}}</td>
                 <td>{{$data -> invoice_date}}</td>
                 <td>    
-                    <a href=""><button type="button"  class="btn btn-link">
+            <a href="{{route('tampilpesananinvoice', $data->id)}}"><button type="button"  class="btn btn-link">
     Lihat Detail Pesanan
-</button></a>
+</button>
+</a>
 </td>
+<td> {{$data->status_invoice}}</td>
 <td>  
 
-<a href="{{route('tampilinvoice',$data->id)}}"><button type="button" class="btn btn-sm btn-info">
+<a  id="cetakSalesOrder{{$data->id}}" href="{{route('tampilinvoice',$data->id)}}">
     Cetak Invoice
-</button>
+
 </a> 
-<a href="{{route('tampildo',$data->id)}}"><button type="button" class="btn btn-sm btn-warning">
+<br>
+<br>
+<a id="cetakDeliveryOrder{{$data->id}}" href="{{route('tampildo',$data->id)}}">
     Cetak Delivery Order
-</button>
+
 </a>
 
 </td>
+<script>
+    $(document).ready(function(){
+        // Cek apakah cookie sudah ada
+        if (document.cookie.indexOf('salesOrderClicked{{$data->id}}=true') !== -1) {
+            $('#cetakSalesOrder{{$data->id}}').html('Cetak Invoice <i class="fas fa-check-circle" style="color:green"></i>');
+        }
+
+        $('#cetakSalesOrder{{$data->id}}').click(function(){
+            $(this).html('Cetak Invoice <i class="fas fa-check-circle" style="color:green"></i>');
+            // Set cookie saat tombol diklik
+            document.cookie = 'salesOrderClicked{{$data->id}}=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        // Cek apakah cookie sudah ada
+        if (document.cookie.indexOf('deliveryOrderClicked{{$data->id}}=true') !== -1) {
+            $('#cetakDeliveryOrder{{$data->id}}').html('Cetak Delivery Order <i class="fas fa-check-circle" style="color:green"></i>');
+        }
+
+        $('#cetakDeliveryOrder{{$data->id}}').click(function(){
+            $(this).html('Cetak Delivery Order <i class="fas fa-check-circle" style="color:green"></i>');
+            // Set cookie saat tombol diklik
+            document.cookie = 'deliveryOrderClicked{{$data->id}}=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+        });
+    });
+</script>
+
+<td>
+    @if($data->is_download == "Yes")
+    <span>Invoice Sudah didownload </span><i class="fas fa-check-circle" style="color:green;"></i>    
+    @else
+        Invoice Belum didownload
+    @endif
+
+    <br>
+    <br>
+    @if($data->is_download_do == "Yes")
+    <span>DO Sudah didownload </span><i class="fas fa-check-circle" style="color:green;"></i>    
+    @else
+        DO Belum didownload
+    @endif
+</td>
+<td>
+
+
+@if($data->status_invoice =="Cancelled")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel Invoice
+</button>
+
+@elseif ($data->is_closing =="Yes")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel Invoice
+</button>
+
+@elseif ($data->status_invoice =="Menunggu Persetujuan Cancel")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel Invoice
+</button>
+@else
+  
+<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
+      Cancel Invoice
+</button>
+@endif
+
+
+<td>
+@if($data->status_invoice =="Cancelled")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Closing
+</button>
+
+@elseif ($data->status_invoice =="Menunggu Persetujuan Cancel")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Closing
+</button>
+
+
+
+@elseif ($data->is_closing =="Yes")
+   Invoice sudah closing <span><i class="fas fa-check-circle" style="color:green;"></i>  </span>
+@else
+  
+<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#closing{{$data->id}}">
+      Closing
+</button>
+@endif
+</td>
+
+
+
+
 </tr>
 
+<div class="modal fade" id="exampleModal{{$data->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Cancel {{$data->invoice_no}}</h5>
+       
+      </div>
+      <div class="modal-body">
+      <form action="{{route('cancelinvoice')}}" method="post">
+        @csrf
+      <input type="hidden"  name="invoice_id" value="{{$data->id}}">
+                   
+      
+                    <div class="form-group">
+                        <label for="alasan"  style="color:black;">Alasan Cancel :</label>
+                        <textarea class="form-control" id="reason" name="alasan" rows="3" required></textarea>
+                    </div>
+      </div>
+      <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <button type="submit" class="btn btn-primary">Ya</button>
+            </div>
+            </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="closing{{$data->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Lakukan closing pada {{$data->invoice_no}}</h5>
+       
+      </div>
+      <div class="modal-body">
+      <form action="{{route('closinginvoice')}}" method="post">
+        @csrf
+      <input type="hidden"  name="invoice_id" value="{{$data->id}}">
+                   
+      Apakah anda yakin untuk melakukan closing pada data ini?
+      <br>
+      No Invoice : {{$data->invoice_no}}
+      <br>
+      Nama Customer : {{$data->nama_customer}}
+        
+      <br>
+      Jika data sudah benar, silahkan isi kolom dibawah ini dengan "Confirm"
+      <div class="form-group">
+                    
+                        <input class="form-control" id="" name="confirm" rows="3" required></input>
+                    </div>
+
+      </div>
+      <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <button type="submit" class="btn btn-primary">Ya</button>
+            </div>
+            </form>
+    </div>
+  </div>
+</div>
 @endforeach
                    
+
                 </tbody>
 
             </table>

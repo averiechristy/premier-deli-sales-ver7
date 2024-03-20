@@ -27,6 +27,12 @@ class Customer extends Model
         return $this->hasMany(RFO::class);
     }
 
+    public function quote()
+    {
+
+        return $this->hasMany(Quotation::class);
+    }
+
     public function salesorder()
     {
 

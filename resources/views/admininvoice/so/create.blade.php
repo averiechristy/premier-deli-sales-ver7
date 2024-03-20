@@ -92,7 +92,7 @@
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Customer</label>
-    <select name="cust_id" id="customerSelect" class="form-control" style="border-color: #01004C; max-width: 100%;" aria-label=".form-select-lg example">
+    <select name="cust_id" id="customerSelect" class="form-control" style="border-color: #01004C; max-width: 100%;" aria-label=".form-select-lg example" readonly>
         <option value="" selected disabled>-- Pilih Customer --</option>
         @foreach ($customer as $item)
             <option value="{{$item->id}}" {{ old('cust_id', $data->cust_id) == $item->id ? 'selected' : '' }} data-nama="{{$item->nama_customer}}" data-alamat="{{$item->alamat}}">{{$item->nama_customer}}</option>
@@ -102,31 +102,19 @@
 
 
 <script>
-    $(document).ready(function() {
-        $('#customerSelect').select2();
-
-        // Simpan informasi nama dan alamat dalam objek
-        var customerInfo = {};
-
-        @foreach ($customer as $item)
-            customerInfo[{{$item->id}}] = {
-                nama: "{{$item->nama_customer}}",
-                alamat: "{{$item->lokasi}}"
-            };
-        @endforeach
-
-        // Ketika pilihan customer diubah
-        $('#customerSelect').change(function() {
-            var customerId = $(this).val();
-            var namaCustomer = customerInfo[customerId].nama;
-            var alamatCustomer = customerInfo[customerId].alamat;
-            
-            // Isikan nilai ke input nama_customer dan alamat
-            $('input[name="nama_customer"]').val(namaCustomer);
-            $('textarea[name="alamat"]').val(alamatCustomer);
-        });
+    // Menonaktifkan interaksi pengguna dengan elemen select
+    document.getElementById('customerSelect').addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        this.blur();
+        return false;
+    });
+    document.getElementById('customerSelect').addEventListener('keydown', function(e) {
+        e.preventDefault();
+        return false;
     });
 </script>
+
+
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;" hidden>Nama Customer</label>
@@ -151,7 +139,7 @@
             <div class="form-group mb-4">
                 <label for="" class="form-label" style="color:black;">Produk</label>
                 <!-- Berikan id yang unik untuk setiap elemen select -->
-                <select name="product[]" class="form-control product-select" id="productselect{{$index}}" style="border-color: #01004C;max-width: 100%;" aria-label=".form-select-lg example">
+                <select name="product[]" class="form-control product-select" id="productselect{{$index}}" style="border-color: #01004C;max-width: 100%;" aria-label=".form-select-lg example" readonly>
                     <option value="" selected disabled>-- Pilih Produk --</option>
                     @foreach ($produk as $item)
                         <option value="{{$item->id}}" {{ old('product[]', $detaildata->product_id) == $item->id ? 'selected' : '' }} >{{$item->kode_produk}} - {{$item->nama_produk}}</option>
@@ -164,25 +152,24 @@
         <div class="col-md-3">
             <div class="form-group mb-4">
                 <label for="" class="form-label" style="color:black;">Harga</label>
-                <input name="price[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata  -> harga_jual}}" />
+                <input name="price[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata  -> harga_jual}}" readonly/>
             </div>
         </div>
-
-
+        
         <div class="col-md-2">
             <div class="form-group mb-4">
                 <label for="" class="form-label" style="color:black;">Quantity</label>
-                <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata -> qty}}" />
+                <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata -> qty}}" readonly />
             </div>
         </div>
         <div class="col-md-2">
-            <label for="" class="form-label" style="color:black;">Action</label>
-            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Remove</button>
+            <label for="" class="form-label" style="color:black; display:none;">Action</label>
+            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1" style="display:none;" >Remove</button>
         </div>
     </div>
 @endforeach
 
-<script>
+<!-- <script>
     $(document).ready(function() {
         // Panggil fungsi select2() untuk setiap elemen product-select di dalam perulangan
         $(".product-select").each(function(index) {
@@ -191,15 +178,27 @@
             $("#" + selectId).select2();
         });
     });
-</script>
+</script> -->
 
+<script>
+    // Menonaktifkan interaksi pengguna dengan elemen select
+    document.getElementById('productselect{{$index}}').addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        this.blur();
+        return false;
+    });
+    document.getElementById('productselect{{$index}}').addEventListener('keydown', function(e) {
+        e.preventDefault();
+        return false;
+    });
+</script>
 
 
 </div>
 
 
 
-<button type="button" class="btn btn-success mt-3" id="add-product-field">Add Product</button>
+<button type="button" class="btn btn-success mt-3" id="add-product-field" style="display:none;">Add Product</button>
 
 <script>
     $(document).ready(function() {
@@ -222,7 +221,7 @@
         <div class="col-md-3">
             <div class="form-group mb-4">
                 <label for="" class="form-label" style="color:black;">Harga</label>
-                <input name="price[]" type="number" class="form-control" style="border-color: #01004C;" value="" />
+                <input name="price[]" type="number" class="form-control" style="border-color: #01004C;" value="" readonly/>
             </div>
         </div>
         <div class="col-md-2">
@@ -355,4 +354,68 @@ $(document).on('change', '.product-select', function() {
                                     </div>
         </div>
     </div>
+
+
+    <script>
+    function validateForm() {
+        var alamat = document.forms["saveform"]["alamat"].value;
+        if (alamat == "") {
+            alert("Alamat harus diisi");
+            closeModal();
+            return false;
+        }
+        var products = document.getElementsByName('product[]');
+        var quantities = document.getElementsByName('quantity[]');
+        var isValidProduct = false;
+        for (var i = 0; i < products.length; i++) {
+            if (products[i].value != "") {
+                isValidProduct = true;
+                // Validasi jumlah produk
+                if (quantities[i].value == "") {
+                    alert("Harap isi jumlah untuk setiap produk yang dipilih");
+                    closeModal();
+                    return false;
+                }
+            }
+        }
+        if (!isValidProduct) {
+            alert("Minimal satu produk harus dipilih");
+            closeModal();
+            return false;
+        }
+        // Validasi radiobutton
+        var radioValue = document.querySelector('input[name="inlineRadioOptions"]:checked');
+        if (!radioValue) {
+            alert("Harap pilih salah satu opsi diskon");
+            closeModal();
+            return false;
+        }
+
+        // Validasi discount
+        var discount = document.forms["saveform"]["discount"].value;
+        if (discount == "") {
+            alert("Discount harus diisi");
+            closeModal();
+            return false;
+        }
+
+        // Validasi PPN
+        var ppn = document.forms["saveform"]["ppn"].value;
+        if (ppn == "") {
+            alert("PPN harus diisi");
+            closeModal();
+            return false;
+        }
+
+
+
+        return true;
+    }
+
+    function closeModal() {
+        // Tutup modal secara manual
+        $('#confirmModal').modal('hide');
+    }
+</script>
+
 @endsection

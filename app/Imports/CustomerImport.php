@@ -4,15 +4,13 @@ namespace App\Imports;
 
 use App\Models\Customer;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use Illuminate\Support\Facades\Session;
 
 class CustomerImport implements ToModel, WithStartRow
 {
-    /**
-    * @param Collection $collection
-    */
     private $lastId;
 
     public function __construct()
@@ -27,13 +25,11 @@ class CustomerImport implements ToModel, WithStartRow
 
     public function model(array $row)
     {            
-       
-        
-        $existingcust = Customer::where('nama_customer', $row['0'])->first();
+        // Validasi format email
 
-        if($existingcust) {
-            // Jika produk dengan kode yang sama sudah ada, Anda dapat memilih untuk melewatinya atau melakukan tindakan lain.
-            // Di sini, saya akan mengembalikan null agar produk tidak disimpan kembali.
+        $existingCust = Customer::where('nama_customer', $row['0'])->first();
+
+        if ($existingCust) {
             return null;
         }
         
@@ -51,6 +47,5 @@ class CustomerImport implements ToModel, WithStartRow
             'lokasi' => $row['7'],
             'produk_sebelumnya' => $row['8'],
         ]);
-
     }
 }

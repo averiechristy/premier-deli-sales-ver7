@@ -4,7 +4,7 @@
 <ul class="navbar-nav  sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color:#9B5718;">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center mt-3 mb-3" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center mt-3 mb-3" >
         <div class="sidebar-brand-icon ">
         <img src="{{asset('img/logopremier.png')}}" style="height: 120px;">
         </div>
@@ -22,18 +22,49 @@
     </li>
     <hr class="sidebar-divider my-0">
 
-    <li class="nav-item {{ Request::is('superadmin/useraccount/index') || Request::is('superadmin/useraccount/create') ? 'active' : '' }}">
+    <li class="nav-item {{ Request::is('superadmin/useraccount/index') ||  Request::is('superadmin/useraccount/create')? 'active' : '' }}">
         <a class="nav-link" href="{{route('superadmin.useraccount.index')}}">
             <i class="fas fa-fw fa-users"></i>
             <span>User Account</span></a>
     </li>
     
-    <li class="nav-item">
-        <a class="nav-link" href="tables.html">
+    <li class="nav-item {{ Request::is('superadmin/customer/index') ||  Request::is('superadmin/customer/create')? 'active' : '' }}">
+        <a class="nav-link" href="{{route('superadmin.customer.index')}}">
             <i class="fas fa-fw fa-building"></i>
             <span>Customer</span></a>
     </li>
 
+    <li class="nav-item {{ Request::is('superadmin/produk/index') ||  Request::is('superadmin/produk/create')? 'active' : '' }}">
+        <a class="nav-link"  href="{{route('superadmin.produk.index')}}">
+            <i class="fa fa-cutlery"></i>
+            <span>Produk</span></a>
+    </li>
+    <li class="nav-item {{ Request::is('superadmin/rfo/index') ||  Request::is('superadmin/rfo/create')? 'active' : '' }}">
+        <a class="nav-link"   href="{{route('superadmin.rfo.index')}}">
+      
+        <i class="fa fa-list" aria-hidden="true"></i>
+            <span>List RFO</span></a>
+    </li>
+
+    <li class="nav-item {{ Request::is('superadmin/so/index') ||  Request::is('superadmin/so/showrfo')? 'active' : '' }}">
+        <a class="nav-link"   href="{{route('superadmin.so.index')}}">
+        <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+            <span>Sales Order</span></a>
+    </li>
+
+    <li class="nav-item {{ Request::is('superadmin/po/index') ||  Request::is('superadmin/po/showso')? 'active' : '' }}">
+        <a class="nav-link"  href="{{route('superadmin.po.index')}}">
+        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+            <span>Purchase Order</span></a>
+    </li>
+
+
+    <li class="nav-item {{ Request::is('superadmin/invoice/index') ||  Request::is('superadmin/invoice/showso')? 'active' : '' }}">
+        <a class="nav-link"  href="{{route('superadmin.invoice.index')}}">
+        <i class="fa fa-file-text" aria-hidden="true"></i>
+            <span>Invoice</span></a>
+    </li>
+<!-- 
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
             aria-expanded="true" aria-controls="collapseUtilities">
@@ -46,11 +77,11 @@
             
                 <a class="collapse-item" href="utilities-color.html">Form Order</a>
                 <a class="collapse-item" href="utilities-border.html">Sales Order</a>
-                <a class="collapse-item" href="utilities-animation.html">Purchase Order</a>
-                <a class="collapse-item" href="utilities-other.html">Invoice</a>
+                <a class="collapse-item" href="{{route('superadmin.po.index')}}">Purchase Order</a>
+                <a class="collapse-item" href="{{route('superadmin.invoice.index')}}">Invoice</a>
             </div>
         </div>
-    </li>
+    </li> -->
 
 
 
@@ -102,7 +133,7 @@
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                         aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="{{route('superadminpassword')}}">
                             <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
                             Change Password
                         </a>

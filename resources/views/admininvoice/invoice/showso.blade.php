@@ -8,7 +8,7 @@
                     
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2" style="color:black;">Pilih SO</h1>
+                    <h1 class="h3 mb-2" style="color:black;">Pilih SO / Quotation</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -42,7 +42,7 @@ entries
                             <table  class="table table-bordered"  width="100%" cellspacing="0" style="border-radius: 10px;">
                 <thead>
                     <tr>                 
-                       <th>No SO</th>
+                       <th>No SO / Quotation</th>
                        <th>Nama Customer</th>
                        <th>Action</th>
                     </tr>
@@ -63,6 +63,22 @@ entries
                 </td>
             </tr>
                  
+@endforeach
+
+@foreach ($quote as $data)
+
+<tr>
+             <td>{{$data -> no_quote}}</td>
+             <td>{{$data -> nama_customer}}</td>
+             <td>
+                  <a href="{{ route('admininvoice.invoice.createquote', $data->id) }}">
+
+                    <button class="btn btn-sm btn-pd">
+                        Buat Invoice
+                  </button>
+                  </a>
+                </td>
+            </tr>
 @endforeach
    
                 </tbody>

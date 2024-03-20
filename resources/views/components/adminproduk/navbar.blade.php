@@ -4,7 +4,7 @@
 <ul class="navbar-nav  sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color:#9B5718;">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center mt-3 mb-3" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center mt-3 mb-3" >
         <div class="sidebar-brand-icon ">
         <img src="{{asset('img/logopremier.png')}}" style="height: 120px;">
         </div>
@@ -81,7 +81,7 @@
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                         aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="{{route('adminprodukpassword')}}">
                             <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
                             Change Password
                         </a>

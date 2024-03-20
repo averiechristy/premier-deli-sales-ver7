@@ -7,7 +7,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">List Order</h1>
+                    <h1 class="h3 mb-2 text-gray-800">List RFO</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -56,7 +56,7 @@ entries
                   <td>{{$data->nama_customer}}</td>
                   <td>{{$data->nama_penerima}}</td>
                   <td>    
-                    <a href=""><button type="button" class="btn btn-link">
+                    <a href="{{route('admininvoicetampilpesanan', $data->id)}}"><button type="button" class="btn btn-link">
     Lihat Detail Pesanan
 </button></a>
 </td>
@@ -79,6 +79,8 @@ entries
         @elseif ($data->status_rfo == "Cancelled")
         Cancel
         <i class="fas fa-times" style="color:red;"></i> <!-- Icon centang dari Font Awesome -->
+        @else
+        {{$data->status_rfo}}
     @endif
 </td>
 <td>{{$data->updated_at}}</td>

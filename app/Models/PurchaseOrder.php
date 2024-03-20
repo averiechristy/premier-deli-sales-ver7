@@ -15,6 +15,7 @@ class PurchaseOrder extends Model
         'email',
         'user_id',
         'no_hp',
+        'status_po',
         'created_by',
         'updated_by',
     ];

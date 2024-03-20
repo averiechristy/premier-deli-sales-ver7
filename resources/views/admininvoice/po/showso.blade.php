@@ -2,19 +2,16 @@
 
 @section('content')
 
-
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    
-
+                <div class="container-fluid">                  
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2" style="color:black;">Pilih SO</h1>
+                    <h1 class="h3 mb-2" style="color:black;">Pilih SO / Quotation </h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
 
-                        <form action="{{route('admininvoice.po.create')}}" method="post" >
+                        <form name="saveform"  action="{{route('admininvoice.po.create')}}" method="post" onsubmit="return validateForm()">
                     @csrf
     <button type="submit" style="float: right; margin-right:6px;" class="btn btn-pd  btn-sm mb-2">Buat Purchase Order</button>
                         </div>
@@ -44,9 +41,9 @@ entries
                 <thead>
                     <tr>                 
                         <th>Select</th>                    
-                        <th>No Sales Order</th>
+                        <th>No Sales Order / No Quotation</th>
                         <th>Nama Customer</th>
-                        <th>Tanggal SO</th>
+                        <th>Tanggal </th>
                       
                         
                     </tr>
@@ -63,6 +60,18 @@ entries
 
             </tr>
                  
+@endforeach
+
+@foreach ($quote as $data) 
+
+<tr>
+                <td><input type="checkbox" name="selected_po[]" value="{{$data->id}}"></td>
+                
+                <td>{{$data->no_quote}}</td>
+                <td>{{$data -> customer -> nama_customer}}</td>
+                <td>{{ \Carbon\Carbon::parse($data->quote_date)->format('d-m-Y') }}</td>                
+
+            </tr>
 @endforeach
    
                 </tbody>
@@ -320,6 +329,20 @@ updatePagination();
     document.getElementById('search').addEventListener('input', applySearchFilter);
     // Panggil updatePagination untuk inisialisasi
          
+</script>
+<script>
+    // Menambahkan fungsi validasi sebelum mengirim formulir
+    function validateForm() {
+        // Memeriksa apakah minimal satu item dipilih dari setiap jenis
+        var selectedSo = document.querySelectorAll("input[name='selected_so[]']:checked").length;
+        var selectedPo = document.querySelectorAll("input[name='selected_po[]']:checked").length;
+
+        if (selectedSo === 0 && selectedPo === 0) {
+            alert("Minimal pilih satu item.");
+            return false; // Mencegah pengiriman formulir jika tidak ada item yang dipilih
+        }
+        return true; // Lanjutkan pengiriman formulir jika minimal satu item dipilih
+    }
 </script>
 
 @endsection

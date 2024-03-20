@@ -31,14 +31,9 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         
         // Attempt to log in the user
-        if (Auth::attempt($credentials)) {
-            // Authentication passed...
-
-           
-
+        if (Auth::attempt($credentials)) { 
             // Check user role and redirect accordingly
             $user = Auth::user();
-
 
             if ($user->isSuperAdmin()) {
                 return redirect()->route('superadmin.dashboard'); // Adjust the route accordingly
@@ -54,10 +49,13 @@ class AuthController extends Controller
             elseif ($user->isLeader()) {
                 return redirect()->route('leader.dashboard'); // Adjust the route accordingly
             }
+            elseif ($user->isManager ()) {
+                return redirect()->route('manager.dashboard'); // Adjust the route accordingly
+            }
 
         }
         // Authentication failed, redirect back with errors
-        return redirect()->route('login')->with('error', 'Invalid credentials');
+        return redirect()->route('login')->with('error', 'Email atau Password salah, silakan coba lagi');
     }
 
     public function logout()

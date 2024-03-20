@@ -26,8 +26,13 @@ class User extends Authenticatable
         'creted_by',
         'no_hp',
         'updated_by',
+        'report_to',
     ];
+    public function rfo()
+    {
 
+        return $this->hasMany(RFO::class);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -84,5 +89,11 @@ class User extends Authenticatable
     {
         $jenis_role = $this->Role->jenis_role;
         return strtoupper($jenis_role) === 'SALES';
+    }
+
+    public function isManager()
+    {
+        $jenis_role = $this->Role->jenis_role;
+        return strtoupper($jenis_role) === 'MANAGER';
     }
 }

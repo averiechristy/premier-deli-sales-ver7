@@ -13,8 +13,23 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
 
-                        <a href="{{route('admininvoice.po.showso')}}" class="btn btn-pd btn-sm">Tambah Purchase Order</a>
+                        <a href="{{route('admininvoice.po.showso')}}" class="btn btn-pd btn-sm">Buat Purchase Order</a>
+                        <span id="notificationBadge" class="badge badge-pill badge-danger"></span>
 
+<script>
+// Ambil elemen tombol
+var button = document.getElementById('buatSalesOrder');
+
+// Fungsi untuk menampilkan notifikasi dengan jumlah yang diinginkan
+function showNotification(number) {
+var badge = document.getElementById('notificationBadge');
+badge.innerText = number;
+badge.style.display = 'inline';
+}
+
+// Panggil fungsi showNotification dengan jumlah yang diinginkan
+showNotification({{$total}}); // Ubah angka 5 sesuai dengan jumlah notifikasi yang diinginkan
+</script>
                         </div>
                         <div class="card-body">
                         <div class="dataTables_length mb-3" id="myDataTable_length">
@@ -42,10 +57,13 @@ entries
                 <thead>
                     <tr>                                       
                         <th>No Purchase Order</th>
-                        <th>SO</th>
+                        <th>SO / Quotation</th>
                        <th>Tanggal PO</th>
                        <th>Produk</th>
                       <th>Action</th>
+                      <th></th>
+                      <th>Status</th>
+                      <th></th>
                     </tr>
                 </thead>
                 
@@ -54,25 +72,98 @@ entries
             <tr>
             <td>{{$item -> no_po}}</td>  
             <td>    
-                <a href="">
-         Lihat Detail SO
+            <a href="{{route('tampilsoquote', $item->id)}}"><button type="button" class="btn btn-link">
+         Lihat Detail 
                 
             </a>
 </td>
-            <td>{{$item -> po_date }}</td>
-            <td>    
-                <a href="">
+<td>{{ \Carbon\Carbon::parse($item->po_date)->format('d-m-Y') }}</td>             
+<td>    
+<a href="{{route('tampilpesananpo', $item->id)}}"><button type="button" class="btn btn-link">
          Lihat Detail Produk
                 
             </a>
-</td>
+</td>  
+     
 <td>    
-                    <a href="{{route('tampilpo',$item->id)}}">
+                    <a id="cetakSalesOrder{{$item->id}}"href="{{route('tampilpo',$item->id)}}">
     Cetak Purchase Order
 </a>
 
 </td>
+
+<script>
+    $(document).ready(function(){
+        // Cek apakah cookie sudah ada
+        if (document.cookie.indexOf('salesOrderClicked{{$item->id}}=true') !== -1) {
+            $('#cetakSalesOrder{{$item->id}}').html('Cetak Purchase Order <i class="fas fa-check-circle" style="color:green"></i>');
+        }
+
+        $('#cetakSalesOrder{{$item->id}}').click(function(){
+            $(this).html('Cetak Purchase Order <i class="fas fa-check-circle" style="color:green"></i>');
+            // Set cookie saat tombol diklik
+            document.cookie = 'salesOrderClicked{{$item->id}}=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+        });
+    });
+</script>
+
+<td>
+    @if($item->is_download == "Yes")
+    <span>Sudah didownload </span><i class="fas fa-check-circle" style="color:green;"></i>    
+    @else
+        Belum didownload
+    @endif
+</td>
+
+
+<td>{{$item->status_po}}</td>
+<td>
+
+@if($item->status_po =="Cancelled")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+     Cancel PO
+</button>
+
+@elseif ($item->status_po =="Menunggu Persetujuan Cancel")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+     Cancel PO
+</button>
+@else
+  
+<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$item->id}}">
+      Cancel PO
+</button>
+@endif
+
+</td>
 </tr>
+
+<div class="modal fade" id="exampleModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Cancel {{$item->no_po}}</h5>
+       
+      </div>
+      <div class="modal-body">
+      <form action="{{route('cancelpo')}}" method="post">
+        @csrf
+      <input type="hidden"  name="po_id" value="{{$item->id}}">
+                   
+      
+                    <div class="form-group">
+                        <label for="alasan"  style="color:black;">Alasan Cancel :</label>
+                        <textarea class="form-control" id="reason" name="alasan" rows="3" required></textarea>
+                    </div>
+      </div>
+      <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <button type="submit" class="btn btn-primary">Ya</button>
+            </div>
+            </form>
+    </div>
+  </div>
+</div>
 @endforeach
 
                    

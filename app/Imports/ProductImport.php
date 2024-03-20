@@ -15,7 +15,7 @@ class ProductImport implements ToModel, WithStartRow
     {
         $this->lastId = Produk::latest()->value('id') ?? 0;
     }
-
+        
     public function startRow(): int
     {
         return 2;
@@ -27,8 +27,6 @@ class ProductImport implements ToModel, WithStartRow
         $existingProduct = Produk::where('kode_produk', $row['0'])->first();
 
         if($existingProduct) {
-            // Jika produk dengan kode yang sama sudah ada, Anda dapat memilih untuk melewatinya atau melakukan tindakan lain.
-            // Di sini, saya akan mengembalikan null agar produk tidak disimpan kembali.
             return null;
         }
         

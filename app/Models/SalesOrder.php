@@ -21,7 +21,9 @@ class SalesOrder extends Model
         'ppn',
         'pembayaran',
         'rfo_id',
-        'status_so'
+        'status_so',
+        'is_cetak',
+        'is_download',
     ];
 
     public function customer()
