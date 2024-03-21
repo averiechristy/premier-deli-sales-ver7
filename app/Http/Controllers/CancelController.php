@@ -10,6 +10,7 @@ use App\Models\PurchaseOrder;
 use App\Models\Quotation;
 use App\Models\RFO;
 use App\Models\SalesOrder;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CancelController extends Controller
@@ -76,6 +77,18 @@ class CancelController extends Controller
         ]);
     }
 
+    public function managerinfocancelpo($id){
+
+        $datapo = PurchaseOrder::find($id);
+        $datacancel = CancelApprovalSA::where('po_id',$id)->first();
+      
+
+        return view('manager.infocancel',[
+            'datapo' => $datapo,
+            'datacancel' => $datacancel,
+        ]);
+    }
+
     public function superadmininfocancelinvoice($id){
 
         $datainv = Inovice::find($id);
@@ -83,6 +96,18 @@ class CancelController extends Controller
       
 
         return view('superadmin.invoice.infocancel',[
+            'datainv' => $datainv,
+            'datacancel' => $datacancel,
+        ]);
+    }
+
+    public function managerinfocancelinvoice($id){
+
+        $datainv = Inovice::find($id);
+        $datacancel = CancelApprovalSA::where('invoice_id',$id)->first();
+      
+
+        return view('manager.infocancelinvoice',[
             'datainv' => $datainv,
             'datacancel' => $datacancel,
         ]);
@@ -238,7 +263,51 @@ foreach ($datacancel as $cancel) {
         
             }
 
+            public function managerapprovecancelpo(Request $request){
 
+      
+
+                $poid = $request -> po_id;
+                
+                $detaildata = DetailSoPo::where('po_id', $poid)->get();
+        
+                foreach ($detaildata as $item){
+                    if($item->quote_id) {
+                        $qid = $item->quote_id;
+                        $quote = Quotation::find($qid);
+        
+                        $quote->status_quote = "Quotation Dibuat";
+                        $quote->save();
+        
+                    } elseif ($item -> so_id) {
+                        
+                        $soid = $item->so_id;
+                        $so = SalesOrder::find($soid);
+        
+                        $so->status_so = "PO Belum Dikerjakan";
+                        $so->save();
+        
+                    }
+                }
+        
+                $datacancel = CancelApprovalSA::where('po_id', $poid)->get();
+        
+        
+        foreach ($datacancel as $cancel) {
+            $cancel->status_cancel = "Disetujui";
+            $cancel->save();
+        }
+        
+                $podata = PurchaseOrder::find($poid);
+                $podata -> status_po = "Cancelled";
+                $podata -> save();
+        
+                $request->session()->flash('success', "Pembatalan Disetujui");
+                
+                return redirect()->route('managerapproval');
+                
+                    }
+        
             public function superadminapprovecancelinvoice(Request $request){
 
                 $invid = $request -> invoice_id;
@@ -270,9 +339,68 @@ foreach ($datacancel as $cancel) {
                 return redirect()->route('superadmin.invoice.index');
                 
                     }
+
+                    public function managerapprovecancelinvoice(Request $request){
+
+                        $invid = $request -> invoice_id;
+                        
+                        $datacancel = CancelApprovalSA::where('invoice_id', $invid)->get();
+                        $datainvoice = Inovice::find($invid);
+                        
+                        foreach ($datacancel as $cancel) {
+                            $cancel->status_cancel = "Disetujui";
+                            $cancel->save();
+                        }
+                        
+                        $datainvoice->status_invoice = "Cancelled";
+                        $datainvoice->save();
+        
+                        $soid = $datainvoice->so_id;
+                        
+                        $dataso = SalesOrder::where('id', $soid)->get();
+                        
+                      
+                        foreach ($dataso as $so) {
+                           $so -> status_so = "Cancelled";
+                           $so->save();
+                        }
+                        
+                        
+                        $request->session()->flash('success', "Pembatalan Disetujui");
+                        
+                        return redirect()->route('managerapproval');
+                        
+                            }
     /**
      * Show the form for creating a new resource.
      */
+    public function managerapprovalindex(){
+      
+        $loggedInUser = auth()->user();
+        $userid = $loggedInUser ->id;
+        
+        $datapo = CancelApprovalSA::where('report_to', $userid)->get();
+
+        $poids = $datapo->pluck('po_id')->toArray();
+    
+        // Mengambil semua data PurchaseOrder berdasarkan po_id yang ditemukan
+        $purchaseOrders = PurchaseOrder::whereIn('id', $poids)->get();
+        
+
+        $datainv = CancelApprovalSA::where('report_to', $userid)->get();
+
+        $invids = $datainv->pluck('invoice_id')->toArray();
+    
+        // Mengambil semua data PurchaseOrder berdasarkan po_id yang ditemukan
+        $invoice = Inovice::whereIn('id', $invids)->get();
+
+  
+
+        return view('manager.approval',[
+         'purchaseOrders' => $purchaseOrders,
+         'invoice' => $invoice,
+        ]);
+    }
     public function create()
     {
         //

@@ -91,6 +91,8 @@ entries
 </a>
 
 </td>
+
+
 <td>{{$item->status_po}}</td>
 <td>
 
@@ -100,9 +102,12 @@ entries
 </button>
 
 @elseif($item->status_po =="Menunggu Persetujuan Cancel")
- <a href="{{route('superadmininfocancel', $item->id)}}">
+ <!-- <a href="{{route('superadmininfocancel', $item->id)}}">
 <button type="button" class="btn btn-danger btn-sm" >
       Penganjuan Cancel
+</button> -->
+<button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel PO
 </button>
 
 @else

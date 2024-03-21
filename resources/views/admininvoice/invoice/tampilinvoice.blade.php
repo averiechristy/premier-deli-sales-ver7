@@ -1,6 +1,26 @@
 @extends('layouts.admininvoice.app')
 
 @section('content')
+
+<style>
+    .container-fluid {
+        position: relative; /* Add position relative to contain absolutely positioned watermark */
+    }
+
+    .watermark {
+        position: absolute;
+        top: 50%; 
+        left: 50%; 
+        transform: translate(-50%, -50%) rotate(-45deg); /* Rotate the watermark */
+        width: 60%;
+        height: 60%;
+        background-image: url('{{ asset("img/lunas.png") }}'); /* Path to your watermark image */
+        background-repeat: no-repeat; /* Change background-repeat to no-repeat */
+        background-size: contain; /* Optionally adjust background-size */
+        opacity: 0.1; /* Adjust opacity as needed */
+    }
+</style>
+
 <div class="buttons">
 <!-- Di bagian bawah tampilan -->
 <button id="exportPdfButton" style="float: right;" class=" d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-3" ><i
@@ -14,7 +34,8 @@
 <br>
 <!-- Begin Page Content -->
 <div class="container-fluid" id="container-fluid">
-    <div class="row">
+<div class="watermark"></div>
+    <div class="row invoice-container">
         <!-- Logo -->
        
         <img src="{{asset('img/logopremier.png')}}"style="max-width: 250px; margin-top:-50px;">
@@ -97,7 +118,7 @@
         <td colspan="4"></td>
         <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">Sub Total</td>
         <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; ">
-    {{ 'Rp ' . number_format($invoice->subtotal, 0, ',', '.') }}
+    {{ 'Rp ' . number_format($subtotal, 0, ',', '.') }}
 </td>
     </tr>
     <tr>
@@ -117,7 +138,7 @@
     <tr>
         <td colspan="4"></td>
         <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold; ">Total</td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($invoice->total, 0, ',', '.') }}</td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($total, 0, ',', '.') }}</td>
     </tr>
   
     <tr> <!-- Baris baru untuk menambahkan tulisan -->

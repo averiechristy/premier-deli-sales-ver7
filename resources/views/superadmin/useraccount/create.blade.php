@@ -131,7 +131,14 @@ document.getElementById("role_id").addEventListener("change", function () {
         if (role_id == 4) {
             userSelectDiv.style.display = "block";
             // You can populate options dynamically here
-        } else {
+        } 
+
+        else if (role_id == 2) {
+            userSelectDiv.style.display = "block";
+            // You can populate options dynamically here
+        } 
+        
+        else {
             userSelectDiv.style.display = "none";
         }
     });

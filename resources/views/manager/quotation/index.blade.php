@@ -122,18 +122,15 @@ entries
        
       </div>
       <div class="modal-body">
-      <form action="" method="post">
+      <form action="{{route('managercancelquote')}}" method="post">
         @csrf
       <input type="hidden"  name="quote_id" value="{{$data->id}}">
-                    <div class="form-group">
-                        <label for="alasan"  style="color:black;">Alasan Cancel :</label>
-                        <textarea class="form-control" id="reason" name="alasan" rows="3" required></textarea>
-                    </div>
+                    Yakin melakukan pembatalan data?
                 
       </div>
       <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <button type="submit" class="btn btn-primary">Ya</button>
             </div>
             </form>
     </div>

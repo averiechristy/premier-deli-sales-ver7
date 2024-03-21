@@ -13,14 +13,18 @@
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
            
-        
+         
             <li class="nav-item">
         <a class="nav-link" href="{{route('manager.dashboarddata')}}" style="color:black;" >
        
             Dashboard</a>
     </li>
 
-
+    <li class="nav-item">
+        <a class="nav-link" href="{{route('managerapproval')}}" style="color:black;" >
+       
+            Approval</a>
+    </li>
                 <!-- Nav Item - User Information -->
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"

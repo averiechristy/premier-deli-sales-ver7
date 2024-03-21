@@ -1,4 +1,4 @@
-@extends('layouts.admininvoice.app')
+@extends('layouts.manager.app')
 
 @section('content')
 
@@ -9,11 +9,13 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-    <h2 class="h3 mb-2 " style="color:black;"><a href="{{route('admininvoice.so.index')}}">Sales Order / </a><span>Detail Pesanan {{$noSO}}</span></h2>
-    
+    <h1 class="h3 mb-2 text-gray-800">Quotation</h1>
+    <a href="{{route('manager.createquote')}}" class="btn btn-pd btn-sm">Buat Quotation</a>
+
 
     </div>
     <div class="card-body">
+        
     <div class="dataTables_length mb-3" id="myDataTable_length">
 <label for="entries"> Show
 <select id="entries" name="myDataTable_length" aria-controls="myDataTable"  onchange="changeEntries()" class>
@@ -38,52 +40,50 @@ entries
             <table  class="table table-bordered "  width="100%" cellspacing="0" style="border-radius: 10px;">
                 <thead>
                     <tr>                           
-                       
-                       <th>Kode Produk</th>
-                       <th>Nama Produk</th>
-                       <th>Quantity</th>
-                       <th>Keterangan</th>
+                   <th>No PO / Invoice</th>
+                    <th>Tanggal</th>
+                    <th>Status</th>
+                    <th>Action</th>
                     </tr>
+
                 </thead>
                 
                 <tbody>
-             @foreach ($pesanan as $data)
-            <tr>
-              <td>{{$data -> kode_produk}}</td>
-              <td>{{$data -> nama_produk}}</td>
-              <td>{{$data -> qty}}</td>
-              <td>{{$data -> keterangan}}</td>
+                           
 
-</tr>      
-<div class="modal fade" id="exampleModal{{$data->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog " role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Cancel {{$data->no_rfo}}</h5>
-       
-      </div>
-      <div class="modal-body">
-      <form action="{{route('cancelorder')}}" method="post">
-        @csrf
-      <input type="hidden"  name="rfo_id" value="{{$data->id}}">
-                    <div class="form-group">
-                        <label for="alasan"  style="color:black;">Alasan Cancel :</label>
-                        <textarea class="form-control" id="reason" name="alasan" rows="3"></textarea>
-                    </div>
-                
-      </div>
-      <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-            </form>
-    </div>
-  </div>
-</div>
+                @foreach ($purchaseOrders as $data)
+            <tr>
+       <td>{{$data->no_po}}</td>
+       <td>{{$data->po_date}}</td>
+       <td>{{$data->status_po}}</td>
+       <td>
+       @if($data->status_po =="Cancelled")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel PO
+</button>
+@elseif($data->status_po =="Menunggu Persetujuan Cancel")
+
+        <a href="{{route('managerinfocancelpo',$data->id)}}"><button class="btn btn-sm btn-danger">Pengajuan Cancel</button></td></a>
+@endif
+    </tr>
 @endforeach
 
+@foreach ($invoice as $data)
+            <tr>
+       <td>{{$data->invoice_no}}</td>
+       <td>{{$data->invoice_date}}</td>
+       <td>{{$data->status_invoice}}</td>
+       <td>
+       @if($data->status_invoice =="Cancelled")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel PO
+</button>
+@elseif($data->status_invoice =="Menunggu Persetujuan Cancel")
 
-  
+        <a href="{{route('managerinfocancelinvoice',$data->id)}}"><button class="btn btn-sm btn-danger">Pengajuan Cancel</button></td></a>
+@endif
+    </tr>
+@endforeach
                 </tbody>
 
             </table>
@@ -106,6 +106,22 @@ Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <
     </div>
 </div>
 
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+<!-- Footer -->
+
+<!-- End of Footer -->
+
+</div>
+
+
+
+
 </div>
 <!-- /.container-fluid -->
 
@@ -118,6 +134,7 @@ Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <
 
 </div>
 <!-- End of Content Wrapper -->
+
 
 </div>
 
@@ -222,7 +239,7 @@ var tableRows = document.querySelectorAll("table tbody tr");
 filteredData = Array.from(tableRows); // Konversi NodeList ke array
 updatePagination();
 }
-
+ 
 // Panggil fungsi initializeData() untuk menginisialisasi data saat halaman dimuat
 initializeData();
 
@@ -340,5 +357,7 @@ document.getElementById('search').addEventListener('input', applySearchFilter);
 
 
 </script>
+
+
 
 @endsection

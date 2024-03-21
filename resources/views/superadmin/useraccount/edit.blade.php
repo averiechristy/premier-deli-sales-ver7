@@ -116,6 +116,9 @@ function checkRoleAndDisplayUserSelect(role_id) {
     } else if (role_id == 4) {
         userSelectManagerDiv.style.display = "block";
         userSelectDiv.style.display = "none";
+    } else if (role_id == 2) {
+        userSelectManagerDiv.style.display = "block";
+        userSelectDiv.style.display = "none";
     } else {
         userSelectDiv.style.display = "none";
         userSelectManagerDiv.style.display = "none";

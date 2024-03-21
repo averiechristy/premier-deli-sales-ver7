@@ -26,7 +26,7 @@ class DashboardController extends Controller
         $endDate = Carbon::now()->endOfMonth();
     
         // Mengambil data Sales Order untuk bulan berjalan
-        $so = SalesOrder::whereNotIn('status_so', ['Cancelled'])
+        $so = SalesOrder::where('status_so', ['PO Belum Dikerjakan'])
                         ->whereBetween('so_date', [$startDate, $endDate])
                         ->get();
     
@@ -36,12 +36,12 @@ class DashboardController extends Controller
                             ->get();
     
         // Mengambil data Invoice untuk bulan berjalan
-        $invoice = Inovice::whereNotIn('status_invoice', ['Cancelled'])
+        $invoice = Inovice::where('status_invoice', ['Closing'])
                             ->whereBetween('invoice_date', [$startDate, $endDate])
                             ->get();
     
         // Mengambil data Quotation untuk bulan berjalan
-        $quote = Quotation::whereNotIn('status_quote', ['Cancelled'])
+        $quote = Quotation::where('status_quote', ['Quotation Dibuat'])
                             ->whereBetween('quote_date', [$startDate, $endDate])
                             ->get();
     
@@ -84,24 +84,24 @@ class DashboardController extends Controller
         $endDate = Carbon::now()->endOfMonth();
     
         // Mengambil data Sales Order untuk bulan berjalan
-        $so = SalesOrder::whereNotIn('status_so', ['Cancelled'])
-                        ->whereBetween('so_date', [$startDate, $endDate])
-                        ->get();
-    
-        // Mengambil data Purchase Order untuk bulan berjalan
-        $po = PurchaseOrder::whereNotIn('status_po', ['Cancelled'])
-                            ->whereBetween('po_date', [$startDate, $endDate])
-                            ->get();
-    
-        // Mengambil data Invoice untuk bulan berjalan
-        $invoice = Inovice::whereNotIn('status_invoice', ['Cancelled'])
-                            ->whereBetween('invoice_date', [$startDate, $endDate])
-                            ->get();
-    
-        // Mengambil data Quotation untuk bulan berjalan
-        $quote = Quotation::whereNotIn('status_quote', ['Cancelled'])
-                            ->whereBetween('quote_date', [$startDate, $endDate])
-                            ->get();
+        $so = SalesOrder::where('status_so', ['PO Belum Dikerjakan'])
+        ->whereBetween('so_date', [$startDate, $endDate])
+        ->get();
+
+// Mengambil data Purchase Order untuk bulan berjalan
+$po = PurchaseOrder::whereNotIn('status_po', ['Cancelled'])
+            ->whereBetween('po_date', [$startDate, $endDate])
+            ->get();
+
+// Mengambil data Invoice untuk bulan berjalan
+$invoice = Inovice::where('status_invoice', ['Closing'])
+            ->whereBetween('invoice_date', [$startDate, $endDate])
+            ->get();
+
+// Mengambil data Quotation untuk bulan berjalan
+$quote = Quotation::where('status_quote', ['Quotation Dibuat'])
+            ->whereBetween('quote_date', [$startDate, $endDate])
+            ->get();
     
         return view('admininvoice.dashboard', [
             'so' => $so,
@@ -118,24 +118,24 @@ class DashboardController extends Controller
         $endDate = Carbon::now()->endOfMonth();
     
         // Mengambil data Sales Order untuk bulan berjalan
-        $so = SalesOrder::whereNotIn('status_so', ['Cancelled'])
-                        ->whereBetween('so_date', [$startDate, $endDate])
-                        ->get();
-    
-        // Mengambil data Purchase Order untuk bulan berjalan
-        $po = PurchaseOrder::whereNotIn('status_po', ['Cancelled'])
-                            ->whereBetween('po_date', [$startDate, $endDate])
-                            ->get();
-    
-        // Mengambil data Invoice untuk bulan berjalan
-        $invoice = Inovice::whereNotIn('status_invoice', ['Cancelled'])
-                            ->whereBetween('invoice_date', [$startDate, $endDate])
-                            ->get();
-    
-        // Mengambil data Quotation untuk bulan berjalan
-        $quote = Quotation::whereNotIn('status_quote', ['Cancelled'])
-                            ->whereBetween('quote_date', [$startDate, $endDate])
-                            ->get();
+        $so = SalesOrder::where('status_so', ['PO Belum Dikerjakan'])
+        ->whereBetween('so_date', [$startDate, $endDate])
+        ->get();
+
+// Mengambil data Purchase Order untuk bulan berjalan
+$po = PurchaseOrder::whereNotIn('status_po', ['Cancelled'])
+            ->whereBetween('po_date', [$startDate, $endDate])
+            ->get();
+
+// Mengambil data Invoice untuk bulan berjalan
+$invoice = Inovice::where('status_invoice', ['Closing'])
+            ->whereBetween('invoice_date', [$startDate, $endDate])
+            ->get();
+
+// Mengambil data Quotation untuk bulan berjalan
+$quote = Quotation::where('status_quote', ['Quotation Dibuat'])
+            ->whereBetween('quote_date', [$startDate, $endDate])
+            ->get();
     
         return view('manager.dashboarddata', [
             'so' => $so,
@@ -150,16 +150,16 @@ class DashboardController extends Controller
         $bulan = $request->input('bulan');
     
         // Filter data Sales Order berdasarkan bulan
-        $so = SalesOrder::whereMonth('so_date', $bulan)->whereNotIn('status_so', ['Cancelled'])->get();
+        $so = SalesOrder::whereMonth('so_date', $bulan)->where('status_so', ['PO Belum Dikerjakan'])->get();
     
         // Filter data Quote berdasarkan bulan
-        $quote = Quotation::whereMonth('quote_date', $bulan)->whereNotIn('status_quote', ['Cancelled'])->get();
+        $quote = Quotation::whereMonth('quote_date', $bulan)->where('status_quote', ['Quotation Dibuat'])->get();
     
         // Filter data Purchase Order berdasarkan bulan
         $po = PurchaseOrder::whereMonth('po_date', $bulan)->whereNotIn('status_po', ['Cancelled'])->get();
     
         // Filter data Invoice berdasarkan bulan
-        $invoice = Inovice::whereMonth('invoice_date', $bulan)->whereNotIn('status_invoice', ['Cancelled'])->get();
+        $invoice = Inovice::whereMonth('invoice_date', $bulan)->where('status_invoice', ['Closing'])->get();
     
         return view ('admininvoice.dashboard',[
             'so' => $so,
@@ -175,17 +175,16 @@ class DashboardController extends Controller
         $bulan = $request->input('bulan');
     
         // Filter data Sales Order berdasarkan bulan
-        $so = SalesOrder::whereMonth('so_date', $bulan)->whereNotIn('status_so', ['Cancelled'])->get();
+        $so = SalesOrder::whereMonth('so_date', $bulan)->where('status_so', ['PO Belum Dikerjakan'])->get();
     
         // Filter data Quote berdasarkan bulan
-        $quote = Quotation::whereMonth('quote_date', $bulan)->whereNotIn('status_quote', ['Cancelled'])->get();
+        $quote = Quotation::whereMonth('quote_date', $bulan)->where('status_quote', ['Quotation Dibuat'])->get();
     
         // Filter data Purchase Order berdasarkan bulan
         $po = PurchaseOrder::whereMonth('po_date', $bulan)->whereNotIn('status_po', ['Cancelled'])->get();
     
         // Filter data Invoice berdasarkan bulan
-        $invoice = Inovice::whereMonth('invoice_date', $bulan)->whereNotIn('status_invoice', ['Cancelled'])->get();
-    
+        $invoice = Inovice::whereMonth('invoice_date', $bulan)->where('status_invoice', ['Closing'])->get();    
         return view ('superadmin.dashboard',[
             'so' => $so,
             'po' => $po,
@@ -200,17 +199,17 @@ class DashboardController extends Controller
         $bulan = $request->input('bulan');
     
         // Filter data Sales Order berdasarkan bulan
-        $so = SalesOrder::whereMonth('so_date', $bulan)->whereNotIn('status_so', ['Cancelled'])->get();
+        $so = SalesOrder::whereMonth('so_date', $bulan)->where('status_so', ['PO Belum Dikerjakan'])->get();
     
         // Filter data Quote berdasarkan bulan
-        $quote = Quotation::whereMonth('quote_date', $bulan)->whereNotIn('status_quote', ['Cancelled'])->get();
+        $quote = Quotation::whereMonth('quote_date', $bulan)->where('status_quote', ['Quotation Dibuat'])->get();
     
         // Filter data Purchase Order berdasarkan bulan
         $po = PurchaseOrder::whereMonth('po_date', $bulan)->whereNotIn('status_po', ['Cancelled'])->get();
     
         // Filter data Invoice berdasarkan bulan
-        $invoice = Inovice::whereMonth('invoice_date', $bulan)->whereNotIn('status_invoice', ['Cancelled'])->get();
-    
+        $invoice = Inovice::whereMonth('invoice_date', $bulan)->where('status_invoice', ['Closing'])->get();
+
         return view ('manager.dashboarddata',[
             'so' => $so,
             'po' => $po,

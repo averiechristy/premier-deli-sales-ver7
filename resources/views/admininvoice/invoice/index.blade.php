@@ -65,6 +65,7 @@ entries
                       <th></th>
                       <th></th>
                       <th></th>
+                      <th></th>
                     </tr>
                 </thead>
                 
@@ -98,33 +99,34 @@ entries
 </td>
 <script>
     $(document).ready(function(){
-        // Cek apakah cookie sudah ada
-        if (document.cookie.indexOf('salesOrderClicked{{$data->id}}=true') !== -1) {
-            $('#cetakSalesOrder{{$data->id}}').html('Cetak Invoice <i class="fas fa-check-circle" style="color:green"></i>');
+        // Cek apakah item sudah dicetak sebelumnya
+        if (localStorage.getItem('salesOrderClicked{{$data->id}}') === 'true') {
+            $('#cetakSalesOrder{{$data->id}}').html('Cetak Invoice <i class="fas fa-check-circle" style="color:green"></i> ');
         }
 
         $('#cetakSalesOrder{{$data->id}}').click(function(){
-            $(this).html('Cetak Invoice <i class="fas fa-check-circle" style="color:green"></i>');
-            // Set cookie saat tombol diklik
-            document.cookie = 'salesOrderClicked{{$data->id}}=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+            $(this).html(' Cetak Invoice <i class="fas fa-check-circle" style="color:green"></i>');
+            // Set localStorage saat tombol diklik
+            localStorage.setItem('salesOrderClicked{{$data->id}}', 'true');
         });
     });
 </script>
 
 <script>
     $(document).ready(function(){
-        // Cek apakah cookie sudah ada
-        if (document.cookie.indexOf('deliveryOrderClicked{{$data->id}}=true') !== -1) {
-            $('#cetakDeliveryOrder{{$data->id}}').html('Cetak Delivery Order <i class="fas fa-check-circle" style="color:green"></i>');
+        // Cek apakah item sudah dicetak sebelumnya
+        if (localStorage.getItem('deliveryOrderClicked{{$data->id}}') === 'true') {
+            $('#cetakDeliveryOrder{{$data->id}}').html('Cetak Delivery Order <i class="fas fa-check-circle" style="color:green"></i> ');
         }
 
         $('#cetakDeliveryOrder{{$data->id}}').click(function(){
-            $(this).html('Cetak Delivery Order <i class="fas fa-check-circle" style="color:green"></i>');
-            // Set cookie saat tombol diklik
-            document.cookie = 'deliveryOrderClicked{{$data->id}}=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+            $(this).html(' Cetak Delivery Order <i class="fas fa-check-circle" style="color:green"></i>');
+            // Set localStorage saat tombol diklik
+            localStorage.setItem('deliveryOrderClicked{{$data->id}}', 'true');
         });
     });
 </script>
+
 
 <td>
     @if($data->is_download == "Yes")
@@ -189,9 +191,26 @@ entries
 @endif
 </td>
 
+<td>
 
+@if($data->status_invoice =="Cancelled")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+     Request Perubahan Invoice
+</button>
 
+@elseif ($data->status_invoice =="Menunggu Persetujuan Cancel")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+     Request Perubahan Invoice
+</button>
+@elseif ($data->is_closing =="Yes")
+<button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Request Perubahan Invoice
+</button>
+@else    
+<a href="{{route('admininvoice.perubahaninvoice', $data->id)}}"><button class="btn btn-sm btn-primary">Request Perubahan Invoice</button></a></td>
+@endif
 
+</td>
 </tr>
 
 <div class="modal fade" id="exampleModal{{$data->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

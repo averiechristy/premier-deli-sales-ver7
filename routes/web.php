@@ -120,6 +120,10 @@ Route::get('/superadminfilter', [DashboardController::class, 'superadminfilter']
 Route::get('superadmin/changepassword', [UserAccountController::class,'superadminchangepasswordindex'])->name('superadminpassword');
 Route::post('superadmin/changepassword', [UserAccountController::class,'superadminchangePassword'])->name('superadmin-change-password');
 Route::post('/user/{user}/reset-password', [UserAccountController::class,'resetPassword'])->name('superadmin.reset-password');
+
+Route::get('superadmin/perubahaninvoice/{id}',[InvoiceController::class,'superadminperubahan'])->name('superadmin.perubahaninvoice');
+Route::post('superadminupdateinvoice/{id}',[InvoiceController::class,'superadminupdateinvoice'])->name('superadminupdateinvoice');
+
 });
 
 
@@ -176,6 +180,8 @@ Route::get('/tampildo/{id}',[DOController::class,'tampildo'])->name('tampildo');
 Route::post('cancelpo',[POController::class,'cancelpo'])->name('cancelpo');
 Route::post('cancelinvoice',[InvoiceController::class,'cancelinvoice'])->name('cancelinvoice');
 
+Route::post('updateinvoice/{id}',[InvoiceController::class,'updateinvoice'])->name('updateinvoice');
+
 
 Route::post('closinginvoice',[InvoiceController::class,'closinginvoice'])->name('closinginvoice');
 
@@ -208,6 +214,9 @@ Route::post('/do/{id}/download', [InvoiceController::class,'downloaddo'])->name(
 Route::get('admininvoice/changepassword', [UserAccountController::class,'admininvoicechangepasswordindex'])->name('password');
 Route::post('admininvoice/changepassword', [UserAccountController::class,'admininvoicechangePassword'])->name('admininvoice-change-password');
 Route::get('/filter', [DashboardController::class, 'filter'])->name('filter');
+
+Route::get('admininvoice/perubahaninvoice/{id}',[InvoiceController::class,'admininvoiceperubahan'])->name('admininvoice.perubahaninvoice');
+
 });
 
 //Sales
@@ -339,5 +348,15 @@ Route::post('leader/changepassword', [UserAccountController::class,'leaderchange
         Route::get('manager/changepassword', [UserAccountController::class,'managerchangepasswordindex'])->name('managerpassword');
         Route::post('manager/changepassword', [UserAccountController::class,'managerchangePassword'])->name('manager-change-password');
         Route::get('/managerfilter', [DashboardController::class, 'managerfilter'])->name('managerfilter');
+
+        Route::get('manager/approval', [CancelController::class,'managerapprovalindex'])->name('managerapproval');
+        Route::get('/managerinfocancelpo/{id}',[CancelController::class,'managerinfocancelpo'])->name('managerinfocancelpo');
+        Route::post('managerapprovecancelpo',[CancelController::class,'managerapprovecancelpo'])->name('managerapprovecancelpo');
+        Route::get('/managerinfocancelinvoice/{id}',[CancelController::class,'managerinfocancelinvoice'])->name('managerinfocancelinvoice');
+        Route::post('managerapprovecancelinvoice',[CancelController::class,'managerapprovecancelinvoice'])->name('managerapprovecancelinvoice');
+
+
+        Route::post('managercancelrfo',[RFOController::class,'managercancelrfo'])->name('managercancelrfo');
+        Route::post('managercancelquote',[QuotationController::class,'managercancelquote'])->name('managercancelquote');
 
     });

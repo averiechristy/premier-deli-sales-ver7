@@ -32,6 +32,19 @@ class RFOController extends Controller
         ]);
     }
 
+    public function managercancelrfo(Request $request){
+
+
+$id=$request->rfo_id;
+$datarfo = RFO::find($id);
+$datarfo -> status_rfo ="Cancelled";
+$datarfo->save();
+$request->session()->flash('success', "RFO berhasil dibatalkan");
+
+return redirect()->route('manager.rfo.index');
+
+
+    }
     public function leaderindex()
     {
         $loggedInUser = auth()->user();
@@ -79,12 +92,22 @@ class RFOController extends Controller
         $customer = Customer::orderBy('nama_customer', 'asc')->get();
         $produk = Produk::orderBy('nama_produk', 'asc')->get();
 
-        $lastRFO = RFO::latest()->first(); // Mendapatkan data SO terakhir dari database
+$lastRFO = RFO::latest()->first(); // Mendapatkan data SO terakhir dari database
 
-        $yearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
-        $lastOrder = $lastRFO ? substr($lastRFO->no_rfo, -4) : '0000'; // Mengambil empat digit terakhir dari nomor SO terakhir
-        
-        $orderNumber = 'RFO - ' . $yearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
+$currentYearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
+$lastYearMonth = $lastRFO ? substr($lastRFO->no_rfo, 6, 4) : '0000'; // Mengambil empat digit tahun dan bulan dari nomor SO terakhir
+
+
+if ($currentYearMonth != $lastYearMonth) {
+    // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor SO terakhir,
+    // maka nomor urutan direset menjadi 1
+    $orderNumber = 'RFO - ' . $currentYearMonth . '0001';
+} else {
+    // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor SO terakhir,
+    // maka nomor urutan diincrement
+    $lastOrder = $lastRFO ? intval(substr($lastRFO->no_rfo, -4)) : 0; // Mengambil nomor urutan terakhir
+    $orderNumber = 'RFO - ' . $currentYearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
+}
         
         
       
@@ -103,11 +126,20 @@ class RFOController extends Controller
 
         $lastRFO = RFO::latest()->first(); // Mendapatkan data SO terakhir dari database
 
-        $yearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
-        $lastOrder = $lastRFO ? substr($lastRFO->no_rfo, -4) : '0000'; // Mengambil empat digit terakhir dari nomor SO terakhir
+        $currentYearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
+        $lastYearMonth = $lastRFO ? substr($lastRFO->no_rfo, 6, 4) : '0000'; // Mengambil empat digit tahun dan bulan dari nomor SO terakhir
         
-        $orderNumber = 'RFO - ' . $yearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
         
+        if ($currentYearMonth != $lastYearMonth) {
+            // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor SO terakhir,
+            // maka nomor urutan direset menjadi 1
+            $orderNumber = 'RFO - ' . $currentYearMonth . '0001';
+        } else {
+            // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor SO terakhir,
+            // maka nomor urutan diincrement
+            $lastOrder = $lastRFO ? intval(substr($lastRFO->no_rfo, -4)) : 0; // Mengambil nomor urutan terakhir
+            $orderNumber = 'RFO - ' . $currentYearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
+        }        
         
       
        
@@ -126,11 +158,20 @@ class RFOController extends Controller
 
         $lastRFO = RFO::latest()->first(); // Mendapatkan data SO terakhir dari database
 
-        $yearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
-        $lastOrder = $lastRFO ? substr($lastRFO->no_rfo, -4) : '0000'; // Mengambil empat digit terakhir dari nomor SO terakhir
+        $currentYearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
+        $lastYearMonth = $lastRFO ? substr($lastRFO->no_rfo, 6, 4) : '0000'; // Mengambil empat digit tahun dan bulan dari nomor SO terakhir
         
-        $orderNumber = 'RFO - ' . $yearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
         
+        if ($currentYearMonth != $lastYearMonth) {
+            // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor SO terakhir,
+            // maka nomor urutan direset menjadi 1
+            $orderNumber = 'RFO - ' . $currentYearMonth . '0001';
+        } else {
+            // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor SO terakhir,
+            // maka nomor urutan diincrement
+            $lastOrder = $lastRFO ? intval(substr($lastRFO->no_rfo, -4)) : 0; // Mengambil nomor urutan terakhir
+            $orderNumber = 'RFO - ' . $currentYearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
+        }        
         
       
        

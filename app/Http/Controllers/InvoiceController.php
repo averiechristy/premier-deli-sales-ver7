@@ -6,9 +6,12 @@ use App\Models\CancelApprovalSA;
 use App\Models\Customer;
 use App\Models\DetailInvoice;
 use App\Models\DetailQuotation;
+use App\Models\DetailRFO;
 use App\Models\DetailSO;
+use App\Models\DetailSoPo;
 use App\Models\Inovice;
 use App\Models\Produk;
+use App\Models\PurchaseOrder;
 use App\Models\Quotation;
 use App\Models\RFO;
 use App\Models\SalesOrder;
@@ -19,6 +22,236 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     public function updateinvoice($id, Request $request){
+
+     
+        $invid = $request->invoice_id;
+
+        $detailinv = DetailInvoice::where('invoice_id', $invid)->get();
+
+        $datainvoice = Inovice::find($invid);
+
+        $soid = $datainvoice->so_id;
+        $quoteid = $datainvoice -> quote_id;
+
+ 
+
+        if($quoteid){
+
+            $dataquote = Quotation::find($quoteid);
+            $detailquote = DetailQuotation::where('quote_id', $quoteid)->get();
+
+            $produk = $request->product;
+
+            $produkIdsInDetailInv = $detailinv->pluck('product_id')->toArray();
+    
+    // Mengumpulkan id_produk dari $produk yang diterima melalui permintaan
+    $produkIdsRequested = collect($produk)->pluck('id')->toArray();
+    
+    // Mencari id_produk yang berbeda antara produk pada detail invoice dan produk yang diterima melalui permintaan
+    $differentProdukIds = array_diff($produkIdsInDetailInv, $produk);
+    
+    // Jika Anda ingin mendapatkan informasi lebih lanjut tentang produk yang berbeda, Anda dapat melakukan sesuatu seperti ini:
+    $differentProduk = Produk::whereIn('id', $differentProdukIds)->get();
+    
+    // Sekarang Anda dapat melakukan apa pun yang Anda inginkan dengan $differentProduk
+    
+    
+    if (!empty($differentProdukIds)) {
+        foreach ($detailinv as $detail) {
+            if (in_array($detail->product_id, $differentProdukIds)) {
+            
+                $detail->delete();
+            }
+        }
+        foreach ($detailquote as $detail) {
+            if (in_array($detail->product_id, $differentProdukIds)) {
+                $detail->keterangan ="Cancelled";
+                $detail->save();
+            }
+        }
+    
+    
+    }
+        }
+
+        if($soid){
+       
+
+        $dataso = SalesOrder::find($soid);
+
+       
+
+        $rfoid = $dataso -> rfo_id;
+
+        $detailso = DetailSO::where('so_id', $soid)->get();
+
+        $detailrfo = DetailRFO::where('rfo_id', $rfoid)->get();
+
+       
+
+        $produk = $request->product;
+
+        $produkIdsInDetailInv = $detailinv->pluck('product_id')->toArray();
+
+// Mengumpulkan id_produk dari $produk yang diterima melalui permintaan
+$produkIdsRequested = collect($produk)->pluck('id')->toArray();
+
+// Mencari id_produk yang berbeda antara produk pada detail invoice dan produk yang diterima melalui permintaan
+$differentProdukIds = array_diff($produkIdsInDetailInv, $produk);
+
+// Jika Anda ingin mendapatkan informasi lebih lanjut tentang produk yang berbeda, Anda dapat melakukan sesuatu seperti ini:
+$differentProduk = Produk::whereIn('id', $differentProdukIds)->get();
+
+// Sekarang Anda dapat melakukan apa pun yang Anda inginkan dengan $differentProduk
+
+
+if (!empty($differentProdukIds)) {
+    foreach ($detailinv as $detail) {
+        if (in_array($detail->product_id, $differentProdukIds)) {
+        
+            $detail->delete();
+        }
+    }
+    foreach ($detailso as $detail) {
+        if (in_array($detail->product_id, $differentProdukIds)) {
+            $detail->keterangan ="Cancelled";
+            $detail->save();
+        }
+    }
+    foreach ($detailrfo as $detail) {
+        if (in_array($detail->product_id, $differentProdukIds)) {
+            $detail->keterangan ="Cancelled";
+            $detail->save();
+        }
+    }
+
+
+}
+
+}
+
+
+$request->session()->flash('success', "Invoice berhasil diupdate");
+
+return redirect()->route('admininvoice.invoice.index');
+     }
+
+     public function superadminupdateinvoice($id, Request $request){
+
+     
+        $invid = $request->invoice_id;
+
+        $detailinv = DetailInvoice::where('invoice_id', $invid)->get();
+
+        $datainvoice = Inovice::find($invid);
+
+        $soid = $datainvoice->so_id;
+        $quoteid = $datainvoice -> quote_id;
+
+ 
+
+        if($quoteid){
+
+            $dataquote = Quotation::find($quoteid);
+            $detailquote = DetailQuotation::where('quote_id', $quoteid)->get();
+
+            $produk = $request->product;
+
+            $produkIdsInDetailInv = $detailinv->pluck('product_id')->toArray();
+    
+    // Mengumpulkan id_produk dari $produk yang diterima melalui permintaan
+    $produkIdsRequested = collect($produk)->pluck('id')->toArray();
+    
+    // Mencari id_produk yang berbeda antara produk pada detail invoice dan produk yang diterima melalui permintaan
+    $differentProdukIds = array_diff($produkIdsInDetailInv, $produk);
+    
+    // Jika Anda ingin mendapatkan informasi lebih lanjut tentang produk yang berbeda, Anda dapat melakukan sesuatu seperti ini:
+    $differentProduk = Produk::whereIn('id', $differentProdukIds)->get();
+    
+    // Sekarang Anda dapat melakukan apa pun yang Anda inginkan dengan $differentProduk
+    
+    
+    if (!empty($differentProdukIds)) {
+        foreach ($detailinv as $detail) {
+            if (in_array($detail->product_id, $differentProdukIds)) {
+            
+                $detail->delete();
+            }
+        }
+        foreach ($detailquote as $detail) {
+            if (in_array($detail->product_id, $differentProdukIds)) {
+                $detail->keterangan ="Cancelled";
+                $detail->save();
+            }
+        }
+    
+    
+    }
+        }
+
+        if($soid){
+       
+
+        $dataso = SalesOrder::find($soid);
+
+       
+
+        $rfoid = $dataso -> rfo_id;
+
+        $detailso = DetailSO::where('so_id', $soid)->get();
+
+        $detailrfo = DetailRFO::where('rfo_id', $rfoid)->get();
+
+       
+
+        $produk = $request->product;
+
+        $produkIdsInDetailInv = $detailinv->pluck('product_id')->toArray();
+
+// Mengumpulkan id_produk dari $produk yang diterima melalui permintaan
+$produkIdsRequested = collect($produk)->pluck('id')->toArray();
+
+// Mencari id_produk yang berbeda antara produk pada detail invoice dan produk yang diterima melalui permintaan
+$differentProdukIds = array_diff($produkIdsInDetailInv, $produk);
+
+// Jika Anda ingin mendapatkan informasi lebih lanjut tentang produk yang berbeda, Anda dapat melakukan sesuatu seperti ini:
+$differentProduk = Produk::whereIn('id', $differentProdukIds)->get();
+
+// Sekarang Anda dapat melakukan apa pun yang Anda inginkan dengan $differentProduk
+
+
+if (!empty($differentProdukIds)) {
+    foreach ($detailinv as $detail) {
+        if (in_array($detail->product_id, $differentProdukIds)) {
+        
+            $detail->delete();
+        }
+    }
+    foreach ($detailso as $detail) {
+        if (in_array($detail->product_id, $differentProdukIds)) {
+            $detail->keterangan ="Cancelled";
+            $detail->save();
+        }
+    }
+    foreach ($detailrfo as $detail) {
+        if (in_array($detail->product_id, $differentProdukIds)) {
+            $detail->keterangan ="Cancelled";
+            $detail->save();
+        }
+    }
+
+
+}
+
+}
+
+
+$request->session()->flash('success', "Invoice berhasil diupdate");
+
+return redirect()->route('superadmin.invoice.index');
+     }
     public function admininvoiceindex(){
 
         $invoice = Inovice::orderBy('created_at', 'desc')->get();
@@ -111,7 +344,7 @@ class InvoiceController extends Controller
         $cancelreq -> invoice_id = $request->invoice_id;
         $cancelreq -> role_id = $roleid;
         $cancelreq -> alasan = $request->alasan;
-        $cancelreq -> report_to = "1";
+        $cancelreq -> report_to = $report;
     
         $cancelreq -> save();
 
@@ -130,6 +363,7 @@ class InvoiceController extends Controller
         $datainv = Inovice::find($invid);
 
         $datainv -> is_closing = "Yes";
+        $datainv -> status_invoice ="Closing";
         $datainv -> save();
         $request->session()->flash('success', "Invoice berhasil closing");
         return redirect(route('admininvoice.invoice.index',[
@@ -146,6 +380,7 @@ class InvoiceController extends Controller
         $datainv = Inovice::find($invid);
 
         $datainv -> is_closing = "Yes";
+        $datainv -> status_invoice ="Closing";
         $datainv -> save();
         $request->session()->flash('success', "Invoice berhasil closing");
         return redirect(route('superadmin.invoice.index',[
@@ -232,12 +467,25 @@ class InvoiceController extends Controller
 
         $lastInvoice = Inovice::latest()->first(); // Mendapatkan data invoice terakhir dari database
 
-        $year = now()->format('y'); // Mendapatkan dua digit tahun saat ini
-        $month = now()->format('m'); // Mendapatkan dua digit bulan saat ini
-        $lastOrder = $lastInvoice ? substr($lastInvoice->invoice_no, 4, 4) : 0; 
-       // Mendapatkan nomor urutan terakhir dari nomor invoice terakhir
-        $invoicenumber = 'INV/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $month . '/' . $year; // Menggabungkan nomor invoice dengan tahun dan bulan
+        $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+        $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
+        
+        $lastYear = $lastInvoice ? substr($lastInvoice->invoice_no, 12, 2) : null; // Mendapatkan dua digit tahun dari nomor invoice terakhir
+        $lastMonth = $lastInvoice ? substr($lastInvoice->invoice_no, 9, 2) : null; // Mendapatkan dua digit bulan dari nomor invoice terakhir
+        
 
+        if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
+            // Jika bulan atau tahun saat ini berbeda dengan bulan atau tahun dari nomor invoice terakhir,
+            // maka nomor urutan direset menjadi 1
+            $newOrder = 1;
+        } else {
+            // Jika bulan dan tahun saat ini sama dengan bulan dan tahun dari nomor invoice terakhir,
+            // maka nomor urutan diincrement
+            $newOrder = $lastInvoice ? intval(substr($lastInvoice->invoice_no, 4, 4)) + 1 : 1;
+        }
+        
+        $invoicenumber = 'INV/' . str_pad($newOrder, 4, '0', STR_PAD_LEFT) . '/' . $currentMonth . '/' . $currentYear; // Menggabungkan nomor invoice dengan tahun dan bulan
+        
         $discountasli = $data->discount;
         $tipe = $data->is_persen;
 
@@ -300,11 +548,24 @@ class InvoiceController extends Controller
 
         $lastInvoice = Inovice::latest()->first(); // Mendapatkan data invoice terakhir dari database
 
-        $year = now()->format('y'); // Mendapatkan dua digit tahun saat ini
-        $month = now()->format('m'); // Mendapatkan dua digit bulan saat ini
-        $lastOrder = $lastInvoice ? substr($lastInvoice->invoice_no, 4, 4) : 0; 
-       // Mendapatkan nomor urutan terakhir dari nomor invoice terakhir
-        $invoicenumber = 'INV/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $month . '/' . $year; // Menggabungkan nomor invoice dengan tahun dan bulan
+        $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+        $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
+        
+        $lastYear = $lastInvoice ? substr($lastInvoice->invoice_no, 12, 2) : null; // Mendapatkan dua digit tahun dari nomor invoice terakhir
+        $lastMonth = $lastInvoice ? substr($lastInvoice->invoice_no, 9, 2) : null; // Mendapatkan dua digit bulan dari nomor invoice terakhir
+        
+
+        if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
+            // Jika bulan atau tahun saat ini berbeda dengan bulan atau tahun dari nomor invoice terakhir,
+            // maka nomor urutan direset menjadi 1
+            $newOrder = 1;
+        } else {
+            // Jika bulan dan tahun saat ini sama dengan bulan dan tahun dari nomor invoice terakhir,
+            // maka nomor urutan diincrement
+            $newOrder = $lastInvoice ? intval(substr($lastInvoice->invoice_no, 4, 4)) + 1 : 1;
+        }
+        
+        $invoicenumber = 'INV/' . str_pad($newOrder, 4, '0', STR_PAD_LEFT) . '/' . $currentMonth . '/' . $currentYear; // Menggabungkan nomor invoice dengan tahun dan bulan
 
         $discountasli = $data->discount;
         $tipe = $data->is_persen;
@@ -355,6 +616,40 @@ class InvoiceController extends Controller
             'tipe' => $tipe,
             'discountasli' => $discountasli,
            
+        ]);
+     }
+
+     public function admininvoiceperubahan($id){
+
+        $data = Inovice::find($id);
+        $detail = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
+    
+        $customer = Customer::orderBy('nama_customer', 'asc')->get();
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
+      
+        return view('admininvoice.invoice.perubahaninvoice',[
+            'data' => $data,
+            'detail' => $detail,
+            'customer' => $customer,
+            'produk' => $produk,
+        ]);
+     }
+
+     public function superadminperubahan($id){
+
+        $data = Inovice::find($id);
+        $detail = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
+    
+        $customer = Customer::orderBy('nama_customer', 'asc')->get();
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
+
+     
+      
+        return view('superadmin.invoice.perubahaninvoice',[
+            'data' => $data,
+            'detail' => $detail,
+            'customer' => $customer,
+            'produk' => $produk,
         ]);
      }
      public function admininvoicecreatequote($id)
@@ -496,22 +791,96 @@ public function tampilinvoice($id){
     $invoice = Inovice::find($id);
     $detailinvoice = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
 
-   
+    $subtotal = 0;
+
+    // Iterasi melalui setiap detail invoice
+    $discountasli = $invoice->discount;
+        $tipe = $invoice->is_persen;
+
+      
+        
+    $subtotal = 0;
+    foreach ($detailinvoice as $detail) {
+        $subtotal += $detail->total_price;
+    }
+
+    if ($tipe == 'persen') {
+        $discount =  ($discountasli / 100) * $subtotal;
+    } elseif ($tipe == 'amount'){
+        $discount = $invoice->discount;
+    }
+
+    $subtotalafterdiscount = $subtotal - $discount;
+
+
+
+  $ppnpersen = $invoice -> ppn;
+  
+  $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
+
+
+    $pembayaran = $invoice->pembayaran;
+
+    $total = $subtotalafterdiscount + $ppn;
+    
+
+    $sisatagihan = $total - $pembayaran;
+ 
 
     return view('admininvoice.invoice.tampilinvoice',[
         'invoice' => $invoice,
         'detailinvoice' => $detailinvoice,
+        'subtotal' => $subtotal,
+        'total' => $total,
+        'sisatagihan' => $sisatagihan,
     ]);
 }
 public function superadmintampilinvoice($id){
     $invoice = Inovice::find($id);
     $detailinvoice = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
 
-   
+    $subtotal = 0;
+
+    // Iterasi melalui setiap detail invoice
+    $discountasli = $invoice->discount;
+        $tipe = $invoice->is_persen;
+
+      
+        
+    $subtotal = 0;
+    foreach ($detailinvoice as $detail) {
+        $subtotal += $detail->total_price;
+    }
+
+    if ($tipe == 'persen') {
+        $discount =  ($discountasli / 100) * $subtotal;
+    } elseif ($tipe == 'amount'){
+        $discount = $invoice->discount;
+    }
+
+    $subtotalafterdiscount = $subtotal - $discount;
+
+
+
+  $ppnpersen = $invoice -> ppn;
+  
+  $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
+
+
+    $pembayaran = $invoice->pembayaran;
+
+    $total = $subtotalafterdiscount + $ppn;
+    
+
+    $sisatagihan = $total - $pembayaran;
+ 
 
     return view('superadmin.invoice.tampilinvoice',[
         'invoice' => $invoice,
         'detailinvoice' => $detailinvoice,
+        'subtotal' => $subtotal,
+        'total' => $total,
+        'sisatagihan' => $sisatagihan,
     ]);
 }
 
@@ -527,6 +896,8 @@ public function superadmintampilinvoice($id){
         $namacust = $customer->nama_customer;
 
         $so = SalesOrder::find($request->so_id);
+
+        $soid = $so->id;
         $so->status_so = "Terbit Invoice";
         $so->save();
     
@@ -535,6 +906,16 @@ public function superadmintampilinvoice($id){
         $rfo = RFO::find($rfo_id);
         $rfo->status_rfo = "Terbit Invoice";
         $rfo->save();
+
+       $detailsopo = DetailSoPo::where('so_id', $soid)->get();
+
+       foreach($detailsopo as $detail){
+            $id = $detail->po_id;
+
+            $datapo = PurchaseOrder::find($id);
+            $datapo -> is_cancel ="No";
+            $datapo ->save();
+       }
 
         $invoice = new Inovice;
         $invoice->so_id = $request->so_id;
@@ -605,6 +986,17 @@ public function superadmintampilinvoice($id){
         $rfo->status_rfo = "Terbit Invoice";
         $rfo->save();
 
+        $soid = $so->id;
+        $detailsopo = DetailSoPo::where('so_id', $soid)->get();
+
+       foreach($detailsopo as $detail){
+            $id = $detail->po_id;
+
+            $datapo = PurchaseOrder::find($id);
+            $datapo -> is_cancel ="No";
+            $datapo ->save();
+       }
+
         $invoice = new Inovice;
         $invoice->so_id = $request->so_id;
         $invoice->invoice_no = $request -> invoice_no;
@@ -668,7 +1060,17 @@ public function superadmintampilinvoice($id){
         $quote->status_quote = "Terbit Invoice";
         $quote->save();
     
-    
+        
+        $quoteid = $quote->id;
+        $detailsopo = DetailSoPo::where('quote_id', $quoteid)->get();
+
+       foreach($detailsopo as $detail){
+            $id = $detail->po_id;
+
+            $datapo = PurchaseOrder::find($id);
+            $datapo -> is_cancel ="No";
+            $datapo ->save();
+       }
 
         $invoice = new Inovice;
         $invoice->quote_id = $request->quote_id;
@@ -749,7 +1151,17 @@ public function superadmintampilinvoice($id){
         $invoice -> ppn = $request -> ppn;
         $invoice -> total = $request->total;
 
-       
+        $quoteid = $quote->id;
+        $detailsopo = DetailSoPo::where('quote_id', $quoteid)->get();
+
+       foreach($detailsopo as $detail){
+            $id = $detail->po_id;
+
+            $datapo = PurchaseOrder::find($id);
+            $datapo -> is_cancel ="No";
+            $datapo ->save();
+       }
+
         $invoice -> save();
 
         $invoiceDetails = [];

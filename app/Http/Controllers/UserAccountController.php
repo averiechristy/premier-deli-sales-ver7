@@ -366,7 +366,20 @@ class UserAccountController extends Controller
     
             $data->save();
         }
-        if($request->role_id =='4'){
+        else if($request->role_id =='4'){
+            $data = User::find($id);
+       
+            $data->role_id = $request->role_id;
+            $data->nama = $request->nama_user;
+            $data->username = $request->username;
+            $data->email = $request->email;
+            $data->no_hp = $request->no_hp;
+            $data -> report_to = $request -> selected_user;
+    
+            $data->save();
+        }
+
+       else if($request->role_id =='2'){
             $data = User::find($id);
        
             $data->role_id = $request->role_id;

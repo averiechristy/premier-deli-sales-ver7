@@ -2,83 +2,41 @@
 
 @section('content')
 
-<style>
-        .container {
-            display: grid;
-            grid-template-columns: 30% 70%; /* Membagi halaman menjadi dua kolom dengan lebar 20% dan 80% */
-            gap: 20px; /* Jarak antar kolom */
-        }
-        .left-column, .right-column {
-            padding: 20px;
-            /* border: 1px solid #ccc; */
-        }
-        /* Menyesuaikan ukuran kolom agar tidak terlalu besar di layar kecil */
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr; /* Ketika layar kecil, tampilkan satu kolom penuh */
-            }
-        }
-    </style>
 
 <div class="container">
-        <div class="left-column">
-
-       
-
-        <div class="card mt-3">
-    <div class="card-body">
-        <h5 class="card-title" style="color:black;">Informasi Pelanggan</h5>
-        <p class="card-text"  style="color:black;">Nama Customer: {{$data->nama_customer}}</p>
-        <p class="card-text"  style="color:black;">Alamat: {{$data->alamat}}</p>
-        <p class="card-text"  style="color:black;">Tanggal Pengiriman: {{ \Carbon\Carbon::parse($data->shipping_date)->format('d-m-Y') }}</p>
-    </div>
-</div>
-
-<div class="card mt-3">
-    <div class="card-body">
-        <h5 class="card-title" style="color:black;">Daftar Produk</h5>
-        <ul class="list-group list-group-flush">
-            @foreach ($rfo as $item)
-            <li  style="color:black;" class="list-group-item">{{$item->kode_produk}} {{$item->nama_produk}} - {{$item->qty}}</li>
-            @endforeach
-        </ul>
-    </div>
-</div>
-
+     
         
-        </div>
-        <div class="right-column">
             <!-- Tempatkan form input di sini -->
             <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
-                                        Buat Sales Order
+                                        Edit Invoice
                                     </div>
                                     <div class="card-body">
-                                    <form name="saveform" action="{{route('superadmin.so.simpan')}}" method="post" onsubmit="return validateForm()">
+                                    <form name="saveform" action="{{route('superadminupdateinvoice',$data->id)}}" method="post" onsubmit="return validateForm()">
                                         @csrf                       
 
 
 
-    <input hidden name="rfo_id" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->id}}" />
+    <input hidden name="invoice_id" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->id}}" />
 
 
 
                                         <div class="form-group mb-4">
-    <label for="" class="form-label" style="color:black;">No Sales Order</label>
-    <input name="no_so" type="text" class="form-control" style="border-color: #01004C; width:50%;" value="{{ $orderNumber }}" readonly />
+    <label for="" class="form-label" style="color:black;">No Invoice</label>
+    <input name="invoice_no" type="text" class="form-control" style="border-color: #01004C; width:50%;" value="{{ $data->invoice_no }}" readonly />
 </div>
 
 
 
 
                                         <div class="form-group mb-4">
-    <label for="" class="form-label" style="color:black;">Tanggal SO</label>
-    <input name="so_date" id="so_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
+    <label for="" class="form-label" style="color:black;">Tanggal Invoice</label>
+    <input name="invoice_date" id="invoice_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="{{$data->invoice_date}}" />
 </div>
 
 <script>
     // Mendapatkan elemen input tanggal
-    var so_date_input = document.getElementById("so_date");
+    var so_date_input = document.getElementById("invoice_date");
 
     // Mendapatkan tanggal hari ini
     var today = new Date();
@@ -91,19 +49,8 @@
     // Set nilai minimum input tanggal ke hari ini
     so_date_input.min = today;
 </script>
-<script>
-    // Mendapatkan elemen input tanggal
-    var orderDateInput = document.getElementById('so_date');
 
-    // Mendapatkan tanggal hari ini
-    var today = new Date();
 
-    // Format tanggal hari ini menjadi YYYY-MM-DD untuk input tanggal
-    var formattedDate = today.toISOString().substr(0, 10);
-
-    // Mengatur nilai input tanggal ke tanggal hari ini
-    orderDateInput.value = formattedDate;
-</script>
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Customer</label>
@@ -138,17 +85,15 @@
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Alamat</label>
-    <textarea name="alamat" class="form-control" style="border-color: #01004C;" rows="4" >{{$data->alamat}}</textarea>
+    <textarea name="alamat" class="form-control" style="border-color: #01004C;" rows="4" readonly>{{$data->alamat}}</textarea>
 </div>
 
-<div class="form-group mb-4">
-    <label for="" class="form-label" style="color:black;">Tanggal Pengiriman</label>
-    <input name="shipping_date"  type="date" class="form-control" style="border-color: #01004C; width:50%;" value="{{$data->shipping_date}}" />
-</div>
+
+
 
 <div id="product-fields">
     
-@foreach ($rfo as $index => $detaildata)
+@foreach ($detail as $index => $detaildata)
     <div class="row product-field">
         <div class="col-md-4">
             <div class="form-group mb-4">
@@ -167,7 +112,7 @@
         <div class="col-md-3">
             <div class="form-group mb-4">
                 <label for="" class="form-label" style="color:black;">Harga</label>
-                <input name="price[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata  -> harga_jual}}" readonly/>
+                <input name="price[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata  -> invoice_price}}" readonly/>
             </div>
         </div>
         
@@ -178,10 +123,25 @@
             </div>
         </div>
         <div class="col-md-2">
-            <label for="" class="form-label" style="color:black; display:none;">Action</label>
-            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1" style="display:none;" >Remove</button>
+
+            <label for="" class="form-label" style="color:black;">Action</label>
+            <div class="form-group mb-4">
+            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1"  >Remove</button>
+             </div>
         </div>
     </div>
+    <script>
+    // Menonaktifkan interaksi pengguna dengan elemen select
+    document.getElementById('productselect{{$index}}').addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        this.blur();
+        return false;
+    });
+    document.getElementById('productselect{{$index}}').addEventListener('keydown', function(e) {
+        e.preventDefault();
+        return false;
+    });
+</script>
 @endforeach
 
 <!-- <script>
@@ -195,18 +155,7 @@
     });
 </script> -->
 
-<script>
-    // Menonaktifkan interaksi pengguna dengan elemen select
-    document.getElementById('productselect{{$index}}').addEventListener('mousedown', function(e) {
-        e.preventDefault();
-        this.blur();
-        return false;
-    });
-    document.getElementById('productselect{{$index}}').addEventListener('keydown', function(e) {
-        e.preventDefault();
-        return false;
-    });
-</script>
+
 
 
 </div>
@@ -214,7 +163,7 @@
 
 
 <button type="button" class="btn btn-success mt-3" id="add-product-field" style="display:none;">Add Product</button>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
         // Add Product Field
@@ -302,39 +251,42 @@ $(document).on('change', '.product-select', function() {
 
 <div class="form-group mb-4 mt-4">
                            <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discpersen" value="persen">
+                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discpersen" value="persen" {{ $data->is_persen == 'persen' ? 'checked' : '' }} >
                               <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio1">Discount dalam %</label>
                             </div>
                             <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discrp" value="amount">
+                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discrp" value="amount"{{ $data->is_persen == 'amount' ? 'checked' : '' }}>
                               <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio2">Discount dalam Rp</label>
                             </div>
 </div>
-
+<script>
+   // Menonaktifkan elemen-elemen radio button
+   var radios = document.querySelectorAll('input[type=radio]');
+   for(var i = 0; i < radios.length; i++) {
+       radios[i].disabled = true;
+   }
+</script>
 <div class="form-group mb-4 mt-3">
         <label for="" class="form-label" style="color:black;">Discount</label>
-    <input name="discount" type="number"  class="form-control " style="border-color: #01004C;" value="" />
+    <input name="discount" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->discount}}" readonly />
 </div>
 
 <div class="form-group mb-4 mt-3">
         <label for="" class="form-label" style="color:black;">PPN (dalam %)</label>
-    <input name="ppn" type="number"  class="form-control " style="border-color: #01004C;" value="" />
+    <input name="ppn" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->ppn}}" readonly/>
 </div>
 
-<div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">Pembayaran</label>
-    <input name="pembayaran" type="number"  class="form-control " style="border-color: #01004C;" value="" />
-</div>
+
 
 <div class="form-group mb-4 mt-3">
-<button type="button" class="btn btn-pd" onclick="confirmSubmit()" >Proses Sales Order</button>
+<button type="button" class="btn btn-pd" onclick="confirmSubmit()" >Proses Perubahan Invoice</button>
 </div>
                                             </div>
                                             <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Sales Order</h5>
+                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Perubahan</h5>
             </div>
             <div class="modal-body">
                 Apakah Anda yakin akan memproses data? Silakan cek kembali sebelum proses data
@@ -345,7 +297,6 @@ $(document).on('change', '.product-select', function() {
             </div>
         </div>
     </div>
-</div>
 
 <script>
     function confirmSubmit() {

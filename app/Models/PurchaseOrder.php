@@ -18,6 +18,7 @@ class PurchaseOrder extends Model
         'status_po',
         'created_by',
         'updated_by',
+        'is_cancel',
     ];
 
     public function detailpurchase()

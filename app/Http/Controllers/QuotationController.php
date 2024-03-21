@@ -82,13 +82,25 @@ class QuotationController extends Controller
         
         $lastquote = Quotation::latest()->first(); // Mendapatkan data invoice terakhir dari database
 
-        $year = now()->format('y'); // Mendapatkan dua digit tahun saat ini
-        $month = now()->format('m'); // Mendapatkan dua digit bulan saat ini
-        $lastOrder = $lastquote ? substr($lastquote->no_quote, 6, 4) : 0; 
+        $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+        $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
         
-       // Mendapatkan nomor urutan terakhir dari nomor invoice terakhir
-        $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $month . '/' . $year;
+        $lastYear = $lastquote ? substr($lastquote->no_quote, 14, 2) : '00'; // Mengambil dua digit tahun dari nomor quote terakhir
+        $lastMonth = $lastquote ? substr($lastquote->no_quote, 11, 2) : '00'; // Mengambil dua digit bulan dari nomor quote terakhir
+        
       
+
+        if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
+            // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor quote terakhir,
+            // maka nomor urutan direset menjadi 1
+            $orderNumber = 'QUOTE/0001/' . $currentMonth . '/' . $currentYear;
+        } else {
+            // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor quote terakhir,
+            // maka nomor urutan diincrement
+            $lastOrder = $lastquote ? intval(substr($lastquote->no_quote, 6, 4)) : 0; // Mengambil nomor urutan terakhir
+            $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $currentMonth . '/' . $currentYear;
+        }
+              
        
         return view('sales.createquotation',[
             'customer' => $customer,
@@ -96,7 +108,18 @@ class QuotationController extends Controller
             'orderNumber' => $orderNumber,
         ]);
     }
+    public function managercancelquote(Request $request){
 
+        $id=$request->quote_id;
+        $dataquote = Quotation::find($id);
+        $dataquote -> status_quote ="Cancelled";
+        $dataquote->save();
+        $request->session()->flash('success', "Quotation berhasil dibatalkan");
+        
+        return redirect()->route('manager.quotation.index');
+        
+        
+            }
     public function leadercreate()
     {
 
@@ -107,12 +130,24 @@ class QuotationController extends Controller
         
         $lastquote = Quotation::latest()->first(); // Mendapatkan data invoice terakhir dari database
 
-        $year = now()->format('y'); // Mendapatkan dua digit tahun saat ini
-        $month = now()->format('m'); // Mendapatkan dua digit bulan saat ini
-        $lastOrder = $lastquote ? substr($lastquote->no_quote, 6, 4) : 0; 
+        $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+        $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
         
-       // Mendapatkan nomor urutan terakhir dari nomor invoice terakhir
-        $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $month . '/' . $year;
+        $lastYear = $lastquote ? substr($lastquote->no_quote, 14, 2) : '00'; // Mengambil dua digit tahun dari nomor quote terakhir
+        $lastMonth = $lastquote ? substr($lastquote->no_quote, 11, 2) : '00'; // Mengambil dua digit bulan dari nomor quote terakhir
+        
+      
+
+        if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
+            // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor quote terakhir,
+            // maka nomor urutan direset menjadi 1
+            $orderNumber = 'QUOTE/0001/' . $currentMonth . '/' . $currentYear;
+        } else {
+            // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor quote terakhir,
+            // maka nomor urutan diincrement
+            $lastOrder = $lastquote ? intval(substr($lastquote->no_quote, 6, 4)) : 0; // Mengambil nomor urutan terakhir
+            $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $currentMonth . '/' . $currentYear;
+        }
       
        
         return view('leader.quotation.create',[
@@ -132,12 +167,24 @@ class QuotationController extends Controller
         
         $lastquote = Quotation::latest()->first(); // Mendapatkan data invoice terakhir dari database
 
-        $year = now()->format('y'); // Mendapatkan dua digit tahun saat ini
-        $month = now()->format('m'); // Mendapatkan dua digit bulan saat ini
-        $lastOrder = $lastquote ? substr($lastquote->no_quote, 6, 4) : 0; 
+        $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+        $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
         
-       // Mendapatkan nomor urutan terakhir dari nomor invoice terakhir
-        $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $month . '/' . $year;
+        $lastYear = $lastquote ? substr($lastquote->no_quote, 14, 2) : '00'; // Mengambil dua digit tahun dari nomor quote terakhir
+        $lastMonth = $lastquote ? substr($lastquote->no_quote, 11, 2) : '00'; // Mengambil dua digit bulan dari nomor quote terakhir
+        
+      
+
+        if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
+            // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor quote terakhir,
+            // maka nomor urutan direset menjadi 1
+            $orderNumber = 'QUOTE/0001/' . $currentMonth . '/' . $currentYear;
+        } else {
+            // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor quote terakhir,
+            // maka nomor urutan diincrement
+            $lastOrder = $lastquote ? intval(substr($lastquote->no_quote, 6, 4)) : 0; // Mengambil nomor urutan terakhir
+            $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $currentMonth . '/' . $currentYear;
+        }
       
        
         return view('manager.quotation.create',[
@@ -256,6 +303,37 @@ class QuotationController extends Controller
        
         $nama = $loggedInUser -> nama;
 
+        $jenisdiskon = $request -> inlineRadioOptions;
+        if ($jenisdiskon == "persen"){
+            $nilaidiskon = $request->discount;
+            if($nilaidiskon >= 15){
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('sales.quotation.index');
+            }
+        }
+        elseif ($jenisdiskon == "amount") {
+            $subtotal = 0;
+            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+                foreach ($request->product as $index => $productId) {
+                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+    
+                    $qty = $request->quantity[$index];
+                    $harga = $product->harga_jual;
+                    $totalprice = $qty * $harga;
+    
+                    $subtotal += $totalprice;
+                }
+            }
+    
+            $diskonAmount = $request->discount;
+            $maxAllowedDiscount = 0.15 * $subtotal;
+    
+            if ($diskonAmount > $maxAllowedDiscount) {
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('sales.quotation.index');
+            }
+        }
+
         $quote = new Quotation;
         $quote -> no_quote = $request->no_quote;
         $quote -> quote_date = $request -> quote_date;
@@ -321,6 +399,37 @@ class QuotationController extends Controller
        
         $nama = $loggedInUser -> nama;
 
+        $jenisdiskon = $request -> inlineRadioOptions;
+        if ($jenisdiskon == "persen"){
+            $nilaidiskon = $request->discount;
+            if($nilaidiskon >= 15){
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('leader.quotation.index');
+            }
+        }
+        elseif ($jenisdiskon == "amount") {
+            $subtotal = 0;
+            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+                foreach ($request->product as $index => $productId) {
+                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+    
+                    $qty = $request->quantity[$index];
+                    $harga = $product->harga_jual;
+                    $totalprice = $qty * $harga;
+    
+                    $subtotal += $totalprice;
+                }
+            }
+    
+            $diskonAmount = $request->discount;
+            $maxAllowedDiscount = 0.15 * $subtotal;
+    
+            if ($diskonAmount > $maxAllowedDiscount) {
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('leader.quotation.index');
+            }
+        }
+
         $quote = new Quotation;
         $quote -> no_quote = $request->no_quote;
         $quote -> quote_date = $request -> quote_date;
@@ -385,6 +494,38 @@ class QuotationController extends Controller
         $nohp = $customer -> no_hp;
        
         $nama = $loggedInUser -> nama;
+
+        $jenisdiskon = $request -> inlineRadioOptions;
+        if ($jenisdiskon == "persen"){
+            $nilaidiskon = $request->discount;
+            if($nilaidiskon >= 15){
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('manager.quotation.index');
+            }
+        }
+        elseif ($jenisdiskon == "amount") {
+            $subtotal = 0;
+            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+                foreach ($request->product as $index => $productId) {
+                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+    
+                    $qty = $request->quantity[$index];
+                    $harga = $product->harga_jual;
+                    $totalprice = $qty * $harga;
+    
+                    $subtotal += $totalprice;
+                }
+            }
+    
+            $diskonAmount = $request->discount;
+            $maxAllowedDiscount = 0.15 * $subtotal;
+    
+            if ($diskonAmount > $maxAllowedDiscount) {
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('manager.quotation.index');
+            }
+        }
+
 
         $quote = new Quotation;
         $quote -> no_quote = $request->no_quote;
@@ -484,7 +625,8 @@ class QuotationController extends Controller
     public function tampilquote($id){
 
         $quote = Quotation::find($id);
-        $detailquote = DetailQuotation::with('quotation')->where('quote_id', $id)->get();
+        $detailquote = DetailQuotation::with('quotation')->orWhereNull('keterangan') ->where('quote_id', $id)->get();
+
 
         $discountasli = $quote->discount;
         $tipe = $quote->is_persen;
@@ -570,7 +712,7 @@ class QuotationController extends Controller
     public function managertampilquote($id){
 
         $quote = Quotation::find($id);
-        $detailquote = DetailQuotation::with('quotation')->where('quote_id', $id)->get();
+        $detailquote = DetailQuotation::with('quotation')->orWhereNull('keterangan') ->where('quote_id', $id)->get();
 
         $discountasli = $quote->discount;
         $tipe = $quote->is_persen;

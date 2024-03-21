@@ -71,16 +71,42 @@ entries
 <td>{{ \Carbon\Carbon::parse($data->shipping_date)->format('d-m-Y') }}</td>
 <td>{{ \Carbon\Carbon::parse($data->payment_date)->format('d-m-Y') }}</td>
 <td>{{$data->nama_pembuat}}</td>
+
 <td>
-    @if($data->status_rfo =="Terbit Invoice")
+@if($data->status_rfo =="Proses PO")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
     Cancel Request
 </button>
 
-    @else
+
+@elseif($data->status_rfo =="Terbit Invoice")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel Request
+</button>
+
+@elseif($data->status_rfo =="Cancelled")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel Request
+</button>
+
+
+@elseif($data->status_rfo =="Menunggu Persetujuan Cancel")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel Request
+</button>
+
+@elseif($data->status_rfo =="Request Terkirim")
+
 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
       Cancel Request
 </button>
+
+@elseif($data->status_rfo =="Terbit SO")
+
+<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
+      Cancel Request
+</button>
+
 @endif
 </td>
 
@@ -93,18 +119,15 @@ entries
        
       </div>
       <div class="modal-body">
-      <form action="" method="post">
+      <form action="{{route('managercancelrfo')}}" method="post">
         @csrf
       <input type="hidden"  name="rfo_id" value="{{$data->id}}">
-                    <div class="form-group">
-                        <label for="alasan"  style="color:black;">Alasan Cancel :</label>
-                        <textarea class="form-control" id="reason" name="alasan" rows="3" required></textarea>
-                    </div>
+                    Yakin untuk melakukan pembatalan?
                 
       </div>
       <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <button type="submit" class="btn btn-primary">Ya</button>
             </div>
             </form>
     </div>

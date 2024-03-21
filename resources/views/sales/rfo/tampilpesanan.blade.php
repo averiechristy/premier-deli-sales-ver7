@@ -42,6 +42,7 @@ entries
                        <th>Kode Produk</th>
                        <th>Nama Produk</th>
                        <th>Quantity</th>
+                       <th>Keterangan</th>
                     </tr>
                 </thead>
                 
@@ -51,6 +52,7 @@ entries
               <td>{{$data -> kode_produk}}</td>
               <td>{{$data -> nama_produk}}</td>
               <td>{{$data -> qty}}</td>
+              <td>{{$data -> keterangan}}</td>
 
 </tr>      
 <div class="modal fade" id="exampleModal{{$data->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

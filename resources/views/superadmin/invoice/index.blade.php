@@ -64,7 +64,7 @@ entries
                       <th>Action</th>
                       <th></th>
                       <th></th>
-                      
+                      <th></th>
                     </tr>
                 </thead>
                 
@@ -103,9 +103,12 @@ entries
 </button>
 
 @elseif($data->status_invoice =="Menunggu Persetujuan Cancel")
- <a href="{{route('superadmininfocancelinvoice', $data->id)}}">
+ <!-- <a href="{{route('superadmininfocancelinvoice', $data->id)}}">
 <button type="button" class="btn btn-danger btn-sm" >
       Penganjuan Cancel
+</button> -->
+<button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Cancel Invoice
 </button>
 @elseif ($data->is_closing =="Yes")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
@@ -143,7 +146,26 @@ entries
 </button>
 @endif
 </td>
+<td>
 
+@if($data->status_invoice =="Cancelled")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+     Request Perubahan Invoice
+</button>
+
+@elseif ($data->status_invoice =="Menunggu Persetujuan Cancel")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+     Request Perubahan Invoice
+</button>
+@elseif ($data->is_closing =="Yes")
+<button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Request Perubahan Invoice
+</button>
+@else    
+<a href="{{route('superadmin.perubahaninvoice', $data->id)}}"><button class="btn btn-sm btn-primary">Request Perubahan Invoice</button></a></td>
+@endif
+
+</td>
 </tr>
 
 <div class="modal fade" id="exampleModal{{$data->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

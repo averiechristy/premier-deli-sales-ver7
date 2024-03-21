@@ -80,12 +80,23 @@ public function superadminindex(){
         $produk = Produk::orderBy('nama_produk', 'asc')->get();
 
         $lastSO = SalesOrder::latest()->first(); // Mendapatkan data SO terakhir dari database
+
+        $currentYearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
+        $lastYearMonth = $lastSO ? substr($lastSO->no_so, 0, 4) : '0000'; // Mendapatkan format tahun dan bulan dari nomor SO terakhir
         
-        $yearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
-        $lastOrder = $lastSO ? substr($lastSO->no_so, 4) : 0; // Mendapatkan nomor urutan terakhir dari nomor SO terakhir
-        
-        $orderNumber = $yearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
-        
+    
+
+        if ($currentYearMonth != $lastYearMonth) {
+            // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor SO terakhir,
+            // maka nomor urutan direset menjadi 1
+            $orderNumber = $currentYearMonth . '0001';
+        } else {
+            // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor SO terakhir,
+            // maka nomor urutan diincrement
+            $lastOrder = $lastSO ? intval(substr($lastSO->no_so, -4)) : 0; // Mengambil nomor urutan terakhir
+            $orderNumber = $currentYearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
+        }
+                
                
         return view ('admininvoice.so.create',[
             'data' => $data,
@@ -105,11 +116,22 @@ public function superadminindex(){
         $produk = Produk::orderBy('nama_produk', 'asc')->get();
 
         $lastSO = SalesOrder::latest()->first(); // Mendapatkan data SO terakhir dari database
+
+        $currentYearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
+        $lastYearMonth = $lastSO ? substr($lastSO->no_so, 0, 4) : '0000'; // Mendapatkan format tahun dan bulan dari nomor SO terakhir
         
-        $yearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
-        $lastOrder = $lastSO ? substr($lastSO->no_so, 4) : 0; // Mendapatkan nomor urutan terakhir dari nomor SO terakhir
-        
-        $orderNumber = $yearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
+    
+
+        if ($currentYearMonth != $lastYearMonth) {
+            // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor SO terakhir,
+            // maka nomor urutan direset menjadi 1
+            $orderNumber = $currentYearMonth . '0001';
+        } else {
+            // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor SO terakhir,
+            // maka nomor urutan diincrement
+            $lastOrder = $lastSO ? intval(substr($lastSO->no_so, -4)) : 0; // Mengambil nomor urutan terakhir
+            $orderNumber = $currentYearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
+        }
         
                
         return view ('superadmin.so.create',[
@@ -203,6 +225,39 @@ public function superadminindex(){
         $so = new SalesOrder;
 
 
+        $jenisdiskon = $request -> inlineRadioOptions;
+
+      
+
+        if ($jenisdiskon == "persen"){
+            $nilaidiskon = $request->discount;
+            if($nilaidiskon > 15){
+                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('admininvoice.so.index');
+            }
+        } elseif ($jenisdiskon == "amount") {
+            $subtotal = 0;
+            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+                foreach ($request->product as $index => $productId) {
+                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+    
+                    $qty = $request->quantity[$index];
+                    $harga = $product->harga_jual;
+                    $totalprice = $qty * $harga;
+    
+                    $subtotal += $totalprice;
+                }
+            }
+    
+            $diskonAmount = $request->discount;
+            $maxAllowedDiscount = 0.15 * $subtotal;
+    
+            if ($diskonAmount > $maxAllowedDiscount) {
+                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('admininvoice.so.index');
+            }
+        }
+
         $so -> no_so = $request -> no_so;
         $so -> cust_id = $request -> cust_id;
         $so -> nama_customer = $namacust;
@@ -216,6 +271,9 @@ public function superadminindex(){
         $so -> pembayaran = $request -> pembayaran;
         $so -> is_persen = $request -> inlineRadioOptions;
         $so -> status_so = "PO Belum Dikerjakan";
+
+
+        
 
         $so -> save();
 
@@ -269,6 +327,41 @@ public function superadminindex(){
 
         $rfo = RFO::find($request->rfo_id);
       
+        $jenisdiskon = $request -> inlineRadioOptions;
+
+      
+
+        if ($jenisdiskon == "persen"){
+            $nilaidiskon = $request->discount;
+            dd($nilaidiskon);
+            if($nilaidiskon > 15){
+                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('superadmin.so.index');
+            }
+        } elseif ($jenisdiskon == "amount") {
+            $subtotal = 0;
+            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+                foreach ($request->product as $index => $productId) {
+                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+    
+                    $qty = $request->quantity[$index];
+                    $harga = $product->harga_jual;
+                    $totalprice = $qty * $harga;
+    
+                    $subtotal += $totalprice;
+                }
+            }
+    
+            $diskonAmount = $request->discount;
+            $maxAllowedDiscount = 0.15 * $subtotal;
+    
+            if ($diskonAmount > $maxAllowedDiscount) {
+                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('superadmin.so.index');
+            }
+        }
+        
+
         $so = new SalesOrder;
 
 
@@ -329,7 +422,9 @@ public function superadminindex(){
     public function tampilso($id){
 
         $so = SalesOrder::find($id);
-        $detailso = DetailSO::with('salesorder')->where('so_id', $id)->get();
+        $detailso = DetailSO::with('salesorder')->orWhereNull('keterangan')->where('so_id', $id)->get();
+
+       
 
         $discountasli = $so->discount;
         $tipe = $so->is_persen;
@@ -380,7 +475,7 @@ public function superadminindex(){
     public function superadmintampilso($id){
 
         $so = SalesOrder::find($id);
-        $detailso = DetailSO::with('salesorder')->where('so_id', $id)->get();
+        $detailso = DetailSO::with('salesorder')->orWhereNull('keterangan')->where('so_id', $id)->get();
 
         $discountasli = $so->discount;
         $tipe = $so->is_persen;

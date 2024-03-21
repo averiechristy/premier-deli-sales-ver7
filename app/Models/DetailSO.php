@@ -15,6 +15,7 @@ class DetailSO extends Model
        'kode_produk',
        'nama_produk',
        'qty',
+       'keterangan',
        'so_price',
        'total_price',
     ];

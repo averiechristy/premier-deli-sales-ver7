@@ -38,7 +38,7 @@
     </div>
 
     <div class="row mt-5">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">Sales Order / Quotation</h5>
@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">Purchase Order</h5>
@@ -104,9 +104,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">Invoice</h5>

@@ -26,7 +26,54 @@
     <label for="" class="form-label" style="color:black;">Tanggal Valid</label>
     <input name="valid_date" id="valid_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
+<script>
+    // Mendapatkan elemen input tanggal
+    var validDateInput = document.getElementById('valid_date');
 
+    // Mendapatkan tanggal hari ini
+    var today = new Date();
+
+    // Menambah 30 hari ke tanggal hari ini
+    var validDate = new Date(today);
+    validDate.setDate(validDate.getDate() + 30);
+
+    // Format tanggal menjadi YYYY-MM-DD untuk input tanggal
+    var formattedValidDate = validDate.toISOString().substr(0, 10);
+
+    // Mengatur nilai input tanggal valid ke 30 hari dari hari ini
+    validDateInput.value = formattedValidDate;
+</script>
+<script>
+    // Mendapatkan elemen input tanggal
+    var so_date_input = document.getElementById("quote_date");
+
+    // Mendapatkan tanggal hari ini
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+
+    // Set nilai minimum input tanggal ke hari ini
+    so_date_input.min = today;
+</script>
+
+<script>
+    // Mendapatkan elemen input tanggal
+    var so_date_input = document.getElementById("valid_date");
+
+    // Mendapatkan tanggal hari ini
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+
+    // Set nilai minimum input tanggal ke hari ini
+    so_date_input.min = today;
+</script>
 
 <script>
     // Mendapatkan elemen input tanggal
@@ -103,14 +150,45 @@
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Tanggal Pengiriman</label>
-    <input name="shipping_date"  type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
+    <input name="shipping_date" id="shipping_date"  type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Tanggal Pembayaran</label>
-    <input name="payment_date"  type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
+    <input name="payment_date" id="payment_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
+<script>
+    // Mendapatkan elemen input tanggal
+    var so_date_input = document.getElementById("shipping_date");
+
+    // Mendapatkan tanggal hari ini
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+
+    // Set nilai minimum input tanggal ke hari ini
+    so_date_input.min = today;
+</script>
+
+<script>
+    // Mendapatkan elemen input tanggal
+    var so_date_input = document.getElementById("payment_date");
+
+    // Mendapatkan tanggal hari ini
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+
+    // Set nilai minimum input tanggal ke hari ini
+    so_date_input.min = today;
+</script>
 
 <!-- Product and Quantity Fields -->
 <div id="product-fields">

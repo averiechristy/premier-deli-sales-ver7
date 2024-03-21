@@ -183,16 +183,29 @@ $mergedDetail = array_values($mergedDetail);
 
          $lastpo = PurchaseOrder::latest()->first(); // Mendapatkan data invoice terakhir dari database
 
-         $year = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
-         $month = ltrim(now()->format('m'), '0');
-         // Mendapatkan dua digit bulan saat ini
+         $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
+         $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
          $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
-         $lastOrder = $lastpo ? substr($lastpo->no_po, 0, 4) : 0; // Mendapatkan nomor urutan terakhir dari nomor invoice terakhir
-     
-     
-        
-         $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/EXA-PSA/' . $romanMonth[$month] . '/' . $year; // Menggabungkan nomor invoice dengan PO/EXA-PSA/bulan berjalan(dalam huruf romawi)/tahun 4 digit
-     
+         
+         $lastYear = $lastpo ? substr($lastpo->no_po, 20, 4) : '0000'; // Mendapatkan 4 digit tahun dari nomor PO terakhir
+         $lastMonth = $lastpo ? substr($lastpo->no_po, 16, -5) : '00'; 
+         
+         
+         $lastMonthIndex = array_search($lastMonth, $romanMonth); // Mendapatkan indeks bulan romawi dari nomor PO terakhir
+
+
+         
+         
+         if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonthIndex) {
+             // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
+             // maka nomor urutan direset menjadi 1
+             $ponumber = '0001/PO/EXA-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+         } else {
+             // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
+             // maka nomor urutan diincrement
+             $lastOrder = $lastpo ? intval(substr($lastpo->no_po, 0, 4)) : 0; // Mendapatkan nomor urutan terakhir
+             $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/EXA-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear; // Menggabungkan nomor urutan dengan PO/EXA-PSA/bulan berjalan (dalam huruf romawi)/tahun 4 digit
+         }     
          $produk = Produk::orderBy('nama_produk', 'asc')->get();
         
         
@@ -344,15 +357,29 @@ $mergedDetail = array_values($mergedDetail);
 
          $lastpo = PurchaseOrder::latest()->first(); // Mendapatkan data invoice terakhir dari database
 
-         $year = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
-         $month = ltrim(now()->format('m'), '0');
-         // Mendapatkan dua digit bulan saat ini
+         $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
+         $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
          $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
-         $lastOrder = $lastpo ? substr($lastpo->no_po, 0, 4) : 0; // Mendapatkan nomor urutan terakhir dari nomor invoice terakhir
-     
-     
-        
-         $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/EXA-PSA/' . $romanMonth[$month] . '/' . $year; // Menggabungkan nomor invoice dengan PO/EXA-PSA/bulan berjalan(dalam huruf romawi)/tahun 4 digit
+         
+         $lastYear = $lastpo ? substr($lastpo->no_po, 20, 4) : '0000'; // Mendapatkan 4 digit tahun dari nomor PO terakhir
+         $lastMonth = $lastpo ? substr($lastpo->no_po, 16, -5) : '00'; 
+         
+         
+         $lastMonthIndex = array_search($lastMonth, $romanMonth); // Mendapatkan indeks bulan romawi dari nomor PO terakhir
+
+
+         
+         
+         if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonthIndex) {
+             // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
+             // maka nomor urutan direset menjadi 1
+             $ponumber = '0001/PO/EXA-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+         } else {
+             // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
+             // maka nomor urutan diincrement
+             $lastOrder = $lastpo ? intval(substr($lastpo->no_po, 0, 4)) : 0; // Mendapatkan nomor urutan terakhir
+             $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/EXA-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear; // Menggabungkan nomor urutan dengan PO/EXA-PSA/bulan berjalan (dalam huruf romawi)/tahun 4 digit
+         }     
      
          $produk = Produk::orderBy('nama_produk', 'asc')->get();
         
@@ -723,7 +750,7 @@ if ($request->has('product') && $request->has('quantity') && $request->has('pric
         $cancelreq -> po_id = $request->po_id;
         $cancelreq -> role_id = $roleid;
         $cancelreq -> alasan = $request->alasan;
-        $cancelreq -> report_to = "1";
+        $cancelreq -> report_to = $report;
     
         $cancelreq -> save();
 

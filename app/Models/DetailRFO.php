@@ -11,6 +11,7 @@ class DetailRFO extends Model
     protected $fillable = [
         'rfo_id',
         'product_id',
+        'keterangan',
         'kode_produk',
         'nama_produk',
         'qty',
