@@ -22,9 +22,12 @@
     <select name="kategori" class="form-control" style="border-color: #01004C;" aria-label=".form-select-lg example" >
         <option value="" selected disabled>-- Pilih Kategori --</option>
      
-                <option value="Hotel"> Hotel</option>
+        <option value="Hotel"> Hotel</option>
                 <option value="Restaurant"> Restaurant</option>
                 <option value="Cafe"> Cafe</option>
+                <option value="Household/Retail"> Household / Retail</option>
+                <option value="Reseller"> Reseller</option>
+                <option value="Consignment">Consignment</option>
     </select>
 </div>
 

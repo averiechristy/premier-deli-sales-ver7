@@ -75,7 +75,7 @@ entries
             <tr>
                 <td>{{$data->no_so}}</td>
                 <td>{{$data-> no_rfo}}</td>
-                <td>{{$data -> customer -> nama_customer}}</td>
+                <td>{{$data  -> nama_customer}}</td>
                 <td>{{ \Carbon\Carbon::parse($data->so_date)->format('d-m-Y') }}</td>                <td>    
                 <a href="{{route('superadmintampilpesananso', $data->id)}}"><button type="button" class="btn btn-link">
          Lihat Detail Pesanan

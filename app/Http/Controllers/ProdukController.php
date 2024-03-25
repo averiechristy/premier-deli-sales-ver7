@@ -97,6 +97,8 @@ class ProdukController extends Controller
         $namaproduk = $request->nama_produk;
         $hargabeli = $request->harga_beli;
         $hargajual = $request->harga_jual;
+        $kodesupplier = $request -> kode_supplier;
+        $namasupplier = $request -> nama_supplier;
 
 
       Produk::create([
@@ -104,6 +106,8 @@ class ProdukController extends Controller
           'nama_produk' => $namaproduk,
           'harga_beli' => $hargabeli,
           'harga_jual' => $hargajual,
+          'kode_supplier' => $kodesupplier,
+          'nama_supplier' => $namasupplier,
         ]);
 
         $request->session()->flash('success', "Data produk berhasil ditambahkan.");
@@ -122,10 +126,11 @@ class ProdukController extends Controller
             return redirect()->route('adminproduk.produk.index');
         }
         
-
         $namaproduk = $request->nama_produk;
         $hargabeli = $request->harga_beli;
         $hargajual = $request->harga_jual;
+        $kodesupplier = $request -> kode_supplier;
+        $namasupplier = $request -> nama_supplier;
 
 
       Produk::create([
@@ -133,7 +138,10 @@ class ProdukController extends Controller
           'nama_produk' => $namaproduk,
           'harga_beli' => $hargabeli,
           'harga_jual' => $hargajual,
+          'kode_supplier' => $kodesupplier,
+          'nama_supplier' => $namasupplier,
         ]);
+
 
         $request->session()->flash('success', "Data produk berhasil ditambahkan.");
 
@@ -164,6 +172,8 @@ class ProdukController extends Controller
         $data-> nama_produk = $request-> nama_produk;
         $data->harga_beli = $request-> harga_beli;
         $data-> harga_jual = $request-> harga_jual;
+        $data->kode_supplier = $request -> kode_supplier;
+        $data->nama_supplier = $request -> nama_supplier;
 
         $data->save();
 
@@ -182,6 +192,9 @@ class ProdukController extends Controller
         $data-> nama_produk = $request-> nama_produk;
         $data->harga_beli = $request-> harga_beli;
         $data-> harga_jual = $request-> harga_jual;
+
+        $data->kode_supplier = $request -> kode_supplier;
+        $data->nama_supplier = $request -> nama_supplier;
 
         $data->save();
 

@@ -15,6 +15,8 @@ class TemplateExport implements FromCollection, WithHeadings
             'Nama Produk',
             'Harga Beli',
             'Harga Jual',
+            'Kode Supplier',
+            'Nama Supplier',
         ];
     }
 

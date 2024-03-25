@@ -34,6 +34,16 @@
     <input name="harga_jual" type="number"  class="form-control " style="border-color: #01004C;" value="" oninput="validasiNumber(this)"/>
 </div>
 
+<div class="form-group mb-4">
+        <label for="" class="form-label" style="color:black;">Kode Supplier</label>
+    <input name="kode_supplier" type="text"  class="form-control " style="border-color: #01004C;" value="" />
+</div>
+
+
+<div class="form-group mb-4">
+        <label for="" class="form-label" style="color:black;">Nama Supplier</label>
+    <input name="nama_supplier" type="text"  class="form-control " style="border-color: #01004C;" value="" />
+</div>
 
 
                                                 <button type="submit" class="btn btn-pd " style="">Simpan</button>

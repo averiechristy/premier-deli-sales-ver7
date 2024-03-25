@@ -60,16 +60,16 @@
 
 <!-- Left column -->
 <div style="flex: 1; margin-right: 10px;">
-    <h6 style="color:black; font-family: Arial, sans-serif;">Nama Customer : {{$invoice -> customer -> nama_customer}} </h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;">Alamat : {{$invoice -> alamat}} </h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;">Phone : {{$invoice -> customer -> no_hp}} </h6>
+    <h6 style="color:black; font-family: Arial, sans-serif; font-size:14px;"><span style="font-weight:bold;">Nama Customer</span> <span style="margin-left:10px;">:</span> {{$invoice -> customer -> nama_customer}} </h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:14px;"><span style="font-weight:bold;">Alamat </span><span style="margin-left:71px;">:</span> {{$invoice -> alamat}} </h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:14px;"><span style="font-weight:bold;">Phone </span><span style="margin-left:75px;">:</span> {{$invoice -> customer -> no_hp}} </h6>
 </div>
 
 <!-- Right column -->
 <div style="flex: 1; margin-left: 10px;">
-    <h6 style="color:black; font-family: Arial, sans-serif;">No. Invoice : {{$invoice -> invoice_no}}</h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;">No. Order : {{$invoice -> no_so}} {{$invoice -> no_quote}}</h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;">Tanggal : <?php echo date('d - m - Y', strtotime($invoice->invoice_date)); ?></h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:14px;"><span style="font-weight:bold;">No. Invoice </span><span style="margin-left:10px;">:</span> {{$invoice -> invoice_no}}</h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:14px;"><span style="font-weight:bold;">No. Order </span> <span style="margin-left:19px;">:</span> {{$invoice -> no_so}} {{$invoice -> no_quote}}</h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:14px;"><span style="font-weight:bold;">Tanggal </span> <span style="margin-left:32px;">:</span> <?php echo date('d - m - Y', strtotime($invoice->invoice_date)); ?></h6>
     
 </div>
 

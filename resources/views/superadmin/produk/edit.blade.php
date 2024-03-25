@@ -33,7 +33,16 @@
         <label for="" class="form-label" style="color:black;">Harga Jual</label>
     <input name="harga_jual" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->harga_jual}}" oninput="validasiNumber(this)"/>
 </div>
+<div class="form-group mb-4">
+        <label for="" class="form-label" style="color:black;">Kode Supplier</label>
+    <input name="kode_supplier" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->kode_supplier}}" />
+</div>
 
+
+<div class="form-group mb-4">
+        <label for="" class="form-label" style="color:black;">Nama Supplier</label>
+    <input name="nama_supplier" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->nama_supplier}}" />
+</div>
                                                 <button type="submit" class="btn btn-pd " style="">Simpan</button>
                                             </div>
 

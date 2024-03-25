@@ -24,27 +24,30 @@
     <hr style=" border: 1px solid black;">
 
     <!-- Split the content into two columns -->
-    <div class ="informasi" style="display: flex;">
+       <!-- Split the content into two columns -->
+       <div class ="informasi" style="display: flex;">
 
-        <!-- Left column -->
-        <div style="flex: 1; margin-right: 10px;">
-        <h6 style="color:black; font-family: Arial, sans-serif;">No Purchase Order : {{$po->no_po}}</h6>
-        <h6 style="color:black; font-family: Arial, sans-serif;">Tanggal : <?php echo date('d - m - Y', strtotime($po->po_date)); ?></h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;"> Nama Customer :  PT Exa Mitra Solusi</h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;"> Alamat :  Graha Arteri Mas Kav 62 - 63, Kel. Kedoya Selatan, Kec. Kebon Jeruk, Jakbar 11520</h6>
+<!-- Left column -->
+<div style="flex: 2; margin-right: 10px;">
+<h6 style="color:black; font-family: Arial, sans-serif; font-size:14px;"><span style="font-weight:bold;">No Purchase Order <span style="margin-left:10px;">:</span></span>  {{$po->no_po}}</h6>
+<h6 style="color:black; font-family: Arial, sans-serif;font-size:14px;"><span style="font-weight:bold;"> Nama Customer <span style="margin-left:30px;">:</span></span> PT BPM SOLUTION</h6>
+<h6 style="color:black; font-family: Arial, sans-serif;font-size:14px;"> <span style="font-weight:bold;">Alamat <span style="margin-left:90px;">:</span>  </span>JL. Pulau Bira D . I No. 12 A, Kembangan Utara, Kembangan  Jakarta Barat - DKI Jakarta 11610</h6>
+<h6 style="color:black; font-family: Arial, sans-serif;font-size:14px;"><span style="font-weight:bold;">Nomor Handphone <span style="margin-left:10px;">:</span></span> {{$po->no_hp}}</h6>
+<h6 style="color:black; font-family: Arial, sans-serif;font-size:14px;"><span style="font-weight:bold;">Email <span style="margin-left:100px;">:</span> </span>{{$po->email}}</h6>
 
-        </div>
+</div>
 
-        <!-- Right column -->
-        <div style="flex: 1; margin-left: 10px;">
-        <h6 style="color:black; font-family: Arial, sans-serif;">Nomor Handphone : {{$po->no_hp}}</h6>
-        <h6 style="color:black; font-family: Arial, sans-serif;">Email : {{$po->email}}</h6>
+<!-- Right column -->
+
+<div style="flex: 1; margin-left: 10px;">
+<h6 style="color:black; font-family: Arial, sans-serif;font-size:14px;"><span style="font-weight:bold;">Tanggal <span style="margin-left:50px;">:</span> </span><?php echo date('d - m - Y', strtotime($po->po_date)); ?></h6>
 
 
 
-        </div>
 
-    </div>
+</div>
+
+</div>
 
     <!-- Tabel Produk -->
 

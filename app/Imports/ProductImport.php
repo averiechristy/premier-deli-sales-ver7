@@ -38,6 +38,8 @@ class ProductImport implements ToModel, WithStartRow
             'nama_produk' => $row['1'],
             'harga_beli' => $row['2'],
             'harga_jual' => $row['3'],
+            'kode_supplier' => $row['4'],
+            'nama_supplier' => $row['5'],
         ]);
 
     }

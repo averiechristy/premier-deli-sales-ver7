@@ -39,25 +39,25 @@
     <!-- Split the content into two columns -->
     <div class ="informasi" style="display: flex;">
 
-        <!-- Left column -->
-        <div style="flex: 1; margin-right: 10px;">
-            <h6 style="color:black; font-family: Arial, sans-serif;">Nama Customer : {{$quote -> customer -> nama_customer}} </h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;">Alamat : {{$quote -> alamat}} </h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;">Nama PIC : {{$quote -> nama_pic}} </h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;">Email : {{$quote -> email}} </h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;">Phone : {{$quote -> customer -> no_hp}} </h6>
-        </div>
+<!-- Left column -->
+<div style="flex: 1; margin-right: 10px;">
+    <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Nama Customer</span> <span style="margin-left:10px;">:</span> {{$quote -> customer -> nama_customer}} </h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Alamat</span> <span style="margin-left:80px;">:</span> {{$quote -> alamat}} </h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Nama PIC</span> <span style="margin-left:59px;">:</span> {{$quote -> nama_pic}} </h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Email</span> <span style="margin-left:91px;">:</span> {{$quote -> email}} </h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Phone</span> <span style="margin-left: 85px;">:</span> {{$quote -> customer -> no_hp}} </h6>
+</div>
 
-        <!-- Right column -->
-        <div style="flex: 1; margin-left: 10px;">
-            <h6 style="color:black; font-family: Arial, sans-serif;">No Order : {{$quote -> no_quote}}</h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;">Tanggal : <?php echo date('d - m - Y', strtotime($quote->quote_date)); ?></h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;">Tanggal Valid: <?php echo date('d - m - Y', strtotime($quote->valid_date)); ?></h6>
+<!-- Right column -->
+<div style="flex: 1; margin-left: 10px;">
+    <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">No Order</span> <span style="margin-left:43px;">:</span> {{$quote -> no_quote}}</h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Tanggal</span> <span style="margin-left:52px;">:</span> <?php echo date('d - m - Y', strtotime($quote->quote_date)); ?></h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Tanggal Valid</span> <span style="margin-left:10px;">:</span> <?php echo date('d - m - Y', strtotime($quote->valid_date)); ?></h6>
 
 
-        </div>
+</div>
 
-    </div>
+</div>
 
     <!-- Tabel Produk -->
 

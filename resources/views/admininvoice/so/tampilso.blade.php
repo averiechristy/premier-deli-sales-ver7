@@ -39,22 +39,24 @@
     <!-- Split the content into two columns -->
     <div class ="informasi" style="display: flex;">
 
-        <!-- Left column -->
-        <div style="flex: 1; margin-right: 10px;">
-            <h6 style="color:black; font-family: Arial, sans-serif;">Nama Customer : {{$so -> customer -> nama_customer}} </h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;">Alamat : {{$so -> alamat}} </h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;">Phone : {{$so -> customer -> no_hp}} </h6>
-        </div>
+<!-- Left column -->
+<div style="flex: 1; margin-right: 10px;">
+    <h6 style="color:black; font-family: Arial, sans-serif; font-size:14px;"><span style="font-weight:bold;">Nama Customer <span style="margin-left:10px;"> : </span></span>   {{$so  -> nama_customer}} </h6>
+    <h6 style="color:black; font-family: Arial, sans-serif; font-size:14px;"><span style="font-weight:bold;">Alamat <span style="margin-left:70px;"> : </span></span>   {{$so -> alamat}} </h6>
+    <h6 style="color:black; font-family: Arial, sans-serif; font-size:14px;"><span style="font-weight:bold;">Phone  <span style="margin-left:74px;"> : </span></span>   {{$so -> customer -> no_hp}} </h6>
 
-        <!-- Right column -->
-        <div style="flex: 1; margin-left: 10px;">
-            <h6 style="color:black; font-family: Arial, sans-serif;">No Order : {{$so -> no_so}}</h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;">Tanggal : <?php echo date('d - m - Y', strtotime($so->so_date)); ?></h6>
-<h6 style="color:black; font-family: Arial, sans-serif;">Tanggal Pengiriman : <?php echo date('d - m - Y', strtotime($so->rfo->shipping_date)); ?></h6>
 
-        </div>
+</div>
 
-    </div>
+<!-- Right column -->
+<div style="flex: 1; margin-left: 10px;">
+    <h6 style="color:black; font-family: Arial, sans-serif; font-size:14px;"><span style="font-weight:bold;">No Order<span style="margin-left:83px;"> :</span></span> {{$so -> no_so}}</h6>
+    <h6 style="color:black; font-family: Arial, sans-serif; font-size:14px;"><span style="font-weight:bold;">Tanggal <span style="margin-left:91px;">:</span></span> <?php echo date('d - m - Y', strtotime($so->so_date)); ?></h6>
+    <h6 style="color:black; font-family: Arial, sans-serif; font-size:14px;"><span style="font-weight:bold;">Tanggal Pengiriman <span style="margin-left:10px;">:</span></span> <?php echo date('d - m - Y', strtotime($so->rfo->shipping_date)); ?></h6>
+</div>
+
+</div>
+
 
     <!-- Tabel Produk -->
 

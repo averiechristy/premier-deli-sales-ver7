@@ -73,18 +73,16 @@ entries
                 </thead>
                 <tbody>
              @foreach ($so as $data)
-            <tr>
-                
-                
+            <tr> 
                 <td>{{$data->no_so}}</td>
                 <td>{{$data-> no_rfo}}</td>
-                <td>{{$data -> customer -> nama_customer}}</td>
-                <td>{{ \Carbon\Carbon::parse($data->so_date)->format('d-m-Y') }}</td>                <td>    
-                <a href="{{route('tampilpesananso', $data->id)}}"><button type="button" class="btn btn-link">
-         Lihat Detail Pesanan
-                
-            </a>
-</td>
+                <td>{{$data  -> nama_customer}}</td>
+                <td>{{ \Carbon\Carbon::parse($data->so_date)->format('d-m-Y') }}</td>                
+            <td>    
+    <a href="{{route('tampilpesananso', $data->id)}}"><button type="button" class="btn btn-link">
+         Lihat Detail Pesanan  
+    </a>
+    </td>
 <td>
 {{$data->status_so}}
 </td>
@@ -92,9 +90,7 @@ entries
 <td>
     <a id="cetakSalesOrder{{$data->id}}" href="{{route('tampilso',$data->id)}}">
         Cetak Sales Order
-    </a>
-
-  
+    </a>  
 </td>
 <script>
     $(document).ready(function(){

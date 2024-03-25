@@ -6,6 +6,9 @@ use App\Exports\TemplateCustomerExport;
 use App\Exports\TemplateCustomerExportSA;
 use App\Imports\CustomerImport;
 use App\Models\Customer;
+use App\Models\Inovice;
+use App\Models\RFO;
+use App\Models\SalesOrder;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -155,6 +158,8 @@ public function managercreate(){
 public function admininvoicedestroy(Request $request, $id){
 
     $datacust = Customer::find($id);
+
+ 
     $datacust->delete();
     $request->session()->flash('success', "Data customer berhasil dihapus.");
 
@@ -164,6 +169,21 @@ public function admininvoicedestroy(Request $request, $id){
 public function superadmindestroy(Request $request, $id){
     
     $datacust = Customer::find($id);
+
+    if (RFO::where('cust_id', $datacust->id)->exists()) {
+        $request->session()->flash('error', "Tidak dapat menghapus Customer, karena masih ada data  yang berhubungan");
+        return redirect()->route('superadmin.customer.index');
+    }
+
+    if (SalesOrder::where('cust_id', $datacust->id)->exists()) {
+        $request->session()->flash('error', "Tidak dapat menghapus Customer, karena masih ada data  yang berhubungan");
+        return redirect()->route('superadmin.customer.index');
+    }
+
+    if (Inovice::where('cust_id', $datacust->id)->exists()) {
+        $request->session()->flash('error', "Tidak dapat menghapus Customer, karena masih ada data  yang berhubungan");
+        return redirect()->route('superadmin.customer.index');
+    }
     $datacust->delete();
     $request->session()->flash('success', "Data customer berhasil dihapus.");
 
@@ -172,7 +192,23 @@ public function superadmindestroy(Request $request, $id){
 
 public function leaderdestroy(Request $request, $id){
     $datacust = Customer::find($id);
+    if (RFO::where('cust_id', $datacust->id)->exists()) {
+        $request->session()->flash('error', "Tidak dapat menghapus Customer, karena masih ada data  yang berhubungan");
+            return redirect()->route('leader.customer.index');
 
+    }
+
+    if (SalesOrder::where('cust_id', $datacust->id)->exists()) {
+        $request->session()->flash('error', "Tidak dapat menghapus Customer, karena masih ada data  yang berhubungan");
+            return redirect()->route('leader.customer.index');
+
+    }
+
+    if (Inovice::where('cust_id', $datacust->id)->exists()) {
+        $request->session()->flash('error', "Tidak dapat menghapus Customer, karena masih ada data  yang berhubungan");
+            return redirect()->route('leader.customer.index');
+
+    }
     $datacust->delete();
     $request->session()->flash('success', "Data customer berhasil dihapus.");
 
@@ -181,7 +217,23 @@ public function leaderdestroy(Request $request, $id){
 
 public function managerdestroy(Request $request, $id){
     $datacust = Customer::find($id);
+    if (RFO::where('cust_id', $datacust->id)->exists()) {
+        $request->session()->flash('error', "Tidak dapat menghapus Customer, karena masih ada data  yang berhubungan");
+            return redirect()->route('manager.customer.index');
 
+    }
+
+    if (SalesOrder::where('cust_id', $datacust->id)->exists()) {
+        $request->session()->flash('error', "Tidak dapat menghapus Customer, karena masih ada data  yang berhubungan");
+            return redirect()->route('manager.customer.index');
+
+    }
+
+    if (Inovice::where('cust_id', $datacust->id)->exists()) {
+        $request->session()->flash('error', "Tidak dapat menghapus Customer, karena masih ada data  yang berhubungan");
+            return redirect()->route('manager.customer.index');
+
+    }
     $datacust->delete();
     $request->session()->flash('success', "Data customer berhasil dihapus.");
 

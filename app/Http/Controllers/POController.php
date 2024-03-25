@@ -199,12 +199,12 @@ $mergedDetail = array_values($mergedDetail);
          if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonthIndex) {
              // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
              // maka nomor urutan direset menjadi 1
-             $ponumber = '0001/PO/EXA-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+             $ponumber = '0001/PO/BPM-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear;
          } else {
              // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
              // maka nomor urutan diincrement
              $lastOrder = $lastpo ? intval(substr($lastpo->no_po, 0, 4)) : 0; // Mendapatkan nomor urutan terakhir
-             $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/EXA-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear; // Menggabungkan nomor urutan dengan PO/EXA-PSA/bulan berjalan (dalam huruf romawi)/tahun 4 digit
+             $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/BPM-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear; // Menggabungkan nomor urutan dengan PO/EXA-PSA/bulan berjalan (dalam huruf romawi)/tahun 4 digit
          }     
          $produk = Produk::orderBy('nama_produk', 'asc')->get();
         
@@ -373,12 +373,12 @@ $mergedDetail = array_values($mergedDetail);
          if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonthIndex) {
              // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
              // maka nomor urutan direset menjadi 1
-             $ponumber = '0001/PO/EXA-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+             $ponumber = '0001/PO/BPM-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear;
          } else {
              // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
              // maka nomor urutan diincrement
              $lastOrder = $lastpo ? intval(substr($lastpo->no_po, 0, 4)) : 0; // Mendapatkan nomor urutan terakhir
-             $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/EXA-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear; // Menggabungkan nomor urutan dengan PO/EXA-PSA/bulan berjalan (dalam huruf romawi)/tahun 4 digit
+             $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/BPM-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear; // Menggabungkan nomor urutan dengan PO/EXA-PSA/bulan berjalan (dalam huruf romawi)/tahun 4 digit
          }     
      
          $produk = Produk::orderBy('nama_produk', 'asc')->get();
