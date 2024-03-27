@@ -19,6 +19,9 @@ class PurchaseOrder extends Model
         'created_by',
         'updated_by',
         'is_cancel',
+        'kode_supplier',
+        'kode_channel',
+        'month',
     ];
 
     public function detailpurchase()

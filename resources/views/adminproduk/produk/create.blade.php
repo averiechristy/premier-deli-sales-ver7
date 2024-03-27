@@ -13,6 +13,16 @@
                                     <form name="saveform" action="{{route('adminproduk.produk.simpan')}}" method="post" onsubmit="return validateForm()">
                                         @csrf                       
 
+                                        <div class="form-group mb-4">
+    <label for="" class="form-label" style="color:black;">Pilih Supplier</label>
+    <select name="supplier_id" id="supplier_id" class="form-control" style="border-color: #01004C;" aria-label=".form-select-lg example" >
+        <option value="" selected disabled>-- Pilih Supplier --</option>
+      @foreach ($supplier as $data)
+                <option value="{{$data->id}}"> {{$data -> kode_supplier}} - {{$data -> nama_supplier}}</option>
+      @endforeach
+    </select>
+</div>
+
 <div class="form-group mb-4">
         <label for="" class="form-label" style="color:black;">Kode Produk</label>
     <input name="kode_produk" type="text"  class="form-control " style="border-color: #01004C;" value="" />
@@ -34,7 +44,7 @@
     <input name="harga_jual" type="number"  class="form-control " style="border-color: #01004C;" value="" oninput="validasiNumber(this)"/>
 </div>
 
-<div class="form-group mb-4">
+<!-- <div class="form-group mb-4">
         <label for="" class="form-label" style="color:black;">Kode Supplier</label>
     <input name="kode_supplier" type="text"  class="form-control " style="border-color: #01004C;" value="" />
 </div>
@@ -43,7 +53,7 @@
 <div class="form-group mb-4">
         <label for="" class="form-label" style="color:black;">Nama Supplier</label>
     <input name="nama_supplier" type="text"  class="form-control " style="border-color: #01004C;" value="" />
-</div>
+</div> -->
 
 
                                                 <button type="submit" class="btn btn-pd " style="">Simpan</button>
@@ -69,14 +79,19 @@ function validasiNumber(input) {
 </script>
   
 <script>
+
     function validateForm() {
+    let supplier = document.forms["saveform"]["supplier_id"].value;
     let kodeproduk = document.forms["saveform"]["kode_produk"].value;
     let namaproduk = document.forms["saveform"]["nama_produk"].value;
     let hargabeli = document.forms["saveform"]["harga_beli"].value;
     let hargajual = document.forms["saveform"]["harga_jual"].value;
     
-
-    if(kodeproduk == "") {
+    if(supplier == "") {
+        alert("Supplier harus dipilih");
+    return false;
+    }
+    else if(kodeproduk == "") {
         alert("Kode produk tidak boleh kosong");
     return false;
     }
@@ -92,8 +107,9 @@ function validasiNumber(input) {
         alert("Harga jual tidak boleh kosong");
     return false;
     }
-
+    
     }
+
 </script>
 
 @endsection

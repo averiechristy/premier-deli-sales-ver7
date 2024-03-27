@@ -15,12 +15,7 @@
 
                                         <input type="hidden" name="selected_so" value="{{ json_encode($selectedSOs) }}">
 
-                                        <input type="hidden" name="selected_quote" value="{{ json_encode($selectedQuote) }}">
-
-<div class="form-group mb-4">
-    <label for="" class="form-label" style="color:black;">No Purchase Order</label>
-    <input name="no_po" type="text" class="form-control" style="border-color: #01004C; width:50%;" value="{{ $ponumber }}" readonly />
-</div>
+                                        <input type="hidden" name="selected_quote" value="{{ json_encode($selectedQuotes) }}">
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Tanggal PO</label>
@@ -57,77 +52,58 @@
     orderDateInput.value = formattedDate;
 </script>
 
-
-
-
 <div id="product-fields">
-
-
-@foreach ($mergedDetail as $index => $detaildata)
-    <div class="row product-field">
-        <div class="col-md-4">
-            <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Produk</label>
-                <!-- Berikan id yang unik untuk setiap elemen select -->
-                <select name="product[]" class="form-control product-select" id="productselect{{$index}}" style="border-color: #01004C;max-width: 100%;" aria-label=".form-select-lg example" readonly>
-                    <option value="" selected disabled>-- Pilih Produk --</option>
-                    @foreach ($produk as $item)
-                        <option value="{{$item->id}}" {{ old('product[]', $detaildata['product_id']) == $item->id ? 'selected' : '' }} >{{$item->kode_produk}} - {{$item->nama_produk}}</option>
-                    @endforeach
-                </select>
-            </div>
+@foreach($mergedDetail as $key => $value)
+    <div class="card mt-3">
+        <div class="card-header" style="color:black;">
+            <input type="text" value={{$key}} name="kode_supplier[{{$key}}][]" hidden>
+            {{ $key }}
         </div>
-
-
-        <div class="col-md-3">
+        <div class="card-body" style="color:black;">
             <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Harga</label>
-                <input name="price[]" type="number" class="form-control" style="border-color: #01004C;" value="{{ $detaildata['harga_beli'] }}" readonly/>
+                <label for="po_number">PO Number</label>
+                <input type="text" class="form-control" id="po_number" name="po_number[{{$key}}][]" value="{{ $value['po_number'] }}" readonly>
             </div>
-        </div>
-
-
-        <div class="col-md-2">
-            <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
-                <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata['qty']}}" readonly />
-            </div>
-        </div>
-        <div class="col-md-1">
-        <!-- <div class="form-group mb-4">
-            <label for="" class="form-label" style="color:black;">Action</label>
-            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Remove</button>
-            </div> -->
+            @foreach($value['items'] as $subValue)
+                <div class="row product-field">
+                    <div class="col-md-4">
+                        <div class="form-group mb-4">
+                            <label for="" class="form-label" style="color:black;">Produk</label>
+                            <select name="produk[{{$key}}][]" class="form-control product-select" readonly>
+                                <option value="{{ $subValue['produk_id'] }}">{{ $subValue['kode_produk'] }} - {{ $subValue['nama_produk'] }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-4">
+                            <label for="" class="form-label" style="color:black;">Harga</label>
+                            <input type="number" name="price[{{$key}}][]" class="form-control" value="{{ $subValue['harga_beli'] }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group mb-4">
+                            <label for="" class="form-label" style="color:black;">Quantity</label>
+                            <input type="number" name="qty[{{$key}}][]" class="form-control" value="{{ $subValue['quantity'] }}" readonly>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
         </div>
     </div>
+@endforeach
 
-    <script>
+<script>
         // Menonaktifkan interaksi pengguna dengan elemen select produk
-        document.getElementById('productselect{{$index}}').addEventListener('mousedown', function(e) {
+        document.getElementById('productselect{{$key}}').addEventListener('mousedown', function(e) {
             e.preventDefault();
             this.blur();
             return false;
         });
-        document.getElementById('productselect{{$index}}').addEventListener('keydown', function(e) {
+        document.getElementById('productselect{{$key}}').addEventListener('keydown', function(e) {
             e.preventDefault();
             return false;
         });
     </script>
-@endforeach
-
-<script>
-    $(document).ready(function() {
-        // Panggil fungsi select2() untuk setiap elemen product-select di dalam perulangan
-        $(".product-select").each(function(index) {
-            // Gunakan id yang unik untuk setiap elemen select
-            var selectId = "productselect" + index;
-            $("#" + selectId).select2();
-        });
-    });
-</script>
-
-
-
 </div>
 
 <!-- <button type="button" class="btn btn-success mt-3" id="add-product-field">Add Product</button> -->

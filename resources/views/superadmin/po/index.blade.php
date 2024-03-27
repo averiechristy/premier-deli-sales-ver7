@@ -13,8 +13,46 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
 
-                        <a href="{{route('superadmin.po.showso')}}" class="btn btn-pd btn-sm">Buat Purchase Order</a>
-                        <span id="notificationBadge" class="badge badge-pill badge-danger"></span>
+                        <div class="button-container">
+    <div class="left-button">
+        <a href="{{route('superadmin.po.showso')}}" class="btn btn-pd btn-sm">Buat Purchase Order</a>
+        <span id="notificationBadge" class="badge badge-pill badge-danger">Notifikasi</span>
+    </div>
+ 
+    <div class="right-button">
+        <a href="{{route('superadmin.po.createpochannel')}}" class="btn btn-info btn-sm  ">Buat PO E-commerce</a>
+    </div>
+</div>
+
+<style>
+   .button-container {
+    display: flex;
+}
+
+.left-button {
+    border-right: 1px solid #000; /* Memberikan garis kanan pada left-button */
+    padding-right: 10px; /* Memberikan padding agar garis terlihat jelas */
+}
+
+.right-button {
+    padding-left: 10px; /* Memberikan padding agar garis terlihat jelas */
+}
+
+/* Gaya untuk tombol "Buat Purchase Order" */
+.custom-btn.btn-pd {
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+}
+
+/* Gaya untuk tombol "Buat PO E-commerce" */
+.custom-btn.btn-info {
+    background-color: #17a2b8;
+    color: #fff;
+    border: 1px solid #17a2b8;
+}
+
+</style>
 
 <script>
 // Ambil elemen tombol

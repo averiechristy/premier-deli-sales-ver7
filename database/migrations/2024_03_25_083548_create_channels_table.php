@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('channels', function (Blueprint $table) {
             $table->id();
+            $table->string('kode_channel');
+            $table->string('nama_channel');
             $table->timestamps();
         });
     }

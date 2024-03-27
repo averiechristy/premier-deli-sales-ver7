@@ -24,7 +24,8 @@ class Quotation extends Model
         'status_quote',
         'is_persen',
         'discount',
-        'ppn'
+        'ppn',
+        'kode_channel',
     ];
 
     public function customer()

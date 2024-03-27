@@ -110,7 +110,7 @@
 </tfoot>
 
         </table>
-        <p style="color:black">Barang diterima dalam kondisi baik dan kondisi memuaskan oleh :</p>
+        <p style="color:black">Barang diterima dalam kondisi baik oleh :</p>
 
         <div class="ttd-container" style="display: flex; justify-content: space-between; margin-top: 20px;">
     <!-- Tanda tangan Pembeli -->

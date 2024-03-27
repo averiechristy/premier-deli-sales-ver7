@@ -21,6 +21,7 @@ class RFO extends Model
         'status_rfo',
         'nama_pembuat',
         'no_rfo',
+        'kode_supplier',
     ];
 
     public function customer()

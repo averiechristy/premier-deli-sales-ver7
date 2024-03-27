@@ -60,7 +60,10 @@
     <textarea name="lokasi" type="text"  class="form-control " style="border-color: #01004C;" value="" >{{$data -> lokasi}}</textarea>
 </div>
 
-
+<div class="form-group mb-4">
+        <label for="" class="form-label" style="color:black;">Produk yang digunakan sebelumnya</label>
+    <textarea name="produk_sebelumnya" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->produk_sebelumnya}}">{{$data->produk_sebelumnya}}</textarea>
+</div>
                                                 <button type="submit" class="btn btn-pd " style="">Simpan</button>
                                             </div>
 

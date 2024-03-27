@@ -24,6 +24,8 @@ class SalesOrder extends Model
         'status_so',
         'is_cetak',
         'is_download',
+        'kode_channel',
+        'kode_supplier',
     ];
 
     public function customer()

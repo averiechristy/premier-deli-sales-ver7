@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CancelController;
+use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DOController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\RFOController;
 use App\Http\Controllers\SOController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserAccountController;
 use App\Models\CancelApproval;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +42,9 @@ Route::post('/logout', [AuthController::class,'logout'])->name('logout');
 //All Dashboard
 //Superadmin
 Route::middleware('auth')->middleware('ensureUserRole:SUPER ADMIN')->group(function () {
+
+    Route::get('/superadmin-get-products-by-supplier', [ProdukController::class,'superadmingetProductsBySupplier']);
+
 
 Route::get('superadmin/dashboard', [DashboardController::class, 'superadminindex'])->name('superadmin.dashboard');
 Route::get('superadmin/useraccount/index', [UserAccountController::class, 'superadminindex'])->name('superadmin.useraccount.index');
@@ -124,6 +129,28 @@ Route::post('/user/{user}/reset-password', [UserAccountController::class,'resetP
 Route::get('superadmin/perubahaninvoice/{id}',[InvoiceController::class,'superadminperubahan'])->name('superadmin.perubahaninvoice');
 Route::post('superadminupdateinvoice/{id}',[InvoiceController::class,'superadminupdateinvoice'])->name('superadminupdateinvoice');
 
+Route::get('superadmin/channel/index',[ChannelController::class,'superadminindex'])->name('superadmin.channel.index');
+
+Route::get('superadmin/channel/create',[ChannelController::class,'superadmincreate'])->name('superadmin.channel.create');
+Route::post('superadmin/channel/simpan',[ChannelController::class,'superadminstore'])->name('superadmin.channel.simpan');
+
+Route::get('/tampilchannel/{id}',[ChannelController::class,'superadminshow'])->name('tampilchannel');
+Route::post('/updatechannel/{id}',[ChannelController::class,'superadminupdate'])->name('updatechannel');
+Route::delete('/deletechannel/{id}',[ChannelController::class,'adminprodukdestroy'])->name('deletechannel');
+
+
+Route::get('superadmin/createpochannel', [POController::class,'superadmincreatePO'])->name('superadmin.po.createpochannel');
+Route::post('superadmin/po/simpanpochannel',[POController::class,'superadminsimpanpochannel'])->name('superadmin.po.simpanpochannel');
+Route::get('superadmin/po/showsupplier',[POController::class,'superadminshowsupplier'])->name('superadmin.po.showsupplier');
+
+Route::get('superadmin/supplier/index', [SupplierController::class,'superadminindex'])->name('superadmin.supplier.index');
+Route::get('superadmin/supplier/create', [SupplierController::class,'superadmincreate'])->name('superadmin.supplier.create');
+
+Route::post('superadmin/supplier/simpan', [SupplierController::class,'superadminstore'])->name('superadmin.supplier.simpan');
+Route::get('/superadmintampilsupplier/{id}',[SupplierController::class,'superadminshow'])->name('superadmintampilsupplier');
+Route::post('/superadminupdatesupplier/{id}',[SupplierController::class,'superadminupdate'])->name('superadminupdatesupplier');
+Route::delete('/superadmindeletesupplier/{id}',[SupplierController::class,'superadmindestroy'])->name('superadmindeletesupplier');
+
 });
 
 
@@ -143,6 +170,15 @@ Route::delete('/deleteproduk/{id}',[ProdukController::class,'adminprodukdestroy'
 
 Route::get('adminproduk/changepassword', [UserAccountController::class,'adminprodukchangepasswordindex'])->name('adminprodukpassword');
 Route::post('adminproduk/changepassword', [UserAccountController::class,'adminprodukchangePassword'])->name('adminproduk-change-password');
+
+
+Route::get('adminproduk/supplier/index', [SupplierController::class,'adminprodukindex'])->name('adminproduk.supplier.index');
+Route::get('adminproduk/supplier/create', [SupplierController::class,'adminprodukcreate'])->name('adminproduk.supplier.create');
+
+Route::post('adminproduk/supplier/simpan', [SupplierController::class,'adminprodukstore'])->name('adminproduk.supplier.simpan');
+Route::get('/tampilsupplier/{id}',[SupplierController::class,'adminprodukshow'])->name('tampilsupplier');
+Route::post('/updatesupplier/{id}',[SupplierController::class,'adminprodukupdate'])->name('updatesupplier');
+Route::delete('/deletesupplier/{id}',[SupplierController::class,'adminprodukdestroy'])->name('deletesupplier');
 
 
 });
@@ -216,6 +252,14 @@ Route::post('admininvoice/changepassword', [UserAccountController::class,'admini
 Route::get('/filter', [DashboardController::class, 'filter'])->name('filter');
 
 Route::get('admininvoice/perubahaninvoice/{id}',[InvoiceController::class,'admininvoiceperubahan'])->name('admininvoice.perubahaninvoice');
+Route::get('admininvoice/po/showchannel',[POController::class,'showchannel'])->name('admininvoice.po.showchannel');
+Route::get('admininvoice/po/showsupplier',[POController::class,'showsupplier'])->name('admininvoice.po.showsupplier');
+
+Route::get('admininvoice/createpochannel', [POController::class,'createPO'])->name('admininvoice.po.createpochannel');
+Route::post('admininvoice/po/simpanpochannel',[POController::class,'simpanpochannel'])->name('admininvoice.po.simpanpochannel');
+
+Route::get('/get-products-by-supplier', [ProdukController::class,'getProductsBySupplier']);
+Route::get('/get-product-price',  [ProdukController::class,'getProductPrice'])->name('get-product-price');
 
 });
 
@@ -303,6 +347,16 @@ Route::middleware('auth')->middleware('ensureUserRole:LEADER')->group(function (
     Route::get('leader/changepassword', [UserAccountController::class,'leaderchangepasswordindex'])->name('leaderpassword');
 Route::post('leader/changepassword', [UserAccountController::class,'leaderchangePassword'])->name('leader-change-password');
 
+
+Route::get('leader/channel/index',[ChannelController::class,'leaderindex'])->name('leader.channel.index');
+
+Route::get('leader/channel/create',[ChannelController::class,'leadercreate'])->name('leader.channel.create');
+Route::post('leader/channel/simpan',[ChannelController::class,'leaderstore'])->name('leader.channel.simpan');
+
+Route::get('/leadertampilchannel/{id}',[ChannelController::class,'leadershow'])->name('leadertampilchannel');
+Route::post('/leaderupdatechannel/{id}',[ChannelController::class,'leaderupdate'])->name('leaderupdatechannel');
+Route::delete('/leaderdeletechannel/{id}',[ChannelController::class,'leaderdestroy'])->name('leaderdeletechannel');
+
     });
 
     //MANAGER
@@ -358,5 +412,15 @@ Route::post('leader/changepassword', [UserAccountController::class,'leaderchange
 
         Route::post('managercancelrfo',[RFOController::class,'managercancelrfo'])->name('managercancelrfo');
         Route::post('managercancelquote',[QuotationController::class,'managercancelquote'])->name('managercancelquote');
+
+
+        Route::get('manager/channel/index',[ChannelController::class,'managerindex'])->name('manager.channel.index');
+
+Route::get('manager/channel/create',[ChannelController::class,'managercreate'])->name('manager.channel.create');
+Route::post('manager/channel/simpan',[ChannelController::class,'managerstore'])->name('manager.channel.simpan');
+
+Route::get('/managertampilchannel/{id}',[ChannelController::class,'managershow'])->name('managertampilchannel');
+Route::post('/managerupdatechannel/{id}',[ChannelController::class,'managerupdate'])->name('managerupdatechannel');
+Route::delete('/managerdeletechannel/{id}',[ChannelController::class,'managerdestroy'])->name('managerdeletechannel');
 
     });

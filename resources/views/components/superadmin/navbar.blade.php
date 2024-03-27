@@ -27,6 +27,12 @@
             <i class="fas fa-fw fa-users"></i>
             <span>User Account</span></a>
     </li>
+
+    <li class="nav-item {{ Request::is('superadmin/channel/index') ||  Request::is('superadmin/channel/create')? 'active' : '' }}">
+        <a class="nav-link" href="{{route('superadmin.channel.index')}}">
+            <i class="fa fa-shopping-cart"></i>
+            <span>Channel</span></a>
+    </li>
     
     <li class="nav-item {{ Request::is('superadmin/customer/index') ||  Request::is('superadmin/customer/create')? 'active' : '' }}">
         <a class="nav-link" href="{{route('superadmin.customer.index')}}">
@@ -34,11 +40,18 @@
             <span>Customer</span></a>
     </li>
 
+    <li class="nav-item {{ Request::is('superadmin/supplier/index') ||  Request::is('superadmin/supplier/create')? 'active' : '' }}">
+        <a class="nav-link"  href="{{route('superadmin.supplier.index')}}">
+            <i  class="fa fa-building-o"></i>
+            <span>Supplier</span></a>
+    </li>
+
     <li class="nav-item {{ Request::is('superadmin/produk/index') ||  Request::is('superadmin/produk/create')? 'active' : '' }}">
         <a class="nav-link"  href="{{route('superadmin.produk.index')}}">
             <i class="fa fa-cutlery"></i>
             <span>Produk</span></a>
     </li>
+    
     <li class="nav-item {{ Request::is('superadmin/rfo/index') ||  Request::is('superadmin/rfo/create')? 'active' : '' }}">
         <a class="nav-link"   href="{{route('superadmin.rfo.index')}}">
       

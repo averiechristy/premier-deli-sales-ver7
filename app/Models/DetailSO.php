@@ -18,6 +18,8 @@ class DetailSO extends Model
        'keterangan',
        'so_price',
        'total_price',
+       'kode_supplier',
+       'kode_channel',
     ];
 
     public function produk()

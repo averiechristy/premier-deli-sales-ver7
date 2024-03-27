@@ -322,7 +322,7 @@ $(document).on('change', '.product-select', function() {
 </div>
 
 <div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">Pembayaran</label>
+        <label for="" class="form-label" style="color:black;">Down Payment</label>
     <input name="pembayaran" type="number"  class="form-control " style="border-color: #01004C;" value="" />
 </div>
 

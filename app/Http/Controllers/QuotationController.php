@@ -27,6 +27,8 @@ class QuotationController extends Controller
         ]);
     }
 
+    
+
     public function leaderindex()
     {
         $loggedInUser = auth()->user();
@@ -41,8 +43,6 @@ class QuotationController extends Controller
         ->orderBy('created_at', 'desc')
         ->get();
 
-
-       
 
         return view ('leader.quotation.index',[
             'quotedarisales' => $quotedarisales,
@@ -375,6 +375,7 @@ class QuotationController extends Controller
                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
                        'quote_price' => $product -> harga_jual,
                        'total_price' => $totalprice,
+                       'kode_supplier' => $product->kode_supplier,
                    ];
                }
            }
@@ -471,6 +472,8 @@ class QuotationController extends Controller
                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
                        'quote_price' => $product -> harga_jual,
                        'total_price' => $totalprice,
+                       'kode_supplier' => $product->kode_supplier,
+                       'kode_channel' => "BPM",
                    ];
                }
            }
@@ -568,6 +571,8 @@ class QuotationController extends Controller
                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
                        'quote_price' => $product -> harga_jual,
                        'total_price' => $totalprice,
+                       'kode_supplier' => $product->kode_supplier,
+                       'kode_channel' => "BPM",
                    ];
                }
            }

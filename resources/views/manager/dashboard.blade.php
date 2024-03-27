@@ -10,11 +10,11 @@
             <h2 style="color: #9B5718;">Sales Sistem Premier Deli</h2>
         </div>
         </div>
-        <div class="row justify-content-center align-items-center" style="margin-top: 50px;">
+        <div class="row">
         <!-- Request Card -->
 
 
-        <div class="col-md-4">
+        <div class="col-md-4 mt-2">
             <div class="card request-card p-4" style="height: 200px;">
             <a href="{{route('manager.rfo.index')}}">
                 <div class="card-body">
@@ -25,7 +25,7 @@
             </div>
         </div>
         <!-- Quotation Card -->
-        <div class="col-md-4">
+        <div class="col-md-4 mt-2">
             <div class="card quotation-card p-4" style="height: 200px;">
             <a href="{{route('manager.quotation.index')}}">
                 <div class="card-body">
@@ -35,13 +35,24 @@
                 </a>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mt-2">
             <div class="card quotation-card p-4" style="height: 200px;">
             <a href="{{route('manager.customer.index')}}">
                     <div class="card-body">
                         <i class="fa fa-building" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
                         <h4 class="card-title mt-3" style="color: black;">Customer</h4>
                     </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mt-2">
+            <div class="card quotation-card p-4" style="height: 200px;">
+            <a href="{{route('manager.channel.index')}}">
+                <div class="card-body">
+                <i class="fa fa-shopping-cart" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
+                <h4 class="card-title mt-3" style="color: black;">Channel</h4>
+                </div>
                 </a>
             </div>
         </div>

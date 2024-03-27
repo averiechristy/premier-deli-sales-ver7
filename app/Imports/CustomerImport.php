@@ -12,7 +12,14 @@ use Illuminate\Support\Facades\Session;
 class CustomerImport implements ToModel, WithStartRow
 {
     private $lastId;
-
+    private $allowedCategories = [
+        'Hotel',
+        'Restaurant',
+        'Cafe',
+        'Household/Retail',
+        'Reseller',
+        'Consignment'
+    ];
     public function __construct()
     {
         $this->lastId = Customer::latest()->value('id') ?? 0;
@@ -26,7 +33,19 @@ class CustomerImport implements ToModel, WithStartRow
     public function model(array $row)
     {            
         // Validasi format email
-
+        $email = $row['6'];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new \Exception("Format email $email tidak valid");
+        }
+        $noHp = $row['5'];
+        if (!is_numeric($noHp)) {
+            throw new \Exception("Nomor HP $noHp harus berupa angka");
+        }
+        $kategori = $row['1'];
+        if (!in_array($kategori, $this->allowedCategories)) {
+            $allowedCategoriesStr = implode(', ', $this->allowedCategories);
+            throw new \Exception("Kategori $kategori tidak valid, hanya boleh $allowedCategoriesStr");
+        }
         $existingCust = Customer::where('nama_customer', $row['0'])->first();
 
         if ($existingCust) {

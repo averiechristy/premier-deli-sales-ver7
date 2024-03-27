@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CancelApprovalSA;
+use App\Models\Channel;
 use App\Models\DetailPO;
 use App\Models\DetailQuotation;
 use App\Models\DetailSO;
@@ -12,6 +13,8 @@ use App\Models\PurchaseOrder;
 use App\Models\Quotation;
 use App\Models\RFO;
 use App\Models\SalesOrder;
+use App\Models\Supplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class POController extends Controller
@@ -19,7 +22,411 @@ class POController extends Controller
     /**
      * Display a listing of the resource.
      */
+public function showchannel()
+{
 
+    $channel = Channel::get();
+ 
+    return view ('admininvoice.po.showchannel',[
+        'channel' => $channel,
+    ]);
+
+}
+
+public function showsupplier(){
+
+    
+    $supplier = Supplier::get();
+
+    return view('admininvoice.po.showsupplier',[
+       
+        'supplier' => $supplier,
+    ]);
+
+}
+public function superadminshowsupplier(){
+
+    
+    $supplier = Supplier::get();
+
+    return view('superadmin.po.showsupplier',[
+       
+        'supplier' => $supplier,
+    ]);
+
+}
+
+public function createPO(Request $request){
+
+    $datasupplier = Supplier::all();
+    $datachannel = Channel::all();
+
+    
+
+
+ 
+    $polast = PurchaseOrder::latest()->first();
+
+    // $kodesupplier = $polast->kode_supplier;
+
+    // $supplier = Supplier::find($supid);
+
+    // $kodesupplier = $supplier->kode_supplier;
+  
+    
+
+   
+
+    // $lastpo = PurchaseOrder::where('kode_channel', $kodechannel)->where('kode_supplier', $kodesupplier)->latest()->first();
+    // $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
+    // $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
+   
+    // $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
+
+    
+
+    // // Langkah-langkah untuk menentukan nomor urutan berdasarkan PO sebelumnya
+    // if ($lastpo) {
+    //     $lastYear = substr($lastpo->no_po, -4); // Mendapatkan 4 digit tahun dari nomor PO terakhir
+    //     $lastMonth = $lastpo->month; // Mendapatkan bulan dari nomor PO terakhir
+    //     $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");// Mendapatkan indeks bulan romawi dari nomor PO terakhir
+
+    //     $lastMonthIndex= $romanMonth[$lastMonth];
+        
+    // } else {
+    //     $lastYear = '0000';
+    //     $lastMonthIndex = false;
+    // }
+    // if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonth) {
+    //     // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
+    //     // maka nomor urutan direset menjadi 1
+    //     $ponumber = '0001/PO-E'.$kodechannel.'/BPM-' . $kodesupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+    // } else {
+    //     // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
+    //     // maka nomor urutan diincrement
+    //     $lastOrder = intval(substr($lastpo->no_po, 0, 4)); // Mendapatkan nomor urutan terakhir
+    //     $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO-E'.$kodechannel.'/BPM-' . $kodesupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+    // }
+
+   
+    $produk = Produk::all();
+
+    return view ('admininvoice.po.createpochannel',[
+        // 'ponumber' => $ponumber,
+        'produk' => $produk,
+       
+        // 'kodechannel' => $kodechannel,
+        'datachannel' => $datachannel,
+        'datasupplier' => $datasupplier,
+     
+
+    ]);
+
+}
+
+public function simpanpochannel(Request $request){
+
+
+   
+    $channelid = $request->channel_id;
+    $supplierid = $request->supplier_id;
+
+   
+
+    $datachannel = Channel::find($channelid);
+  
+    $datasupplier = Supplier::find($supplierid);
+   
+    $loggedInUser = auth()->user();
+
+    $tanggalHariIni = Carbon::now();
+    $month = $tanggalHariIni->month;
+    
+    $namauser = $loggedInUser->nama;
+    $nohp = $loggedInUser->no_hp;
+    $email = $loggedInUser-> email;
+    $userid = $loggedInUser->id;
+
+   
+
+    
+
+    $kodesupplier = $datasupplier->kode_supplier;
+    $kodechannel = $datachannel -> kode_channel;
+    
+
+   
+
+    $lastpo = PurchaseOrder::where('kode_channel', $kodechannel)->where('kode_supplier', $kodesupplier)->latest()->first();
+    
+  
+    $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
+    $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
+   
+    $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
+
+    
+
+    // Langkah-langkah untuk menentukan nomor urutan berdasarkan PO sebelumnya
+    if ($lastpo) {
+        $lastYear = substr($lastpo->no_po, -4); // Mendapatkan 4 digit tahun dari nomor PO terakhir
+        $lastMonth = $lastpo->month; // Mendapatkan bulan dari nomor PO terakhir
+        $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");// Mendapatkan indeks bulan romawi dari nomor PO terakhir
+
+        $lastMonthIndex= $romanMonth[$lastMonth];
+        
+    } else {
+        $lastYear = '0000';
+        $lastMonthIndex = false;
+    }
+
+
+    if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonth) {
+        // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
+        // maka nomor urutan direset menjadi 1
+       
+        $ponumber = '0001/PO-E'.$kodechannel.'/BPM-' . $kodesupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+    } else {
+        // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
+        // maka nomor urutan diincrement
+        
+        $lastOrder = intval(substr($lastpo->no_po, 0, 4)); // Mendapatkan nomor urutan terakhir
+       
+        $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO-E'.$kodechannel.'/BPM-' . $kodesupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+    }
+
+
+    $po = new PurchaseOrder;
+    $po->no_po = $ponumber;
+    $po->po_date = $request->po_date;
+    $po->user_id = $userid;
+    $po->nama_user = $namauser;
+    $po->email = $email;
+    $po->no_hp = $nohp;
+    $po -> month = $month;
+    $po->kode_channel = $kodechannel;
+    $po->kode_supplier = $kodesupplier;
+   
+    $po->save();
+
+$poDetails = [];
+
+
+if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+foreach ($request->product as $index => $productId) {
+    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+
+    $qty = $request->quantity[$index];
+    $harga = $product -> harga_beli;
+    $totalprice = $qty * $harga;
+
+    if ($product) {
+        $poDetails[] = [
+            'po_id' => $po->id,
+            'product_id' => $productId,
+            'qty' => $request->quantity[$index],
+            'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+            'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+            'po_price' => $product->harga_beli, // Menyimpan kode_produk
+            'total_price' => $totalprice,
+        ];
+    }
+    
+}
+
+DetailPO::insert($poDetails); 
+
+$request->session()->flash('success', "Purchase Order berhasil dibuat");
+
+return redirect()->route('admininvoice.po.index');
+}
+}
+
+
+public function superadmincreatePO(){
+
+    $datasupplier = Supplier::all();
+    $datachannel = Channel::all();
+
+    
+
+
+ 
+    $polast = PurchaseOrder::latest()->first();
+
+    // $kodesupplier = $polast->kode_supplier;
+
+    // $supplier = Supplier::find($supid);
+
+    // $kodesupplier = $supplier->kode_supplier;
+  
+    
+
+   
+
+    // $lastpo = PurchaseOrder::where('kode_channel', $kodechannel)->where('kode_supplier', $kodesupplier)->latest()->first();
+    // $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
+    // $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
+   
+    // $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
+
+    
+
+    // // Langkah-langkah untuk menentukan nomor urutan berdasarkan PO sebelumnya
+    // if ($lastpo) {
+    //     $lastYear = substr($lastpo->no_po, -4); // Mendapatkan 4 digit tahun dari nomor PO terakhir
+    //     $lastMonth = $lastpo->month; // Mendapatkan bulan dari nomor PO terakhir
+    //     $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");// Mendapatkan indeks bulan romawi dari nomor PO terakhir
+
+    //     $lastMonthIndex= $romanMonth[$lastMonth];
+        
+    // } else {
+    //     $lastYear = '0000';
+    //     $lastMonthIndex = false;
+    // }
+    // if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonth) {
+    //     // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
+    //     // maka nomor urutan direset menjadi 1
+    //     $ponumber = '0001/PO-E'.$kodechannel.'/BPM-' . $kodesupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+    // } else {
+    //     // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
+    //     // maka nomor urutan diincrement
+    //     $lastOrder = intval(substr($lastpo->no_po, 0, 4)); // Mendapatkan nomor urutan terakhir
+    //     $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO-E'.$kodechannel.'/BPM-' . $kodesupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+    // }
+
+   
+    $produk = Produk::all();
+
+    return view ('superadmin.po.createpochannel',[
+        // 'ponumber' => $ponumber,
+        'produk' => $produk,
+       
+        // 'kodechannel' => $kodechannel,
+        'datachannel' => $datachannel,
+        'datasupplier' => $datasupplier,
+     
+
+    ]);
+
+}
+
+public function superadminsimpanpochannel(Request $request){
+
+
+    $channelid = $request->channel_id;
+    $supplierid = $request->supplier_id;
+
+   
+
+    $datachannel = Channel::find($channelid);
+  
+    $datasupplier = Supplier::find($supplierid);
+   
+    $loggedInUser = auth()->user();
+
+    $tanggalHariIni = Carbon::now();
+    $month = $tanggalHariIni->month;
+    
+    $namauser = $loggedInUser->nama;
+    $nohp = $loggedInUser->no_hp;
+    $email = $loggedInUser-> email;
+    $userid = $loggedInUser->id;
+
+   
+
+    
+
+    $kodesupplier = $datasupplier->kode_supplier;
+    $kodechannel = $datachannel -> kode_channel;
+    
+
+   
+
+    $lastpo = PurchaseOrder::where('kode_channel', $kodechannel)->where('kode_supplier', $kodesupplier)->latest()->first();
+    
+  
+    $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
+    $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
+   
+    $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
+
+    
+
+    // Langkah-langkah untuk menentukan nomor urutan berdasarkan PO sebelumnya
+    if ($lastpo) {
+        $lastYear = substr($lastpo->no_po, -4); // Mendapatkan 4 digit tahun dari nomor PO terakhir
+        $lastMonth = $lastpo->month; // Mendapatkan bulan dari nomor PO terakhir
+        $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");// Mendapatkan indeks bulan romawi dari nomor PO terakhir
+
+        $lastMonthIndex= $romanMonth[$lastMonth];
+        
+    } else {
+        $lastYear = '0000';
+        $lastMonthIndex = false;
+    }
+
+
+    if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonth) {
+        // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
+        // maka nomor urutan direset menjadi 1
+       
+        $ponumber = '0001/PO-E'.$kodechannel.'/BPM-' . $kodesupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+    } else {
+        // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
+        // maka nomor urutan diincrement
+        
+        $lastOrder = intval(substr($lastpo->no_po, 0, 4)); // Mendapatkan nomor urutan terakhir
+       
+        $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO-E'.$kodechannel.'/BPM-' . $kodesupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+    }
+
+
+    $po = new PurchaseOrder;
+    $po->no_po = $ponumber;
+    $po->po_date = $request->po_date;
+    $po->user_id = $userid;
+    $po->nama_user = $namauser;
+    $po->email = $email;
+    $po->no_hp = $nohp;
+    $po -> month = $month;
+    $po->kode_channel = $kodechannel;
+    $po->kode_supplier = $kodesupplier;
+   
+    $po->save();
+
+$poDetails = [];
+
+
+if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+foreach ($request->product as $index => $productId) {
+    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+
+    $qty = $request->quantity[$index];
+    $harga = $product -> harga_beli;
+    $totalprice = $qty * $harga;
+
+    if ($product) {
+        $poDetails[] = [
+            'po_id' => $po->id,
+            'product_id' => $productId,
+            'qty' => $request->quantity[$index],
+            'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+            'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+            'po_price' => $product->harga_beli, // Menyimpan kode_produk
+            'total_price' => $totalprice,
+        ];
+    }
+    
+}
+
+DetailPO::insert($poDetails); 
+
+$request->session()->flash('success', "Purchase Order berhasil dibuat");
+
+return redirect()->route('superadmin.po.index');
+}
+}
      public function admininvoiceindex()
      {
         $po = PurchaseOrder::orderBy('created_at', 'desc')->get();
@@ -34,364 +441,475 @@ class POController extends Controller
      }
 
      public function superadminindex()
-     {
+     {    
+        
         $po = PurchaseOrder::orderBy('created_at', 'desc')->get();
         $so = SalesOrder::where('status_so','PO Belum Dikerjakan')->orderBy('created_at', 'desc')->count();
         $quote = Quotation::where('status_quote','Quotation Dibuat')->orderBy('created_at', 'desc')->count();
 
         $total = $so + $quote;
+
         return view ('superadmin.po.index',[
             'po' => $po,
             'total' => $total,
         ]);
+
      }
 
      public function admininvoicecreate(Request $request)
-     {
-
+    {
+        $selectedQuotes = $request->input('selected_po');
         $selectedSOs = $request->input('selected_so');
-        $selectedQuote = $request->input('selected_po');
 
+        $poterakhir = PurchaseOrder::latest()->first();
         
-        if ($selectedQuote){
-            $quoteDetail = [];
-            
-            foreach ($selectedQuote as $selectedquotation) {
-                // Ambil detail SO dari database atau sumber data lainnya
-                $detail = DetailQuotation::where('quote_id', $selectedquotation)->get();
-                if ($detail->isNotEmpty()) {
-
-                    foreach ($detail as $item) {
-                        $product_id = $item->product_id;
-                        if (!isset($quoteDetail[$product_id])) {
-                            // Jika product_id belum ada dalam array, inisialisasi dengan array kosong
-                            $quoteDetail[$product_id] = [
-                                'product_id' => $item->product_id,
-                                'nama_produk' => $item->nama_produk,
-                                'kode_produk' => $item->kode_produk,
-                                'qty' => 0,
-                                'harga_beli' => 0 // Inisialisasi harga beli dengan nilai default
-                            ];
-                        }
-                        // Tambahkan qty dari produk yang sama
-                        $quoteDetail[$product_id]['qty'] += $item->qty;
-                        
-                        // Ambil harga beli dari model Produk
-                        $produk = Produk::find($product_id);
-                        if ($produk) {
-
-                            $quoteDetail[$product_id]['harga_beli'] = $produk->harga_beli;
-                        }
-                    }
-                }
-            }
-            $quoteDetail = array_values($quoteDetail);
-        }
-
-        if ($selectedSOs){
-        $soDetail = [];
+     
+      
         
-        foreach ($selectedSOs as $selectedSO) {
-            // Ambil detail SO dari database atau sumber data lainnya
-            $detail = DetailSO::where('so_id', $selectedSO)->get();
-            if ($detail->isNotEmpty()) {
-                // Tambahkan detail SO ke dalam array $soDetail
-                foreach ($detail as $item) {
-                    $product_id = $item->product_id;
-                    if (!isset($soDetail[$product_id])) {
-                        // Jika product_id belum ada dalam array, inisialisasi dengan array kosong
-                        $soDetail[$product_id] = [
-                            'product_id' => $item->product_id,
-                            'nama_produk' => $item->nama_produk,
-                            'kode_produk' => $item->kode_produk,
-                            'qty' => 0,
-                            'harga_beli' => 0 // Inisialisasi harga beli dengan nilai default
-                        ];
-                    }
-                    // Tambahkan qty dari produk yang sama
-                    $soDetail[$product_id]['qty'] += $item->qty;
-                    
-                    // Ambil harga beli dari model Produk
-                    $produk = Produk::find($product_id);
-                    if ($produk) {
-                        // Jika produk ditemukan, tambahkan informasi harga beli ke dalam array $soDetail
-                        $soDetail[$product_id]['harga_beli'] = $produk->harga_beli;
-                    }
-                }
-            }
-        }
+       if ($selectedSOs) {
+    $soDetail = [];
+
+    foreach ($selectedSOs as $selectedSO) {
+        // Ambil detail SO dari database atau sumber data lainnya
+        $details = DetailSO::where('so_id', $selectedSO)->get();
+
+
+        // Membagi detail berdasarkan kode_supplier
+        foreach ($details as $detail) {
           
-        $soDetail = array_values($soDetail);
+            $kodeSupplier = $detail->kode_supplier;
+            $kodechannel = $detail ->kode_channel;
+          
+
+          
+
+            // Langkah-langkah untuk menghasilkan nomor PO yang sesuai dengan kode_supplier
+            $lastpo = PurchaseOrder::where('kode_channel', $kodechannel)->where('kode_supplier', $kodeSupplier)->latest()->first(); // Mendapatkan data PO terakhir dari database untuk kode_supplier tertentu
+            // Langkah-langkah untuk menghasilkan nomor urutan
+            $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
+            $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
+            $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
+
+            // Langkah-langkah untuk menentukan nomor urutan berdasarkan PO sebelumnya
+            if ($lastpo) {
+                $lastYear = substr($lastpo->no_po, -4); // Mendapatkan 4 digit tahun dari nomor PO terakhir
+                $lastMonth = substr($lastpo->no_po, 16, -5); // Mendapatkan bulan dari nomor PO terakhir
+                $lastMonthIndex = array_search($lastMonth, $romanMonth); // Mendapatkan indeks bulan romawi dari nomor PO terakhir
+           
+          
+            } else {
+                $lastYear = '0000';
+                $lastMonthIndex = false;
+            }
+
+            // Langkah-langkah untuk membuat nomor PO baru
+            if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonthIndex) {
+                // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
+                // maka nomor urutan direset menjadi 1
+                $ponumber = '0001/PO/BPM-' . $kodeSupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+            } else {
+                // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
+                // maka nomor urutan diincrement
+                $lastOrder = intval(substr($lastpo->no_po, 0, 4)); // Mendapatkan nomor urutan terakhir
+                $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/BPM-' . $kodeSupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+            }
+
+            // Tambahkan nomor PO ke dalam array
+            if (!isset($soDetail[$kodeSupplier])) {
+                $soDetail[$kodeSupplier] = [
+                    'po_number' => $ponumber, // Menambahkan nomor PO untuk setiap kode_supplier
+                    'items' => [] // Menyiapkan array untuk menyimpan detail produk
+                ];
+            }
+
+            $index = array_search($detail->product_id, array_column($soDetail[$kodeSupplier]['items'], 'produk_id'));
+
+            if ($index !== false) {
+                // Produk sudah ada dalam array, tambahkan jumlahnya
+                $soDetail[$kodeSupplier]['items'][$index]['quantity'] += $detail->qty;
+            } else {
+                // Produk belum ada dalam array, tambahkan produk baru
+                $soDetail[$kodeSupplier]['items'][] = [
+                    'produk_id' => $detail->product_id,
+                    'nama_produk' => $detail->nama_produk,
+                    'kode_produk' => $detail->kode_produk,
+                    'harga_beli' => $detail->produk->harga_beli,
+                    'quantity' => $detail->qty,
+                    'no_po' => $ponumber
+                ];
+            }
+        }
     }
-        // Ubah array asosiatif menjadi array numerik
-        if ($selectedSOs && !$selectedQuote) {
+
+    // Output untuk melihat hasil penggabungan dan penjumlahan
+ 
+}
+
+        
+if ($selectedQuotes) {
+    $quoteDetail = [];
+
+    foreach ($selectedQuotes as $selectedQuote) {
+        // Ambil detail quotation dari database atau sumber data lainnya
+        $details = DetailQuotation::where('quote_id', $selectedQuote)->get();
+
+        // Membagi detail berdasarkan kode_supplier
+        foreach ($details as $detail) {
+            $kodeSupplier = $detail->kode_supplier;
+
+            // Langkah-langkah untuk menghasilkan nomor PO yang sesuai dengan kode_supplier
+            $lastpo = PurchaseOrder::where('kode_supplier', $kodeSupplier)->latest()->first(); // Mendapatkan data PO terakhir dari database untuk kode_supplier tertentu
+
+            // Langkah-langkah untuk menghasilkan nomor urutan
+            $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
+            $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
+            $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
+
+            // Langkah-langkah untuk menentukan nomor urutan berdasarkan PO sebelumnya
+            if ($lastpo) {
+                $lastYear = substr($lastpo->no_po, -4); // Mendapatkan 4 digit tahun dari nomor PO terakhir
+                $lastMonth = substr($lastpo->no_po, 16, -5); // Mendapatkan bulan dari nomor PO terakhir
+                $lastMonthIndex = array_search($lastMonth, $romanMonth); 
+                
+            } else {
+                $lastYear = '0000';
+                $lastMonthIndex = false;
+            }
+
+            // Langkah-langkah untuk membuat nomor PO baru
+            if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonthIndex) {
+                // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
+                // maka nomor urutan direset menjadi 1
+                $ponumber = '0001/PO/BPM-' . $kodeSupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+            } else {
+                // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
+                // maka nomor urutan diincrement
+                $lastOrder = intval(substr($lastpo->no_po, 0, 4)); // Mendapatkan nomor urutan terakhir
+                $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/BPM-' . $kodeSupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+            }
+
+            // Tambahkan nomor PO ke dalam array
+            if (!isset($quoteDetail[$kodeSupplier])) {
+                $quoteDetail[$kodeSupplier] = [
+                    'po_number' => $ponumber, // Menambahkan nomor PO untuk setiap kode_supplier
+                    'items' => [] // Menyiapkan array untuk menyimpan detail produk
+                ];
+            }
+
+            $index = array_search($detail->product_id, array_column($quoteDetail[$kodeSupplier]['items'], 'produk_id'));
+
+            if ($index !== false) {
+                // Produk sudah ada dalam array, tambahkan jumlahnya
+                $quoteDetail[$kodeSupplier]['items'][$index]['quantity'] += $detail->qty;
+            } else {
+                // Produk belum ada dalam array, tambahkan produk baru
+                $quoteDetail[$kodeSupplier]['items'][] = [
+                    'produk_id' => $detail->product_id,
+                    'nama_produk' => $detail->nama_produk,
+                    'kode_produk' => $detail->kode_produk,
+                    'harga_beli' => $detail->produk->harga_beli,
+                    'quantity' => $detail->qty,
+                    'no_po' => $ponumber
+                ];
+            }
+        }
+    }
+
+    // Output untuk melihdd($quoteDetail);
+}
+
+        if ($selectedSOs && !$selectedQuotes) {
             $mergedDetail = $soDetail;
         }
 
-        if (!$selectedSOs && $selectedQuote) {
+        if (!$selectedSOs && $selectedQuotes) {
             $mergedDetail = $quoteDetail;
         }
 
-        if ($selectedSOs && $selectedQuote) {
-        // Inisialisasi array untuk hasil penggabungan
-$mergedDetail = [];
+        if ($selectedSOs && $selectedQuotes) {
 
-// Menggabungkan detail dari Quote
-foreach ($quoteDetail as $quoteItem) {
-    $productId = $quoteItem['product_id'];
+           
+            $mergedDetail = [];
     
-    if (!isset($mergedDetail[$productId])) {
-        // Jika product_id belum ada dalam array gabungan, inisialisasi dengan array kosong
-        $mergedDetail[$productId] = [
-            'product_id' => $quoteItem['product_id'],
-            'nama_produk' => $quoteItem['nama_produk'],
-            'kode_produk' => $quoteItem['kode_produk'],
-            'qty' => $quoteItem['qty'],
-            'harga_beli' => $quoteItem['harga_beli']
-        ];
-    } else {
-        // Jika product_id sudah ada, tambahkan qty
-        $mergedDetail[$productId]['qty'] += $quoteItem['qty'];
-    }
-}
-
-// Menggabungkan detail dari Sales Order
-foreach ($soDetail as $soItem) {
-    $productId = $soItem['product_id'];
-    
-    if (!isset($mergedDetail[$productId])) {
-        // Jika product_id belum ada dalam array gabungan, inisialisasi dengan array kosong
-        $mergedDetail[$productId] = [
-            'product_id' => $soItem['product_id'],
-            'nama_produk' => $soItem['nama_produk'],
-            'kode_produk' => $soItem['kode_produk'],
-            'qty' => $soItem['qty'],
-            'harga_beli' => $soItem['harga_beli']
-        ];
-    } else {
-        // Jika product_id sudah ada, tambahkan qty
-        $mergedDetail[$productId]['qty'] += $soItem['qty'];
-    }
-}
-
-// Ubah array asosiatif menjadi array numerik
-$mergedDetail = array_values($mergedDetail);
+    // Gabungkan array berdasarkan kunci $kodeSupplier
+    foreach ($soDetail as $kodeSupplier => $details) {
+        // Gabungkan detail dari $soDetail
+        if (isset($mergedDetail[$kodeSupplier])) {
+            $mergedDetail[$kodeSupplier] = array_merge($mergedDetail[$kodeSupplier], $details);
+        } else {
+            $mergedDetail[$kodeSupplier] = $details;
         }
-
-         // Mengambil semua Sales Order
-        
-
-         $lastpo = PurchaseOrder::latest()->first(); // Mendapatkan data invoice terakhir dari database
-
-         $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
-         $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
-         $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
-         
-         $lastYear = $lastpo ? substr($lastpo->no_po, 20, 4) : '0000'; // Mendapatkan 4 digit tahun dari nomor PO terakhir
-         $lastMonth = $lastpo ? substr($lastpo->no_po, 16, -5) : '00'; 
-         
-         
-         $lastMonthIndex = array_search($lastMonth, $romanMonth); // Mendapatkan indeks bulan romawi dari nomor PO terakhir
-
+      
+        // Gabungkan detail dari $quoteDetail
+        if (isset($quoteDetail[$kodeSupplier])) {
 
          
-         
-         if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonthIndex) {
-             // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
-             // maka nomor urutan direset menjadi 1
-             $ponumber = '0001/PO/BPM-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear;
-         } else {
-             // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
-             // maka nomor urutan diincrement
-             $lastOrder = $lastpo ? intval(substr($lastpo->no_po, 0, 4)) : 0; // Mendapatkan nomor urutan terakhir
-             $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/BPM-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear; // Menggabungkan nomor urutan dengan PO/EXA-PSA/bulan berjalan (dalam huruf romawi)/tahun 4 digit
-         }     
-         $produk = Produk::orderBy('nama_produk', 'asc')->get();
-        
-        
-         return view('admininvoice.po.create', [
-        
-            'ponumber' => $ponumber,
-            'produk' => $produk,
+            foreach ($quoteDetail[$kodeSupplier]['items'] as $quoteDetailItem) {
+                // Access product details directly
             
+                
+                $index = array_search($quoteDetailItem['produk_id'], array_column($mergedDetail[$kodeSupplier]['items'], 'produk_id'));
+
+    if ($index !== false) {
+        // Jika produk sudah ada dalam array, tambahkan jumlahnya
+        $mergedDetail[$kodeSupplier]['items'][$index]['quantity'] += $quoteDetailItem['quantity'];
+    } else {
+        // Jika produk belum ada dalam array, tambahkan produk baru
+        $mergedDetail[$kodeSupplier]['items'][] = $quoteDetailItem;
+    }
+                
+            }
+            
+        } 
+
+        foreach ($quoteDetail as $kodeSupplier => $quoteDetails) {
+            if (!isset($soDetail[$kodeSupplier])) {
+                $mergedDetail[$kodeSupplier] = $quoteDetails;
+            }
+        }
+    }
+
+
+            }
+       
+
+       
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
+        
+      
+         return view('admininvoice.po.create', [
+            'produk' => $produk,
+
             'selectedSOs' => $selectedSOs,
+            'selectedQuotes' => $selectedQuotes,
             'mergedDetail' => $mergedDetail,
-            'selectedQuote' => $selectedQuote,
+    
+            
          ]);
      }
 
      public function superadmincreate(Request $request)
      {
 
+        $selectedQuotes = $request->input('selected_po');
         $selectedSOs = $request->input('selected_so');
-        $selectedQuote = $request->input('selected_po');
 
+        $poterakhir = PurchaseOrder::latest()->first();
+     
+       
         
-        if ($selectedQuote){
-            $quoteDetail = [];
-            
-            foreach ($selectedQuote as $selectedquotation) {
-                // Ambil detail SO dari database atau sumber data lainnya
-                $detail = DetailQuotation::where('quote_id', $selectedquotation)->get();
-                if ($detail->isNotEmpty()) {
+       if ($selectedSOs) {
+    $soDetail = [];
 
-                    foreach ($detail as $item) {
-                        $product_id = $item->product_id;
-                        if (!isset($quoteDetail[$product_id])) {
-                            // Jika product_id belum ada dalam array, inisialisasi dengan array kosong
-                            $quoteDetail[$product_id] = [
-                                'product_id' => $item->product_id,
-                                'nama_produk' => $item->nama_produk,
-                                'kode_produk' => $item->kode_produk,
-                                'qty' => 0,
-                                'harga_beli' => 0 // Inisialisasi harga beli dengan nilai default
-                            ];
-                        }
-                        // Tambahkan qty dari produk yang sama
-                        $quoteDetail[$product_id]['qty'] += $item->qty;
-                        
-                        // Ambil harga beli dari model Produk
-                        $produk = Produk::find($product_id);
-                        if ($produk) {
+    foreach ($selectedSOs as $selectedSO) {
+        // Ambil detail SO dari database atau sumber data lainnya
+        $details = DetailSO::where('so_id', $selectedSO)->get();
 
-                            $quoteDetail[$product_id]['harga_beli'] = $produk->harga_beli;
-                        }
-                    }
-                }
-            }
-            $quoteDetail = array_values($quoteDetail);
-        }
 
-        if ($selectedSOs){
-        $soDetail = [];
-        
-        foreach ($selectedSOs as $selectedSO) {
-            // Ambil detail SO dari database atau sumber data lainnya
-            $detail = DetailSO::where('so_id', $selectedSO)->get();
-            if ($detail->isNotEmpty()) {
-                // Tambahkan detail SO ke dalam array $soDetail
-                foreach ($detail as $item) {
-                    $product_id = $item->product_id;
-                    if (!isset($soDetail[$product_id])) {
-                        // Jika product_id belum ada dalam array, inisialisasi dengan array kosong
-                        $soDetail[$product_id] = [
-                            'product_id' => $item->product_id,
-                            'nama_produk' => $item->nama_produk,
-                            'kode_produk' => $item->kode_produk,
-                            'qty' => 0,
-                            'harga_beli' => 0 // Inisialisasi harga beli dengan nilai default
-                        ];
-                    }
-                    // Tambahkan qty dari produk yang sama
-                    $soDetail[$product_id]['qty'] += $item->qty;
-                    
-                    // Ambil harga beli dari model Produk
-                    $produk = Produk::find($product_id);
-                    if ($produk) {
-                        // Jika produk ditemukan, tambahkan informasi harga beli ke dalam array $soDetail
-                        $soDetail[$product_id]['harga_beli'] = $produk->harga_beli;
-                    }
-                }
-            }
-        }
+        // Membagi detail berdasarkan kode_supplier
+        foreach ($details as $detail) {
           
-        $soDetail = array_values($soDetail);
+            $kodeSupplier = $detail->kode_supplier;
+            $kodechannel = $detail ->kode_channel;
+
+          
+
+            // Langkah-langkah untuk menghasilkan nomor PO yang sesuai dengan kode_supplier
+            $lastpo = PurchaseOrder::where('kode_channel', $kodechannel)->where('kode_supplier', $kodeSupplier)->latest()->first(); // Mendapatkan data PO terakhir dari database untuk kode_supplier tertentu
+            // Langkah-langkah untuk menghasilkan nomor urutan
+            $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
+            $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
+            $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
+
+            // Langkah-langkah untuk menentukan nomor urutan berdasarkan PO sebelumnya
+            if ($lastpo) {
+                $lastYear = substr($lastpo->no_po, -4); // Mendapatkan 4 digit tahun dari nomor PO terakhir
+                $lastMonth = substr($lastpo->no_po, 16, -5); // Mendapatkan bulan dari nomor PO terakhir
+                $lastMonthIndex = array_search($lastMonth, $romanMonth); // Mendapatkan indeks bulan romawi dari nomor PO terakhir
+           
+          
+            } else {
+                $lastYear = '0000';
+                $lastMonthIndex = false;
+            }
+
+            // Langkah-langkah untuk membuat nomor PO baru
+            if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonthIndex) {
+                // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
+                // maka nomor urutan direset menjadi 1
+                $ponumber = '0001/PO/BPM-' . $kodeSupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+            } else {
+                // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
+                // maka nomor urutan diincrement
+                $lastOrder = intval(substr($lastpo->no_po, 0, 4)); // Mendapatkan nomor urutan terakhir
+                $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/BPM-' . $kodeSupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+            }
+
+            // Tambahkan nomor PO ke dalam array
+            if (!isset($soDetail[$kodeSupplier])) {
+                $soDetail[$kodeSupplier] = [
+                    'po_number' => $ponumber, // Menambahkan nomor PO untuk setiap kode_supplier
+                    'items' => [] // Menyiapkan array untuk menyimpan detail produk
+                ];
+            }
+
+            $index = array_search($detail->product_id, array_column($soDetail[$kodeSupplier]['items'], 'produk_id'));
+
+            if ($index !== false) {
+                // Produk sudah ada dalam array, tambahkan jumlahnya
+                $soDetail[$kodeSupplier]['items'][$index]['quantity'] += $detail->qty;
+            } else {
+                // Produk belum ada dalam array, tambahkan produk baru
+                $soDetail[$kodeSupplier]['items'][] = [
+                    'produk_id' => $detail->product_id,
+                    'nama_produk' => $detail->nama_produk,
+                    'kode_produk' => $detail->kode_produk,
+                    'harga_beli' => $detail->produk->harga_beli,
+                    'quantity' => $detail->qty,
+                    'no_po' => $ponumber
+                ];
+            }
+        }
     }
-        // Ubah array asosiatif menjadi array numerik
-        if ($selectedSOs && !$selectedQuote) {
+
+    // Output untuk melihat hasil penggabungan dan penjumlahan
+ 
+}
+
+        
+if ($selectedQuotes) {
+    $quoteDetail = [];
+
+    foreach ($selectedQuotes as $selectedQuote) {
+        // Ambil detail quotation dari database atau sumber data lainnya
+        $details = DetailQuotation::where('quote_id', $selectedQuote)->get();
+
+        // Membagi detail berdasarkan kode_supplier
+        foreach ($details as $detail) {
+            $kodeSupplier = $detail->kode_supplier;
+
+            // Langkah-langkah untuk menghasilkan nomor PO yang sesuai dengan kode_supplier
+            $lastpo = PurchaseOrder::where('kode_supplier', $kodeSupplier)->latest()->first(); // Mendapatkan data PO terakhir dari database untuk kode_supplier tertentu
+
+            // Langkah-langkah untuk menghasilkan nomor urutan
+            $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
+            $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
+            $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
+
+            // Langkah-langkah untuk menentukan nomor urutan berdasarkan PO sebelumnya
+            if ($lastpo) {
+                $lastYear = substr($lastpo->no_po, -4); // Mendapatkan 4 digit tahun dari nomor PO terakhir
+                $lastMonth = substr($lastpo->no_po, 16, -5); // Mendapatkan bulan dari nomor PO terakhir
+                $lastMonthIndex = array_search($lastMonth, $romanMonth); 
+                
+            } else {
+                $lastYear = '0000';
+                $lastMonthIndex = false;
+            }
+
+            // Langkah-langkah untuk membuat nomor PO baru
+            if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonthIndex) {
+                // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
+                // maka nomor urutan direset menjadi 1
+                $ponumber = '0001/PO/BPM-' . $kodeSupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+            } else {
+                // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
+                // maka nomor urutan diincrement
+                $lastOrder = intval(substr($lastpo->no_po, 0, 4)); // Mendapatkan nomor urutan terakhir
+                $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/BPM-' . $kodeSupplier . '/' . $romanMonth[$currentMonth] . '/' . $currentYear;
+            }
+
+            // Tambahkan nomor PO ke dalam array
+            if (!isset($quoteDetail[$kodeSupplier])) {
+                $quoteDetail[$kodeSupplier] = [
+                    'po_number' => $ponumber, // Menambahkan nomor PO untuk setiap kode_supplier
+                    'items' => [] // Menyiapkan array untuk menyimpan detail produk
+                ];
+            }
+
+            $index = array_search($detail->product_id, array_column($quoteDetail[$kodeSupplier]['items'], 'produk_id'));
+
+            if ($index !== false) {
+                // Produk sudah ada dalam array, tambahkan jumlahnya
+                $quoteDetail[$kodeSupplier]['items'][$index]['quantity'] += $detail->qty;
+            } else {
+                // Produk belum ada dalam array, tambahkan produk baru
+                $quoteDetail[$kodeSupplier]['items'][] = [
+                    'produk_id' => $detail->product_id,
+                    'nama_produk' => $detail->nama_produk,
+                    'kode_produk' => $detail->kode_produk,
+                    'harga_beli' => $detail->produk->harga_beli,
+                    'quantity' => $detail->qty,
+                    'no_po' => $ponumber
+                ];
+            }
+        }
+    }
+
+    // Output untuk melihdd($quoteDetail);
+}
+
+        if ($selectedSOs && !$selectedQuotes) {
             $mergedDetail = $soDetail;
         }
 
-        if (!$selectedSOs && $selectedQuote) {
+        if (!$selectedSOs && $selectedQuotes) {
             $mergedDetail = $quoteDetail;
         }
 
-        if ($selectedSOs && $selectedQuote) {
-        // Inisialisasi array untuk hasil penggabungan
-$mergedDetail = [];
+        if ($selectedSOs && $selectedQuotes) {
 
-// Menggabungkan detail dari Quote
-foreach ($quoteDetail as $quoteItem) {
-    $productId = $quoteItem['product_id'];
+           
+            $mergedDetail = [];
     
-    if (!isset($mergedDetail[$productId])) {
-        // Jika product_id belum ada dalam array gabungan, inisialisasi dengan array kosong
-        $mergedDetail[$productId] = [
-            'product_id' => $quoteItem['product_id'],
-            'nama_produk' => $quoteItem['nama_produk'],
-            'kode_produk' => $quoteItem['kode_produk'],
-            'qty' => $quoteItem['qty'],
-            'harga_beli' => $quoteItem['harga_beli']
-        ];
-    } else {
-        // Jika product_id sudah ada, tambahkan qty
-        $mergedDetail[$productId]['qty'] += $quoteItem['qty'];
-    }
-}
-
-// Menggabungkan detail dari Sales Order
-foreach ($soDetail as $soItem) {
-    $productId = $soItem['product_id'];
-    
-    if (!isset($mergedDetail[$productId])) {
-        // Jika product_id belum ada dalam array gabungan, inisialisasi dengan array kosong
-        $mergedDetail[$productId] = [
-            'product_id' => $soItem['product_id'],
-            'nama_produk' => $soItem['nama_produk'],
-            'kode_produk' => $soItem['kode_produk'],
-            'qty' => $soItem['qty'],
-            'harga_beli' => $soItem['harga_beli']
-        ];
-    } else {
-        // Jika product_id sudah ada, tambahkan qty
-        $mergedDetail[$productId]['qty'] += $soItem['qty'];
-    }
-}
-
-// Ubah array asosiatif menjadi array numerik
-$mergedDetail = array_values($mergedDetail);
+    // Gabungkan array berdasarkan kunci $kodeSupplier
+    foreach ($soDetail as $kodeSupplier => $details) {
+        // Gabungkan detail dari $soDetail
+        if (isset($mergedDetail[$kodeSupplier])) {
+            $mergedDetail[$kodeSupplier] = array_merge($mergedDetail[$kodeSupplier], $details);
+        } else {
+            $mergedDetail[$kodeSupplier] = $details;
         }
-
-         // Mengambil semua Sales Order
-        
-
-         $lastpo = PurchaseOrder::latest()->first(); // Mendapatkan data invoice terakhir dari database
-
-         $currentYear = now()->format('Y'); // Mendapatkan 4 digit tahun saat ini
-         $currentMonth = ltrim(now()->format('m'), '0'); // Mendapatkan dua digit bulan saat ini
-         $romanMonth = array("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"); // Array untuk mengubah bulan menjadi huruf romawi
-         
-         $lastYear = $lastpo ? substr($lastpo->no_po, 20, 4) : '0000'; // Mendapatkan 4 digit tahun dari nomor PO terakhir
-         $lastMonth = $lastpo ? substr($lastpo->no_po, 16, -5) : '00'; 
-         
-         
-         $lastMonthIndex = array_search($lastMonth, $romanMonth); // Mendapatkan indeks bulan romawi dari nomor PO terakhir
-
+      
+        // Gabungkan detail dari $quoteDetail
+        if (isset($quoteDetail[$kodeSupplier])) {
 
          
+            foreach ($quoteDetail[$kodeSupplier]['items'] as $quoteDetailItem) {
+                // Access product details directly
+            
+                $index = array_search($quoteDetailItem['produk_id'], array_column($mergedDetail[$kodeSupplier]['items'], 'produk_id'));
+
+    if ($index !== false) {
+        // Jika produk sudah ada dalam array, tambahkan jumlahnya
+        $mergedDetail[$kodeSupplier]['items'][$index]['quantity'] += $quoteDetailItem['quantity'];
+    } else {
+        // Jika produk belum ada dalam array, tambahkan produk baru
+        $mergedDetail[$kodeSupplier]['items'][] = $quoteDetailItem;
+    }
          
-         if ($lastMonthIndex === false || $currentYear != $lastYear || $currentMonth != $lastMonthIndex) {
-             // Jika indeks bulan tidak ditemukan atau tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor PO terakhir,
-             // maka nomor urutan direset menjadi 1
-             $ponumber = '0001/PO/BPM-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear;
-         } else {
-             // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor PO terakhir,
-             // maka nomor urutan diincrement
-             $lastOrder = $lastpo ? intval(substr($lastpo->no_po, 0, 4)) : 0; // Mendapatkan nomor urutan terakhir
-             $ponumber = str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/PO/BPM-PSA/' . $romanMonth[$currentMonth] . '/' . $currentYear; // Menggabungkan nomor urutan dengan PO/EXA-PSA/bulan berjalan (dalam huruf romawi)/tahun 4 digit
-         }     
-     
-         $produk = Produk::orderBy('nama_produk', 'asc')->get();
-        
+            }
+            
+        } 
+
+        foreach ($quoteDetail as $kodeSupplier => $quoteDetails) {
+            if (!isset($soDetail[$kodeSupplier])) {
+                $mergedDetail[$kodeSupplier] = $quoteDetails;
+            }
+        }
+    }
+            }
+         
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
         
          return view('superadmin.po.create', [
-        
-            'ponumber' => $ponumber,
             'produk' => $produk,
-            
+
             'selectedSOs' => $selectedSOs,
+            'selectedQuotes' => $selectedQuotes,
             'mergedDetail' => $mergedDetail,
-            'selectedQuote' => $selectedQuote,
+    
+            
          ]);
      }
      public function tampilpesananpo($id)
@@ -446,8 +964,28 @@ $mergedDetail = array_values($mergedDetail);
         ]);
      }
      public function admininvoicesimpan (Request $request){
+        $data = $request->all();
 
-        $soId = $request->input('selected_so');
+       
+        $poNumbers = $request->input('po_number');
+        // Iterasi melalui setiap nomor PO
+        $kodeSuppliers = $request->input('kode_supplier');  
+
+        $poNumbers = $request->input('po_number');
+        $poIds = $request->input('po_id');
+        $kodeSuppliers = $request->input('kode_supplier');
+        $produk = $request->input('produk');
+        $prices = $request->input('price');
+        $quantities = $request->input('qty');
+        $tanggalHariIni = Carbon::now();
+$month =$tanggalHariIni->month;
+
+        foreach ($kodeSuppliers as $kodeSupplier => $poData) {
+
+          
+
+            
+            $soId = $request->input('selected_so');
         $soIds = json_decode($soId);
 
         $quoteId = $request->input('selected_quote');
@@ -460,23 +998,57 @@ $mergedDetail = array_values($mergedDetail);
         $userid = $loggedInUser->id;
         
         $po = new PurchaseOrder;
-        $po->no_po = $request-> no_po;
+        $po->no_po = $poNumbers[$kodeSupplier][0]; 
         $po->po_date = $request->po_date;
         $po->user_id = $userid;
         $po->nama_user = $namauser;
         $po->email = $email;
         $po->no_hp = $nohp;
-        
-       
-        $po->save();
+        $po -> kode_supplier = $kodeSupplier;
+        $po -> kode_channel = "BPM";
+        $po -> month = $month;
+                
+     $po -> save();
+       $poId = $po->id;
+       $datapo = PurchaseOrder::find($poId);
 
-        $soIds = $soIds ?? [];
+       $coba = $request->produk[$kodeSupplier];
+    
+
+       $poDetails = [];
+foreach ($request->produk[$kodeSupplier] as $index => $productId) {
+
+        
+    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+
+    $qty = $quantities[$kodeSupplier][$index];
+    $harga = $prices[$kodeSupplier][$index];
+    $totalprice = $qty * $harga;
+
+    if ($product) {
+        $poDetails[] = [
+            'po_id' => $poId,
+            'product_id' => $productId,
+            'qty' => $qty,
+            'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+            'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+            'po_price' => $product->harga_beli, // Menyimpan kode_produk
+            'total_price' => $totalprice,
+        ];
+    }
+    
+}
+
+DetailPO::insert($poDetails); 
+$soIds = $soIds ?? [];
 $quoteIds = $quoteIds ?? [];
 
 // Gabungkan kedua array jika keduanya memiliki nilai yang valid
 $mergedIds = array_merge($soIds, $quoteIds);
 
+
 foreach ($mergedIds as $id) {
+
             if (in_array($id, $soIds)) {
                 // ID adalah dari jenis Sales Order
                 $so = SalesOrder::find($id);
@@ -484,13 +1056,15 @@ foreach ($mergedIds as $id) {
                 $so->save();
         
                 DetailSoPo::create([
-                    'po_id' => $po->id,
+                  'po_id' => $poId,
                     'so_id' => $id,
                     'quote_id' => null,
                     'rfo_id' => $so->rfo_id,
                     'no_so' => $so->no_so,
-                    'no_po' => $po->no_po,
-                    'no_rfo' => $so->no_rfo
+                    'no_po' => $datapo->no_po,
+                    'no_rfo' => $so->no_rfo,
+                    'kode_supplier' => $so->kode_supplier,
+                    
                 ]);
         
                 $rfo = RFO::find($so->rfo_id);
@@ -504,12 +1078,12 @@ foreach ($mergedIds as $id) {
                 $quote->save();
 
                 DetailSoPo::create([
-                    'po_id' => $po->id,
+                  'po_id' => $poId,
                     'so_id' => null,
                     'quote_id' => $id,
                     'rfo_id' => null,
                     'no_so' => null,
-                    'no_po' => $po->no_po,
+                    'no_po' => $datapo->no_po,
                     'no_rfo' => null,
                     'no_quote' => $quote -> no_quote,
                 ]);
@@ -518,47 +1092,51 @@ foreach ($mergedIds as $id) {
                 // Lakukan logika lain yang diperlukan untuk Quote
             }
         }
+}
+
+
+    
+    // Setelah selesai iterasi foreach, lakukan penyimpanan detail pembelian untuk setiap nomor PO yang telah dikumpulkan
+  
+
+     
         
 
  
         
-$poDetails = [];
 
 
-if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
-    foreach ($request->product as $index => $productId) {
-        $product = Produk::find($productId); // Mendapatkan data produk dari basis data
-
-        $qty = $request->quantity[$index];
-        $harga = $product -> harga_beli;
-        $totalprice = $qty * $harga;
-
-        if ($product) {
-            $poDetails[] = [
-                'po_id' => $po->id,
-                'product_id' => $productId,
-                'qty' => $request->quantity[$index],
-                'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
-                'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
-                'po_price' => $product->harga_beli, // Menyimpan kode_produk
-                'total_price' => $totalprice,
-            ];
-        }
-        
-    }
-
- DetailPO::insert($poDetails); 
  
     $request->session()->flash('success', "Purchase Order berhasil dibuat");
 
     return redirect()->route('admininvoice.po.index');
   
-}
+
      }
      
      public function superadminsimpan (Request $request){
+        $data = $request->all();
 
-        $soId = $request->input('selected_so');
+       
+        $poNumbers = $request->input('po_number');
+        // Iterasi melalui setiap nomor PO
+        $kodeSuppliers = $request->input('kode_supplier');  
+
+        $poNumbers = $request->input('po_number');
+        $poIds = $request->input('po_id');
+        $kodeSuppliers = $request->input('kode_supplier');
+        $produk = $request->input('produk');
+        $prices = $request->input('price');
+        $quantities = $request->input('qty');
+        $tanggalHariIni = Carbon::now();
+$month =$tanggalHariIni->month;
+
+        foreach ($kodeSuppliers as $kodeSupplier => $poData) {
+
+          
+
+            
+            $soId = $request->input('selected_so');
         $soIds = json_decode($soId);
 
         $quoteId = $request->input('selected_quote');
@@ -571,23 +1149,57 @@ if ($request->has('product') && $request->has('quantity') && $request->has('pric
         $userid = $loggedInUser->id;
         
         $po = new PurchaseOrder;
-        $po->no_po = $request-> no_po;
+        $po->no_po = $poNumbers[$kodeSupplier][0]; 
         $po->po_date = $request->po_date;
         $po->user_id = $userid;
         $po->nama_user = $namauser;
         $po->email = $email;
         $po->no_hp = $nohp;
-        
-       
-        $po->save();
+        $po -> kode_supplier = $kodeSupplier;
+        $po -> kode_channel = "BPM";
+        $po -> month = $month;
+                
+     $po -> save();
+       $poId = $po->id;
+       $datapo = PurchaseOrder::find($poId);
 
-        $soIds = $soIds ?? [];
+       $coba = $request->produk[$kodeSupplier];
+    
+
+       $poDetails = [];
+foreach ($request->produk[$kodeSupplier] as $index => $productId) {
+
+        
+    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+
+    $qty = $quantities[$kodeSupplier][$index];
+    $harga = $prices[$kodeSupplier][$index];
+    $totalprice = $qty * $harga;
+
+    if ($product) {
+        $poDetails[] = [
+            'po_id' => $poId,
+            'product_id' => $productId,
+            'qty' => $qty,
+            'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+            'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+            'po_price' => $product->harga_beli, // Menyimpan kode_produk
+            'total_price' => $totalprice,
+        ];
+    }
+    
+}
+
+DetailPO::insert($poDetails); 
+$soIds = $soIds ?? [];
 $quoteIds = $quoteIds ?? [];
 
 // Gabungkan kedua array jika keduanya memiliki nilai yang valid
 $mergedIds = array_merge($soIds, $quoteIds);
 
+
 foreach ($mergedIds as $id) {
+
             if (in_array($id, $soIds)) {
                 // ID adalah dari jenis Sales Order
                 $so = SalesOrder::find($id);
@@ -595,12 +1207,12 @@ foreach ($mergedIds as $id) {
                 $so->save();
         
                 DetailSoPo::create([
-                    'po_id' => $po->id,
+                  'po_id' => $poId,
                     'so_id' => $id,
                     'quote_id' => null,
                     'rfo_id' => $so->rfo_id,
                     'no_so' => $so->no_so,
-                    'no_po' => $po->no_po,
+                    'no_po' => $datapo->no_po,
                     'no_rfo' => $so->no_rfo
                 ]);
         
@@ -615,12 +1227,12 @@ foreach ($mergedIds as $id) {
                 $quote->save();
 
                 DetailSoPo::create([
-                    'po_id' => $po->id,
+                  'po_id' => $poId,
                     'so_id' => null,
                     'quote_id' => $id,
                     'rfo_id' => null,
                     'no_so' => null,
-                    'no_po' => $po->no_po,
+                    'no_po' => $datapo->no_po,
                     'no_rfo' => null,
                     'no_quote' => $quote -> no_quote,
                 ]);
@@ -629,42 +1241,26 @@ foreach ($mergedIds as $id) {
                 // Lakukan logika lain yang diperlukan untuk Quote
             }
         }
+}
+
+
+    
+    // Setelah selesai iterasi foreach, lakukan penyimpanan detail pembelian untuk setiap nomor PO yang telah dikumpulkan
+  
+
+     
         
 
  
         
-$poDetails = [];
 
 
-if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
-    foreach ($request->product as $index => $productId) {
-        $product = Produk::find($productId); // Mendapatkan data produk dari basis data
-
-        $qty = $request->quantity[$index];
-        $harga = $product -> harga_beli;
-        $totalprice = $qty * $harga;
-
-        if ($product) {
-            $poDetails[] = [
-                'po_id' => $po->id,
-                'product_id' => $productId,
-                'qty' => $request->quantity[$index],
-                'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
-                'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
-                'po_price' => $product->harga_beli, // Menyimpan kode_produk
-                'total_price' => $totalprice,
-            ];
-        }
-        
-    }
-
- DetailPO::insert($poDetails); 
  
     $request->session()->flash('success', "Purchase Order berhasil dibuat");
 
     return redirect()->route('superadmin.po.index');
   
-}
+
      }
      public function tampilpo($id){
         $po = PurchaseOrder::find($id);
@@ -860,6 +1456,10 @@ return redirect(route('superadmin.po.index',[
         //
     }
 
+
+
+
+    
     /**
      * Show the form for creating a new resource.
      */

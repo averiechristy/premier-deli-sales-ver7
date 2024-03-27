@@ -17,7 +17,15 @@ class DetailQuotation extends Model
         'qty',
         'quote_price',
         'total_price',
+        'kode_supplier',
+        'kode_channel',
     ];
+
+    public function produk()
+    {
+
+        return $this->belongsTo(Produk::class,'product_id');
+    }
 
     public function quotation()
     {

@@ -268,8 +268,13 @@ foreach ($datacancel as $cancel) {
       
 
                 $poid = $request -> po_id;
+                $podata = PurchaseOrder::find($poid);
+                $kodesupplier = $podata -> kode_supplier;
+               
                 
-                $detaildata = DetailSoPo::where('po_id', $poid)->get();
+                $detaildata = DetailSoPo::where('po_id', $poid)->where('kode_supplier', $kodesupplier)->get();
+                
+               
         
                 foreach ($detaildata as $item){
                     if($item->quote_id) {
@@ -289,14 +294,14 @@ foreach ($datacancel as $cancel) {
         
                     }
                 }
-        
+
                 $datacancel = CancelApprovalSA::where('po_id', $poid)->get();
-        
-        
-        foreach ($datacancel as $cancel) {
-            $cancel->status_cancel = "Disetujui";
-            $cancel->save();
-        }
+            
+        foreach ($datacancel as $cancel) 
+        {
+                $cancel->status_cancel = "Disetujui";
+                $cancel->save();
+            }
         
                 $podata = PurchaseOrder::find($poid);
                 $podata -> status_po = "Cancelled";

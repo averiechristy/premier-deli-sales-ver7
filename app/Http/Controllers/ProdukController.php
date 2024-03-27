@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Exports\TemplateExport;
 use App\Imports\ProductImport;
 use App\Models\Produk;
+use App\Models\Supplier;
+use Exception;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -47,14 +49,20 @@ class ProdukController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        $file = $request->file('file');
-
-        Excel::import(new ProductImport, $file);
-
-        $request->session()->flash('success', "Data produk berhasil ditambahkan.");
-
+        try {
+            $file = $request->file('file');
+    
+            // Lakukan impor
+            Excel::import(new ProductImport, $file);
+    
+            // Jika impor berhasil, tampilkan pesan sukses
+            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+        } catch (Exception $e) {
+            // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
+            $request->session()->flash('error',   $e->getMessage());
+        }
+    
         return redirect()->route('adminproduk.produk.index');
-
     }
     public function superadminimport(Request $request)
     {
@@ -62,25 +70,56 @@ class ProdukController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        $file = $request->file('file');
-
-        Excel::import(new ProductImport, $file);
-
-        $request->session()->flash('success', "Data produk berhasil ditambahkan.");
-
+       
+        try {
+            $file = $request->file('file');
+    
+            // Lakukan impor
+            Excel::import(new ProductImport, $file);
+    
+            // Jika impor berhasil, tampilkan pesan sukses
+            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+        } catch (Exception $e) {
+            // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
+            $request->session()->flash('error',  $e->getMessage());
+        }
         return redirect()->route('superadmin.produk.index');
-
     }
 
     public function adminprodukcreate(){
-        return view('adminproduk.produk.create');
+        $supplier = Supplier::all();
+
+      
+        return view('adminproduk.produk.create',[
+            'supplier' => $supplier,
+        ]);
     }
 
     public function superadmincreate(){
-        return view('superadmin.produk.create');
+
+        $supplier = Supplier::all();
+        return view('superadmin.produk.create',[
+            'supplier' => $supplier,
+        ]);
     }
 
-
+    public function getProductsBySupplier(Request $request)
+    {
+        $supplierId = $request->input('supplier_id');
+        $datasupplier = Supplier::find($supplierId);
+        $kodesupplier = $datasupplier->kode_supplier;
+        $products = Produk::where('kode_supplier', $kodesupplier)->get(); // Sesuaikan dengan model dan nama kolom yang sesuai di database Anda
+        return response()->json(['products' => $products]);
+    }
+    public function superadmingetProductsBySupplier(Request $request)
+    {
+        $supplierId = $request->input('supplier_id');
+        $datasupplier = Supplier::find($supplierId);
+        $kodesupplier = $datasupplier->kode_supplier;
+        $products = Produk::where('kode_supplier', $kodesupplier)->get(); // Sesuaikan dengan model dan nama kolom yang sesuai di database Anda
+        return response()->json(['products' => $products]);
+    }
+    
     public function adminprodukstore(Request $request){
 
         $kodeproduk = $request->kode_produk;
@@ -97,8 +136,11 @@ class ProdukController extends Controller
         $namaproduk = $request->nama_produk;
         $hargabeli = $request->harga_beli;
         $hargajual = $request->harga_jual;
-        $kodesupplier = $request -> kode_supplier;
-        $namasupplier = $request -> nama_supplier;
+        $supplierid = $request ->supplier_id;
+        $datasupplier = Supplier::find($supplierid);
+
+        $kodesupplier = $datasupplier -> kode_supplier;
+        $namasupplier = $datasupplier -> nama_supplier;
 
 
       Produk::create([
@@ -108,6 +150,7 @@ class ProdukController extends Controller
           'harga_jual' => $hargajual,
           'kode_supplier' => $kodesupplier,
           'nama_supplier' => $namasupplier,
+          'supplier_id' => $request->supplier_id,
         ]);
 
         $request->session()->flash('success', "Data produk berhasil ditambahkan.");
@@ -129,9 +172,13 @@ class ProdukController extends Controller
         $namaproduk = $request->nama_produk;
         $hargabeli = $request->harga_beli;
         $hargajual = $request->harga_jual;
-        $kodesupplier = $request -> kode_supplier;
-        $namasupplier = $request -> nama_supplier;
+   
 
+        $supplierid = $request ->supplier_id;
+        $datasupplier = Supplier::find($supplierid);
+
+        $kodesupplier = $datasupplier -> kode_supplier;
+        $namasupplier = $datasupplier -> nama_supplier;
 
       Produk::create([
           'kode_produk' => $kodeproduk,
@@ -140,6 +187,7 @@ class ProdukController extends Controller
           'harga_jual' => $hargajual,
           'kode_supplier' => $kodesupplier,
           'nama_supplier' => $namasupplier,
+          'supplier_id' => $supplierid,
         ]);
 
 
@@ -150,17 +198,23 @@ class ProdukController extends Controller
     }
     public function adminprodukshow($id){
         $data = Produk::find($id);
+        $supplier = Supplier::all();
 
         return view('adminproduk.produk.edit',[
             'data' => $data,
+            'supplier' => $supplier,
         ]);
     }
 
     public function superadminshow($id){
         $data = Produk::find($id);
 
+        $supplier = Supplier::all();
+     
+
         return view('superadmin.produk.edit',[
             'data' => $data,
+            'supplier' => $supplier,
         ]);
     }
 
@@ -168,13 +222,22 @@ class ProdukController extends Controller
     public function adminprodukupdate(Request $request, $id){
         $data = Produk::find($id);
 
+        $supplierid = $request ->supplier_id;
+        $datasupplier = Supplier::find($supplierid);
+
+        $kodesupplier = $datasupplier -> kode_supplier;
+        $namasupplier = $datasupplier -> nama_supplier;
+
+
         $data-> kode_produk = $request-> kode_produk;
         $data-> nama_produk = $request-> nama_produk;
         $data->harga_beli = $request-> harga_beli;
         $data-> harga_jual = $request-> harga_jual;
-        $data->kode_supplier = $request -> kode_supplier;
-        $data->nama_supplier = $request -> nama_supplier;
+        $data->kode_supplier =  $kodesupplier;
+        $data->nama_supplier = $namasupplier ;
+        $data -> supplier_id = $supplierid;
 
+       
         $data->save();
 
         $request->session()->flash('success', "Data produk berhasil diubah");
@@ -183,19 +246,37 @@ class ProdukController extends Controller
     }
 
     
+    public function getProductPrice(Request $request)
+    {
+        $productId = $request->input('product_id');
+        
+        // Ambil harga produk dari database berdasarkan product_id
+        $product = Produk::find($productId);
 
+        // Periksa apakah produk ditemukan
+        if ($product) {
+            return response()->json(['price' => $product->harga]); // Adjust the attribute name accordingly
+        } else {
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+    }
     public function superadminupdate(Request $request, $id){
         
         $data = Produk::find($id);
+        $supplierid = $request ->supplier_id;
+        $datasupplier = Supplier::find($supplierid);
 
+        $kodesupplier = $datasupplier -> kode_supplier;
+        $namasupplier = $datasupplier -> nama_supplier;
         $data-> kode_produk = $request-> kode_produk;
         $data-> nama_produk = $request-> nama_produk;
         $data->harga_beli = $request-> harga_beli;
         $data-> harga_jual = $request-> harga_jual;
 
-        $data->kode_supplier = $request -> kode_supplier;
-        $data->nama_supplier = $request -> nama_supplier;
-
+        $data->kode_supplier =  $kodesupplier;
+        $data->nama_supplier = $namasupplier ;
+      
+        $data -> supplier_id = $supplierid;
         $data->save();
 
         $request->session()->flash('success', "Data produk berhasil diubah");

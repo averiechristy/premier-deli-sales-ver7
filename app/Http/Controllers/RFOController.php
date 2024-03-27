@@ -219,6 +219,7 @@ if ($currentYearMonth != $lastYearMonth) {
                         'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
                         'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
                         'harga_jual' => $product -> harga_jual,
+                        'kode_supplier' => $product -> kode_supplier,
                     ];
                 }
             }
@@ -269,6 +270,7 @@ if ($currentYearMonth != $lastYearMonth) {
                         'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
                         'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
                         'harga_jual' => $product -> harga_jual,
+                        'kode_supplier' => $product -> kode_supplier,
                     ];
                 }
             }
@@ -318,6 +320,7 @@ if ($currentYearMonth != $lastYearMonth) {
                         'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
                         'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
                         'harga_jual' => $product -> harga_jual,
+                        'kode_supplier' => $product -> kode_supplier,
                     ];
                 }
             }

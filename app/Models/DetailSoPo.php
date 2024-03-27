@@ -17,6 +17,7 @@ class DetailSoPo extends Model
         'no_so',
         'no_rfo',
         'no_quote',
+        'kode_supplier',
     ];
     public function salesorder()
     {

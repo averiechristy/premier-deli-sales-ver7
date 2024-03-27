@@ -15,6 +15,8 @@ class DetailRFO extends Model
         'kode_produk',
         'nama_produk',
         'qty',
+        'kode_supplier',
+        
     ];
 
     public function produk()

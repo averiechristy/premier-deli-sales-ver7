@@ -22,6 +22,13 @@
     </li>
     <hr class="sidebar-divider my-0">
 
+    <li class="nav-item" >
+        <a class="nav-link"  href="{{route('adminproduk.supplier.index')}}">
+            <i class="fa fa-building-o"></i>
+            <span>Supplier</span></a>
+    </li>
+
+  
 
     
     <li class="nav-item" >

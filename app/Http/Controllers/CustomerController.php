@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\Inovice;
 use App\Models\RFO;
 use App\Models\SalesOrder;
+use Exception;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -82,14 +83,21 @@ class CustomerController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        $file = $request->file('file');
-
-        Excel::import(new CustomerImport, $file);
-
-        $request->session()->flash('success', "Data customer berhasil ditambahkan.");
-
+       
+        try {
+            $file = $request->file('file');
+    
+            // Lakukan impor
+            Excel::import(new CustomerImport, $file);
+    
+            // Jika impor berhasil, tampilkan pesan sukses
+            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+        } catch (Exception $e) {
+            // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
+            $request->session()->flash('error',  $e->getMessage());
+        }
+    
         return redirect()->route('admininvoice.customer.index');
-
     }
 
     public function superadminimportcustomer(Request $request)
@@ -98,13 +106,20 @@ class CustomerController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        $file = $request->file('file');
-
-        Excel::import(new CustomerImport, $file);
-
-        $request->session()->flash('success', "Data customer berhasil ditambahkan.");
-
+        try {
+            $file = $request->file('file');
+    
+            // Lakukan impor
+            Excel::import(new CustomerImport, $file);
+    
+            // Jika impor berhasil, tampilkan pesan sukses
+            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+        } catch (Exception $e) {
+            // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
+            $request->session()->flash('error',  $e->getMessage());
+        }
         return redirect()->route('superadmin.customer.index');
+
 
     }
     
@@ -114,13 +129,21 @@ class CustomerController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        $file = $request->file('file');
-
-        Excel::import(new CustomerImport, $file);
-
-        $request->session()->flash('success', "Data customer berhasil ditambahkan.");
-
+        try {
+            $file = $request->file('file');
+    
+            // Lakukan impor
+            Excel::import(new CustomerImport, $file);
+    
+            // Jika impor berhasil, tampilkan pesan sukses
+            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+        } catch (Exception $e) {
+            // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
+            $request->session()->flash('error',  $e->getMessage());
+        }
+    
         return redirect()->route('leader.customer.index');
+
 
     }
 
@@ -130,12 +153,19 @@ class CustomerController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-        $file = $request->file('file');
-
-        Excel::import(new CustomerImport, $file);
-
-        $request->session()->flash('success', "Data customer berhasil ditambahkan.");
-
+        try {
+            $file = $request->file('file');
+    
+            // Lakukan impor
+            Excel::import(new CustomerImport, $file);
+    
+            // Jika impor berhasil, tampilkan pesan sukses
+            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+        } catch (Exception $e) {
+            // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
+            $request->session()->flash('error',  $e->getMessage());
+        }
+    
         return redirect()->route('manager.customer.index');
 
     }
@@ -267,6 +297,7 @@ public function superadminstore(Request $request){
         'no_hp' => $nohp,
         'email' => $email,
         'lokasi' => $lokasi,
+        'produk_sebelumnya' => $request->produk_sebelumnya,
       ]);
     
 
@@ -300,6 +331,7 @@ public function leaderstore(Request $request){
         'no_hp' => $nohp,
         'email' => $email,
         'lokasi' => $lokasi,
+        'produk_sebelumnya' => $request->produk_sebelumnya,
       ]);
     
 
@@ -333,6 +365,7 @@ public function managerstore(Request $request){
         'no_hp' => $nohp,
         'email' => $email,
         'lokasi' => $lokasi,
+        'produk_sebelumnya' => $request->produk_sebelumnya,
       ]);
     
 
@@ -370,6 +403,7 @@ public function admininvoicestore(Request $request){
         'no_hp' => $nohp,
         'email' => $email,
         'lokasi' => $lokasi,
+        'produk_sebelumnya' => $request->produk_sebelumnya,
       ]);
     
 
@@ -393,7 +427,7 @@ public  function superadminshow($id){
     $data = Customer::find($id);
 
     
-    return view ('leader.customer.edit',[
+    return view ('superadmin.customer.edit',[
         'data' => $data,
     ]);
 
@@ -431,6 +465,7 @@ public function admininvoiceupdate(Request $request, $id)
     $data -> no_hp = $request->no_hp;
     $data -> email = $request->email;
     $data -> lokasi = $request -> lokasi;
+    $data->produk_sebelumnya = $request->produk_sebelumnya;
 
     $data->save();
     $request->session()->flash('success', "Data customer berhasil diupdate.");
@@ -440,6 +475,7 @@ public function admininvoiceupdate(Request $request, $id)
 
 public function superadminupdatecustomer(Request $request, $id)
 {  
+    
     $data = Customer::find($id);
     $data->nama_customer = $request->nama_customer;
     $data->kategori = $request->kategori;
@@ -449,11 +485,13 @@ public function superadminupdatecustomer(Request $request, $id)
     $data -> no_hp = $request->no_hp;
     $data -> email = $request->email;
     $data -> lokasi = $request -> lokasi;
+    $data->produk_sebelumnya = $request->produk_sebelumnya;
+   
 
     $data->save();
     $request->session()->flash('success', "Data customer berhasil diupdate.");
 
-    return redirect()->route('superadmin.customer.index');
+     return redirect()->route('superadmin.customer.index');
 }
 
 
@@ -468,6 +506,7 @@ public function leaderupdatecustomer(Request $request, $id)
     $data -> no_hp = $request->no_hp;
     $data -> email = $request->email;
     $data -> lokasi = $request -> lokasi;
+    $data->produk_sebelumnya = $request->produk_sebelumnya;
 
     $data->save();
     $request->session()->flash('success', "Data customer berhasil diupdate.");
@@ -486,6 +525,7 @@ public function managerupdatecustomer(Request $request, $id)
     $data -> no_hp = $request->no_hp;
     $data -> email = $request->email;
     $data -> lokasi = $request -> lokasi;
+    $data->produk_sebelumnya = $request->produk_sebelumnya;
 
     $data->save();
     $request->session()->flash('success', "Data customer berhasil diupdate.");

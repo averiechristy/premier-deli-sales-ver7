@@ -16,6 +16,7 @@ class DetailPO extends Model
         'qty',
         'po_price',
         'total_price',
+        'kode_supplier'
     ];
 
     public function produk()

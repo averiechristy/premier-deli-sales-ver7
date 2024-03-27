@@ -119,7 +119,7 @@
     </tr>
     <tr>
         <td colspan="4"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;font-weight: bold; ">Pembayaran</td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;font-weight: bold; ">Down Payment</td>
         <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($pembayaran, 0, ',', '.') }}</td>
     </tr>
     <tr>
