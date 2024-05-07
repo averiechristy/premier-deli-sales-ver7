@@ -11,10 +11,7 @@
                                        <form name="saveform" action="{{route('manager.simpanquotation')}}" method="post" onsubmit="return validateForm()">
                                         @csrf           
                                        
-                                        <div class="form-group mb-4">
-    <label for="" class="form-label" style="color:black;">No Quotation</label>
-    <input name="no_quote" type="text" class="form-control" style="border-color: #01004C; width:50%;" value="{{$orderNumber}}" readonly />
-</div>               
+                                   
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Tanggal Order</label>
@@ -60,21 +57,7 @@
     validDateInput.value = formattedValidDate;
 </script>
 
-<script>
-    // Mendapatkan elemen input tanggal
-    var so_date_input = document.getElementById("quote_date");
 
-    // Mendapatkan tanggal hari ini
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
-    today = yyyy + '-' + mm + '-' + dd;
-
-    // Set nilai minimum input tanggal ke hari ini
-    so_date_input.min = today;
-</script>
 <script>
     // Mendapatkan elemen input tanggal
     var orderDateInput = document.getElementById('quote_date');
@@ -93,45 +76,16 @@
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Customer</label>
-    <select name="customer_id" id="customerSelect" class="form-control" style="border-color: #01004C; max-width: 100%;" aria-label=".form-select-lg example">
+    <select name="customer_id" id="customerSelect" class="form-control customer-select" style="border-color: #01004C; max-width: 100%;" aria-label=".form-select-lg example">
         <option value="" selected disabled>-- Pilih Customer --</option>
         @foreach ($customer as $item)
-            <option value="{{$item->id}}" data-nama="{{$item->nama_customer}}" data-alamat="{{$item->alamat}}">{{$item->nama_customer}}</option>
+        <option value="{{$item->id}}" data-nama="{{$item->nama_customer}}" data-alamat="{{$item->lokasi}}" data-pic="{{$item->nama_pic}}">{{$item->nama_customer}}</option>
         @endforeach
     </select>
 </div>
 
 
-<script>
-    $(document).ready(function() {
-        $('#customerSelect').select2();
 
-        // Simpan informasi nama dan alamat dalam objek
-        var customerInfo = {};
-
-        @foreach ($customer as $item)
-            customerInfo[{{$item->id}}] = {
-                nama: "{{$item->nama_customer}}",
-                alamat: "{{$item->lokasi}}",
-                namapenerima : "{{$item->nama_pic}}"
-            };
-        @endforeach
-
-        // Ketika pilihan customer diubah
-        $('#customerSelect').change(function() {
-            var customerId = $(this).val();
-            var namaCustomer = customerInfo[customerId].nama;
-            var alamatCustomer = customerInfo[customerId].alamat;
-            var namapenerima = customerInfo[customerId].namapenerima;
-
-           
-            // Isikan nilai ke input nama_customer dan alamat
-            $('input[name="nama_customer"]').val(namaCustomer);
-            $('textarea[name="alamat"]').val(alamatCustomer);
-            $('input[name="nama_penerima"]').val(namapenerima);
-        });
-    });
-</script>
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;" hidden>Nama Customer</label>
@@ -148,6 +102,27 @@
     <input  name="nama_penerima" type="text"  class="form-control " style="border-color: #01004C;" value="" />
 </div>
 
+<script>
+    $(document).ready(function() {
+        $('#customerSelect').select2();
+    });
+
+    $(document).ready(function() {
+    $('#customerSelect').change(function() {
+        var selectedOption = $(this).find('option:selected');
+        var namaCustomer = selectedOption.data('nama');
+        var alamatCustomer = selectedOption.data('alamat');
+        var namaPIC = selectedOption.data('pic');
+
+        $('input[name="nama_customer"]').val(namaCustomer);
+        $('textarea[name="alamat"]').val(alamatCustomer);
+        $('input[name="nama_penerima"]').val(namaPIC);
+    });
+});
+
+
+</script>
+
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Tanggal Pengiriman</label>
     <input name="shipping_date" id="shipping_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
@@ -158,39 +133,6 @@
     <input name="payment_date" id="payment_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
-
-<script>
-    // Mendapatkan elemen input tanggal
-    var so_date_input = document.getElementById("shipping_date");
-
-    // Mendapatkan tanggal hari ini
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
-    today = yyyy + '-' + mm + '-' + dd;
-
-    // Set nilai minimum input tanggal ke hari ini
-    so_date_input.min = today;
-</script>
-
-
-<script>
-    // Mendapatkan elemen input tanggal
-    var so_date_input = document.getElementById("payment_date");
-
-    // Mendapatkan tanggal hari ini
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
-    today = yyyy + '-' + mm + '-' + dd;
-
-    // Set nilai minimum input tanggal ke hari ini
-    so_date_input.min = today;
-</script>
 <!-- Product and Quantity Fields -->
 <div id="product-fields">
     <div class="row product-field">
@@ -199,7 +141,7 @@
                 <label for="" class="form-label" style="color:black;">Produk</label>
                 <select name="product[]" class="form-control product-select" style="border-color: #01004C;max-width: 100%;" aria-label=".form-select-lg example">
                     <option value="" selected disabled>-- Pilih Produk --</option>
-                    @foreach ($produk as $item)
+        @foreach ($produk as $item)
             <option value="{{$item->id}}">{{$item->kode_produk}} - {{$item->nama_produk}}</option>
         @endforeach
                 </select>
@@ -323,8 +265,13 @@ function validasiNumber(input) {
 
 <script>
     function confirmSubmit() {
-        $('#confirmModal').modal('show'); // Tampilkan modal
-        return false; // Mengembalikan false untuk mencegah pengiriman form secara langsung
+        // Panggil fungsi untuk melakukan validasi form
+        if (validateForm()) {
+            // Jika validasi berhasil, tampilkan modal
+            $('#confirmModal').modal('show');
+        }
+        // Mengembalikan false untuk mencegah pengiriman form secara langsung
+        return false;
     }
 
     // Fungsi untuk menutup modal
@@ -412,10 +359,15 @@ var paymentDate = document.forms["saveform"]["payment_date"].value;
             closeModal();
             return false;
         }
-
+        if(shippingDate < paymentDate) {
+            alert("Tanggal pengiriman tidak boleh lebih dulu dari tanggal pembayaran");
+            closeModal();
+            return false;
+        }
         var products = document.getElementsByName('product[]');
         var quantities = document.getElementsByName('quantity[]');
         var isValidProduct = false;
+        var selectedProducts = [];
         for (var i = 0; i < products.length; i++) {
             if (products[i].value != "") {
                 isValidProduct = true;
@@ -425,6 +377,14 @@ var paymentDate = document.forms["saveform"]["payment_date"].value;
                     closeModal();
                     return false;
                 }
+
+                if (selectedProducts.includes(products[i].value)) {
+                alert("Produk yang sama tidak boleh dipilih lebih dari satu kali.");
+                closeModal();
+                return false;
+            } else {
+                selectedProducts.push(products[i].value);
+            }
             }
         }
         if (!isValidProduct) {

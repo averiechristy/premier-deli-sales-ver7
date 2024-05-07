@@ -10,7 +10,7 @@
     .watermark {
         position: absolute;
         top: 50%; 
-        left: 50%; 
+        left: 60%; 
         transform: translate(-50%, -50%) rotate(-45deg); /* Rotate the watermark */
         width: 60%;
         height: 60%;
@@ -31,7 +31,7 @@
 
 </div>
 <br>
-<br>
+
 <!-- Begin Page Content -->
 <div class="container-fluid" id="container-fluid">
 <div class="watermark"></div>
@@ -42,34 +42,45 @@
         
         <!-- Text -->
       
-            <div class="tulisan" style="margin-top:35px;">
-                <h6 style="color:black; font-family: Arial, sans-serif; font-weight:bold;">Premier Deli Indonesia</h6>
-                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold;">Graha Arteri Mas Kav 31, Kedoya Selatan</h6>
-                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold;">Jakarta Barat,11520</h6>
+            <div class="tulisan" style="margin-top:40px;">
+                <h6 style="color:black; font-family: Arial, sans-serif; font-weight:bold;font-size:12px; ">Premier Deli Indonesia</h6>
+                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold;font-size:12px;">Graha Arteri Mas Kav 31, Kedoya Selatan</h6>
+                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold;font-size:12px;">Jakarta Barat,11520</h6>
             </div>
       
     </div>
 
     
 
-    <h2 style="color:black; font-family: Arial, sans-serif; font-weight:bold;text-align:center;">Invoice</h2>
+    <h2 style="color:black; font-family: Arial, sans-serif; font-weight:bold;text-align:center;font-size:22px;margin-top:-45px;">Invoice</h2>
     <hr style=" border: 1px solid black;">
 
 
     <div class ="informasi" style="display: flex;">
 
 <!-- Left column -->
-<div style="flex: 1; margin-right: 10px;">
-    <h6 style="color:black; font-family: Arial, sans-serif; font-size:14px;"><span style="font-weight:bold;">Nama Customer</span> <span style="margin-left:10px;">:</span> {{$invoice -> customer -> nama_customer}} </h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:14px;"><span style="font-weight:bold;">Alamat </span><span style="margin-left:71px;">:</span> {{$invoice -> alamat}} </h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:14px;"><span style="font-weight:bold;">Phone </span><span style="margin-left:75px;">:</span> {{$invoice -> customer -> no_hp}} </h6>
+<div style="flex: 1.7; margin-right: 10px;">
+    <h6 style="color:black; font-family: Arial, sans-serif; font-size:12px;"><span style="font-weight:bold;">Nama Customer</span> <span style="margin-left:10px;">:</span> {{$invoice -> customer -> nama_customer}} </h6>
+    <h6 style="color:black; font-family: Arial, sans-serif; font-size:12px; word-wrap: break-word;">
+    <span style="font-weight:bold;">Alamat</span>
+    <span style="margin-left:63px;">:</span> 
+    <?php 
+    if(strlen($invoice->alamat) > 50) {
+        $alamat_wrapped = wordwrap($invoice->alamat, 50, "<br>\n", true);
+        $alamat_with_spaces = str_replace("<br>", "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $alamat_wrapped);
+        echo $alamat_with_spaces;
+    } else {
+        echo $invoice->alamat;
+    }
+    ?> 
+</h6>    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:12px;"><span style="font-weight:bold;">Phone </span><span style="margin-left:67px;">:</span> {{$invoice -> customer -> no_hp}} </h6>
 </div>
 
 <!-- Right column -->
-<div style="flex: 1; margin-left: 10px;">
-    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:14px;"><span style="font-weight:bold;">No. Invoice </span><span style="margin-left:10px;">:</span> {{$invoice -> invoice_no}}</h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:14px;"><span style="font-weight:bold;">No. Order </span> <span style="margin-left:19px;">:</span> {{$invoice -> no_so}} {{$invoice -> no_quote}}</h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:14px;"><span style="font-weight:bold;">Tanggal </span> <span style="margin-left:32px;">:</span> <?php echo date('d - m - Y', strtotime($invoice->invoice_date)); ?></h6>
+<div style="flex: 1;">
+    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:12px;"><span style="font-weight:bold;">No. Invoice </span><span style="margin-left:10px;">:</span> {{$invoice -> invoice_no}}</h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:12px;"><span style="font-weight:bold;">No. Order </span> <span style="margin-left:19px;">:</span> {{$invoice -> no_so}} {{$invoice -> no_quote}}</h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;  font-size:12px;"><span style="font-weight:bold;">Tanggal </span> <span style="margin-left:29px;">:</span> <?php echo date('d - m - Y', strtotime($invoice->invoice_date)); ?></h6>
     
 </div>
 
@@ -83,16 +94,16 @@
         <!-- <h4 class="mb-4 mt-4 text-center" style="color:black;">Informasi Produk</h4> -->
         <div class="table-responsive">
         <table class="table table-bordered" >
-            <thead>
+        <thead style="text-align: center;">
                 <tr>
-                    <th  scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">No</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Kode Produk</th>
+                    <th  scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">No</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Kode Produk</th>
 
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Nama Produk</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Nama Produk</th>
 
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Qty</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Unit Price</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Total Price</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Jumlah Produk</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Harga Jual</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Total Harga</th>
                 </tr>
             </thead>
             <tbody>
@@ -101,14 +112,27 @@
         @endphp
                 @foreach ($detailinvoice as $detail)
                 <tr>
-                <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{ $counter++ }}</td>
-                <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail -> kode_produk}}</td>
+                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px;width:1px;">{{ $counter++ }}</td>
+                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px;width:10px;">{{$detail -> kode_produk}}</td>
  
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail -> nama_produk}}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail->qty}}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($detail->invoice_price, 0, ',', '.') }}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($detail->total_price, 0, ',', '.') }}</td>
-                </tr>
+                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 350px;">
+    <?php
+    $nama_produk = $detail->nama_produk;
+    if (strlen($nama_produk) > 100) {
+        $nama_produk = wordwrap($nama_produk, 100, "<br>", true);
+    }
+    echo $nama_produk;
+    ?>
+</td>                                      <td style="color:black; font-family: Arial, sans-serif; font-size: 10px;width:10px;">{{$detail->qty}}</td>
+<td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($detail->invoice_price, 0, ',', '.') }}
+</td>                   
+
+<td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($detail->total_price, 0, ',', '.') }}
+</td>                </tr>
                @endforeach 
                 <!-- End of data produk -->
             </tbody>
@@ -116,30 +140,35 @@
             <tfoot>
     <tr>
         <td colspan="4"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">Sub Total</td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; ">
-    {{ 'Rp ' . number_format($subtotal, 0, ',', '.') }}
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold;">Sub Total</td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($subtotal, 0, ',', '.') }}
 </td>
     </tr>
     <tr>
         <td colspan="4"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">Discount</td>
-        @if ($invoice->is_persen == 'persen')
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$invoice->discount}} %</td>
-        @elseif ($invoice->is_persen== 'amount')
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($invoice->discount, 0, ',', '.') }} </td>
-        @endif
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold;">Discount</td>
+       
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($discount, 0, ',', '.') }}
+</td>       
     </tr>
     <tr>
         <td colspan="4"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">PPN</td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{ $invoice->ppn }} %</td>
-    </tr>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold;">PPN</td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($ppn, 0, ',', '.') }}
+</td>         </tr>
     <tr>
         <td colspan="4"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold; ">Total</td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($total, 0, ',', '.') }}</td>
-    </tr>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold; ">Total</td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($total, 0, ',', '.') }}
+</td>         </tr>
   
     <tr> <!-- Baris baru untuk menambahkan tulisan -->
     <td colspan="6" style="text-align: center; color:black; font-family: Arial, sans-serif; font-weight: bold; font-size: 13px;">
@@ -184,7 +213,7 @@
             var chartContainer = document.getElementById('container-fluid').cloneNode(true);
             var options = {
                 filename:  '<?php echo $invoice->invoice_no; ?>' + ' - ' + '<?php echo $invoice->nama_customer; ?>' + '.pdf',
-                margin: [5, 5, 5, 5],
+                
                 // konfigurasi untuk unduhan PDF
             };
             html2pdf(chartContainer, options);

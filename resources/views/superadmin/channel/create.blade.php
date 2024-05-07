@@ -59,6 +59,9 @@ else if (kodechannel.length != 2) {
 else if(namachannel == ""){
     alert("Nama Channel harus diisi");
 return false;
+} else if (kodechannel === namachannel){
+    alert("Kode channel dan nama channel harus berbeda");
+return false;
 }
 
 

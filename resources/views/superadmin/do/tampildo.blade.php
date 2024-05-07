@@ -22,17 +22,17 @@
 
 <!-- Left column -->
 <div style="flex: 1; margin-right: 10px;">
-<div class="row">
+<div class="row" style="margin-top">
         <!-- Logo -->
        
         <img src="{{asset('img/logopremier.png')}}"style="max-width: 250px; margin-top:-50px;">
         
         <!-- Text -->
       
-            <div class="tulisan" style="margin-top:35px;">
-                <h6 style="color:black; font-family: Arial, sans-serif; font-weight:bold;">Premier Deli Indonesia</h6>
-                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold;">Graha Arteri Mas Kav 31, Kedoya Selatan</h6>
-                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold;">Jakarta Barat,11520</h6>
+            <div class="tulisan">
+                <h6 style="color:black; font-family: Arial, sans-serif; font-weight:bold;font-size:12px;">Premier Deli Indonesia</h6>
+                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold;font-size:12px;">Graha Arteri Mas Kav 31, Kedoya Selatan</h6>
+                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold;font-size:12px;">Jakarta Barat,11520</h6>
             </div>
       
     </div>
@@ -40,7 +40,7 @@
 
 <!-- Right column -->
 <div style="flex: 1; margin-left: 10px;">
-<h2 style="color:black; font-family: Arial, sans-serif; font-weight:bold;text-align:center;">Delivery Order</h2>
+<h2 style="color:black; font-family: Arial, sans-serif; font-weight:bold;text-align:center; font-size:22px;">Delivery Order</h2>
 
     
 </div>
@@ -56,31 +56,42 @@
     <div class ="informasi" style="display: flex;">
 
 <!-- Left column -->
-<div style="flex: 1; margin-right: 10px;">
-<h6 style="color:black; font-family: Arial, sans-serif;">Nama Customer : {{$invoice -> customer -> nama_customer}} </h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;">Alamat : {{$invoice -> alamat}} </h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;">Phone : {{$invoice -> customer -> no_hp}} </h6></div>
+<div style="flex: 1.8; ">
+<h6 style="color:black; font-family: Arial, sans-serif;font-size:12px;">Nama Customer <span style="margin-left:15px;">: {{$invoice -> customer -> nama_customer}} </span></h6>
+<h6 style="color:black; font-family: Arial, sans-serif; font-size:12px; word-wrap: break-word;">
+    <span >Alamat</span>
+    <span style="margin-left:65px;">:</span> 
+    <?php 
+    if(strlen($invoice->alamat) > 50) {
+        $alamat_wrapped = wordwrap($invoice->alamat, 50, "<br>\n", true);
+        $alamat_with_spaces = str_replace("<br>", "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $alamat_wrapped);
+        echo $alamat_with_spaces;
+    } else {
+        echo $invoice->alamat;
+    }
+    ?> 
+</h6>    <h6 style="color:black; font-family: Arial, sans-serif;font-size:12px;">Phone <span style="margin-left:65px;">: {{$invoice -> customer -> no_hp}} </span></h6></div>
 
 <!-- Right column -->
 <div style="flex: 1; margin-left: 10px;">
 
-<h6 style="color:black; font-family: Arial, sans-serif;">No. Invoice : {{$invoice -> invoice_no}}</h6>
-<h6 style="color:black; font-family: Arial, sans-serif;">Tanggal : <?php echo date('d - m - Y', strtotime($invoice->invoice_date)); ?></h6>
+<h6 style="color:black; font-family: Arial, sans-serif;font-size:12px;">No. Invoice <span style="margin-left:55px;">: {{$invoice -> invoice_no}}</span></h6>
+<h6 style="color:black; font-family: Arial, sans-serif;font-size:12px;">Tanggal <span style="margin-left:73px;">: <?php echo date('d - m - Y', strtotime($invoice->invoice_date)); ?> </span></h6>
 
 </div>
 </div>
-<div class="produk" style="margin-top:50px;">
+<div class="produk" >
         <!-- <h4 class="mb-4 mt-4 text-center" style="color:black;">Informasi Produk</h4> -->
         <div class="table-responsive">
         <table class="table table-bordered" >
-            <thead>
+        <thead style="text-align: center;">
                 <tr>
-                    <th  scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">No</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Kode Produk</th>
+                    <th  scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">No</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Kode Produk</th>
 
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Nama Produk</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Nama Produk</th>
 
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Qty</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Jumlah Produk</th>
                
                 </tr>
             </thead>
@@ -90,19 +101,25 @@
         @endphp
                 @foreach ($detailinvoice as $detail)
                 <tr>
-                <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{ $counter++ }}</td>
-                <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail -> kode_produk}}</td>
+                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width:1px;text-align:center;">{{ $counter++ }}</td>
+                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width:10px;">{{$detail -> kode_produk}}</td>
  
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail -> nama_produk}}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail->qty}}</td>
+                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 450px;">
+    <?php
+    $nama_produk = $detail->nama_produk;
+    if (strlen($nama_produk) > 200) {
+        $nama_produk = wordwrap($nama_produk, 200, "<br>", true);
+    }
+    echo $nama_produk;
+    ?>
+</td>                                     <td style="color:black; font-family: Arial, sans-serif; font-size: 10px;width:10px;text-align:center;">{{$detail->qty}}</td>
                 </tr>
                @endforeach 
                 <!-- End of data produk -->
             </tbody>
-
             <tfoot>
     <tr>
-    <td colspan="4" style="color:black; font-family: Arial, sans-serif; font-size: 15px; height: 150px;">
+    <td colspan="4" style="color:black; font-family: Arial, sans-serif; font-size: 10px; height: 100px;">
                 <!-- Isi kolom catatan dengan panjang yang cukup panjang -->
             Catatan: 
         </td>
@@ -110,12 +127,12 @@
 </tfoot>
 
         </table>
-        <p style="color:black">Barang diterima dalam kondisi baik oleh :</p>
+        <p style="color:black; font-size:10px;">Barang diterima dalam kondisi baik oleh :</p>
 
         <div class="ttd-container" style="display: flex; justify-content: space-between; margin-top: 20px;">
     <!-- Tanda tangan Pembeli -->
     <div class="ttd-pembeli" style="flex: 1;">
-        <h6 style="color:black; font-family: Arial, sans-serif; font-weight:bold;"> Pembeli  / Penerima </h6>
+        <h6 style="color:black; font-family: Arial, sans-serif; font-weight:bold;font-size:10px;"> Pembeli  / Penerima </h6>
         <br>
         <br>
         <br>
@@ -126,7 +143,7 @@
     
     <!-- Tanda tangan Pengirim -->
     <div class="ttd-pengirim" style="flex: 1;">
-        <h6 style="color:black; font-family: Arial, sans-serif; font-weight:bold;">Pengirim</h6>
+        <h6 style="color:black; font-family: Arial, sans-serif; font-weight:bold;font-size:10px;">Pengirim</h6>
         <!-- Tempat untuk tanda tangan -->
         <br>
         <br>

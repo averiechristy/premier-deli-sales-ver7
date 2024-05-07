@@ -17,9 +17,7 @@
 <div class="container-fluid" id="container-fluid">
 
     <!-- Page Heading -->
-    <h2 class="h3 mb-2 text-center" style="color:black; font-weight:bold; font-family: Arial, sans-serif;">Purchase Order</h2>
-
-
+    <h2 class="h3 mb-2 text-center" style="color:black; font-weight:bold; font-family: Arial, sans-serif; font-size:22px;">Purchase Order</h2>
 
     <hr style=" border: 1px solid black;">
 
@@ -28,19 +26,19 @@
 
         <!-- Left column -->
         <div style="flex: 2; margin-right: 10px;">
-        <h6 style="color:black; font-family: Arial, sans-serif; font-size:14px;"><span style="font-weight:bold;">No Purchase Order <span style="margin-left:10px;">:</span></span>  {{$po->no_po}}</h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;font-size:14px;"><span style="font-weight:bold;"> Nama Customer <span style="margin-left:30px;">:</span></span> PT BPM SOLUTION</h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;font-size:14px;"> <span style="font-weight:bold;">Alamat <span style="margin-left:90px;">:</span>  </span>JL. Pulau Bira D . I No. 12 A, Kembangan Utara, Kembangan  Jakarta Barat - DKI Jakarta 11610</h6>
-    <h6 style="color:black; font-family: Arial, sans-serif;font-size:14px;"><span style="font-weight:bold;">Nomor Handphone <span style="margin-left:10px;">:</span></span> {{$po->no_hp}}</h6>
-        <h6 style="color:black; font-family: Arial, sans-serif;font-size:14px;"><span style="font-weight:bold;">Email <span style="margin-left:100px;">:</span> </span>{{$po->email}}</h6>
+    <h6 style="color:black; font-family: Arial, sans-serif; font-size:12px;"><span style="font-weight:bold;">No Purchase Order <span style="margin-left:10px;">:</span></span>  {{$po->no_po}}</h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;font-size:12px;"><span style="font-weight:bold;"> Nama Customer <span style="margin-left:28px;">:</span></span> PT BPM SOLUTION</h6>
+    <h6 style="color:black; font-family: Arial, sans-serif;font-size:12px;"> <span style="font-weight:bold;">Alamat <span style="margin-left:81px;">:</span>  </span>JL. Pulau Bira D . I No. 12 A, Kembangan Utara,
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kembangan Jakarta Barat - DKI Jakarta 11610   
+   <h6 style="color:black; font-family: Arial, sans-serif;font-size:12px;"><span style="font-weight:bold;">Nomor Handphone <span style="margin-left:13px;">:</span></span> {{$po->no_hp}}</h6>
+        <h6 style="color:black; font-family: Arial, sans-serif;font-size:12px;"><span style="font-weight:bold;">Email <span style="margin-left:90px;">:</span> </span>{{$po->email}}</h6>
 
         </div>
 
         <!-- Right column -->
 
         <div style="flex: 1; margin-left: 10px;">
-        <h6 style="color:black; font-family: Arial, sans-serif;font-size:14px;"><span style="font-weight:bold;">Tanggal <span style="margin-left:50px;">:</span> </span><?php echo date('d - m - Y', strtotime($po->po_date)); ?></h6>
-
+        <h6 style="color:black; font-family: Arial, sans-serif;font-size:12px;"><span style="font-weight:bold;">Tanggal <span style="margin-left:50px;">:</span> </span><?php echo date('d - m - Y', strtotime($po->po_date)); ?></h6>
 
 
 
@@ -54,15 +52,15 @@
         <!-- <h4 class="mb-4 mt-4 text-center" style="color:black;">Informasi Produk</h4> -->
         <div class="table-responsive">
         <table class="table table-bordered" >
-            <thead>
+        <thead style="text-align: center;">
                 <tr>
-                    <th  scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">No</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Kode Produk</th>
+                    <th  scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;width:1px;">No</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;width:10px;">Kode Produk</th>
 
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Nama Produk</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Qty</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Unit Price</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Total Price</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;width:300px;vertical-align: top;">Nama Produk</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Jumlah Produk</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Harga Beli</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Total Harga</th>
                 </tr>
             </thead>
             <tbody>
@@ -71,23 +69,32 @@
         @endphp
                 @foreach ($detailpo as $detail)
                 <tr>
-                <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{ $counter++ }}</td> 
-                <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail -> kode_produk}}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail -> nama_produk}}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail->qty}}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($detail->po_price, 0, ',', '.') }}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($detail->total_price, 0, ',', '.') }}</td>
-                </tr>
+                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px;width:1px;text-align: center;">{{ $counter++ }}</td> 
+                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px;width:10px;">{{$detail -> kode_produk}}</td>
+                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 350px;">
+   {{$detail -> nama_produk}}
+</td>                    
+<td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 10px;text-align: center;">{{$detail->qty}}</td>
+<td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($detail->po_price, 0, ',', '.') }}
+</td>                 
+
+<td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($detail->total_price, 0, ',', '.') }}
+</td>                </tr>
                @endforeach 
                 <!-- End of data produk -->
             </tbody>
             <tfoot>
     <tr>
         <td colspan="3"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">{{$totalqty}}</td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold; ">
-    {{ 'Rp ' . number_format($subtotal, 0, ',', '.') }}
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold;text-align:center;">{{$totalqty}}</td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold;"></td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($subtotal, 0, ',', '.') }}
 </td>
     </tr>
     
@@ -98,14 +105,14 @@
         </table>
 
 <div class="ttd mt-5">
-<h6 style="color:black; font-family: Arial, sans-serif;">Admin Purchasing, </h6>
+<h6 style="color:black; font-family: Arial, sans-serif; font-size:12px;">Admin Purchasing, </h6>
 <br>
 <br>
 <br>
 <br>
 
-<h6 style="color:black; font-family: Arial, sans-serif;">Nama : {{$po -> nama_user}} </h6>
-<h6 style="color:black; font-family: Arial, sans-serif;">Tanggal : <?php echo date('d - m - Y', strtotime($po->po_date)); ?></h6>
+<h6 style="color:black; font-family: Arial, sans-serif;font-size:12px;">Nama : {{$po -> nama_user}} </h6>
+<h6 style="color:black; font-family: Arial, sans-serif;font-size:12px;">Tanggal : <?php echo date('d - m - Y', strtotime($po->po_date)); ?></h6>
 
         </div>
 
@@ -145,7 +152,7 @@
             var chartContainer = document.getElementById('container-fluid').cloneNode(true);
             var options = {
                 filename: 'PO - <?php echo $po->no_po; ?> .pdf',
-                margin: [5, 5, 5, 5],
+                
                 // konfigurasi untuk unduhan PDF
             };
             html2pdf(chartContainer, options);

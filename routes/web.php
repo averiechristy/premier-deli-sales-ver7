@@ -7,11 +7,13 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DOController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\POController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\RFOController;
 use App\Http\Controllers\SOController;
+use App\Http\Controllers\SumberController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserAccountController;
 use App\Models\CancelApproval;
@@ -42,6 +44,21 @@ Route::post('/logout', [AuthController::class,'logout'])->name('logout');
 //All Dashboard
 //Superadmin
 Route::middleware('auth')->middleware('ensureUserRole:SUPER ADMIN')->group(function () {
+
+
+    Route::get('superadmin/quotation/index',[QuotationController::class,'superadminindex'])->name('superadmin.quotation.index');
+    Route::get('superadmin/createquote',[QuotationController::class,'superadmincreate'])->name('superadmin.createquote');
+    Route::post('superadmin/simpanquotation',[QuotationController::class,'superadminstore'])->name('superadmin.simpanquotation');
+    Route::get('/superadmintampilpesananquote/{id}',[QuotationController::class,'superadmintampilpesananquote'])->name('superadmintampilpesananquote');
+    Route::get('/superadmintampilquote/{id}',[QuotationController::class,'superadmintampilquote'])->name('superadmintampilquote');
+    Route::post('superadmincancelquotation',[QuotationController::class,'superadmincancelquotation'])->name('superadmincancelquotation');
+
+
+
+    Route::get('superadmin/createrfo',[RFOController::class,'superadmincreate'])->name('superadmin.createrfo');
+    Route::post('superadmin/simpanrfo',[RFOController::class,'superadminstore'])->name('superadmin.simpanrfo');
+    Route::post('superadmincancelorder',[RFOController::class,'superadmincancelorder'])->name('superadmincancelorder');
+
 
     Route::get('/superadmin-get-products-by-supplier', [ProdukController::class,'superadmingetProductsBySupplier']);
 
@@ -150,6 +167,24 @@ Route::post('superadmin/supplier/simpan', [SupplierController::class,'superadmin
 Route::get('/superadmintampilsupplier/{id}',[SupplierController::class,'superadminshow'])->name('superadmintampilsupplier');
 Route::post('/superadminupdatesupplier/{id}',[SupplierController::class,'superadminupdate'])->name('superadminupdatesupplier');
 Route::delete('/superadmindeletesupplier/{id}',[SupplierController::class,'superadmindestroy'])->name('superadmindeletesupplier');
+
+
+
+Route::get('superadmin/kategori/index',[KategoriController::class,'superadminindex'])->name('superadmin.kategori.index');
+Route::get('superadmin/kategori/create',[KategoriController::class,'superadmincreate'])->name('superadmin.kategori.create');
+Route::post('superadmin/kategori/simpan',[KategoriController::class,'superadminstore'])->name('superadmin.kategori.simpan');
+Route::get('/superadmintampilkategori/{id}',[KategoriController::class,'superadminshow'])->name('superadmintampilkategori');
+Route::delete('/superadmindelekategori/{id}',[KategoriController::class,'superadmindestroy'])->name('superadmindeletekategori');
+Route::post('/superadminupdatekategori/{id}',[KategoriController::class,'superadminupdate'])->name('superadminupdatekategori');
+
+Route::get('superadmin/sumber/index',[SumberController::class,'superadminindex'])->name('superadmin.sumber.index');
+Route::get('superadmin/sumber/create',[SumberController::class,'superadmincreate'])->name('superadmin.sumber.create');
+Route::post('superadmin/sumber/simpan',[SumberController::class,'superadminstore'])->name('superadmin.sumber.simpan');
+Route::get('/superadmintampilsumber/{id}',[SumberController::class,'superadminshow'])->name('superadmintampilsumber');
+Route::delete('/superadmindelesumber/{id}',[SumberController::class,'superadmindestroy'])->name('superadmindeletesumber');
+Route::post('/superadminupdatesumber/{id}',[SumberController::class,'superadminupdate'])->name('superadminupdatesumber');
+
+
 
 });
 
@@ -295,6 +330,8 @@ Route::post('/leaderquotation/{id}/download', [QuotationController::class,'leade
 Route::get('sales/changepassword', [UserAccountController::class,'saleschangepasswordindex'])->name('salespassword');
 Route::post('sales/changepassword', [UserAccountController::class,'saleschangePassword'])->name('sales-change-password');
 
+
+
 });
 
 
@@ -357,10 +394,32 @@ Route::get('/leadertampilchannel/{id}',[ChannelController::class,'leadershow'])-
 Route::post('/leaderupdatechannel/{id}',[ChannelController::class,'leaderupdate'])->name('leaderupdatechannel');
 Route::delete('/leaderdeletechannel/{id}',[ChannelController::class,'leaderdestroy'])->name('leaderdeletechannel');
 
+
+
+Route::get('leader/kategori/index',[KategoriController::class,'leaderindex'])->name('leader.kategori.index');
+Route::get('leader/kategori/create',[KategoriController::class,'leadercreate'])->name('leader.kategori.create');
+Route::post('leader/kategori/simpan',[KategoriController::class,'leaderstore'])->name('leader.kategori.simpan');
+Route::get('/leadertampilkategori/{id}',[KategoriController::class,'leadershow'])->name('leadertampilkategori');
+Route::delete('/leaderdelekategori/{id}',[KategoriController::class,'leaderdestroy'])->name('leaderdeletekategori');
+Route::post('/leaderupdatekategori/{id}',[KategoriController::class,'leaderupdate'])->name('leaderupdatekategori');
+
+
+Route::get('leader/sumber/index',[SumberController::class,'leaderindex'])->name('leader.sumber.index');
+Route::get('leader/sumber/create',[SumberController::class,'leadercreate'])->name('leader.sumber.create');
+Route::post('leader/sumber/simpan',[SumberController::class,'leaderstore'])->name('leader.sumber.simpan');
+Route::get('/leadertampilsumber/{id}',[SumberController::class,'leadershow'])->name('leadertampilsumber');
+Route::delete('/leaderdelesumber/{id}',[SumberController::class,'leaderdestroy'])->name('leaderdeletesumber');
+Route::post('/leaderupdatesumber/{id}',[SumberController::class,'leaderupdate'])->name('leaderupdatesumber');
+
+Route::post('/leaderquotation/{id}/download', [QuotationController::class,'leaderdownload'])->name('leaderquotation.download');
+
     });
 
     //MANAGER
     Route::middleware('auth')->middleware('ensureUserRole:MANAGER')->group(function () {
+
+        Route::post('/managerquotation/{id}/download', [QuotationController::class,'managerdownload'])->name('managerquotation.download');
+
         Route::get('manager/dashboard',[DashboardController::class,'managerindex'])->name('manager.dashboard');
         Route::get('manager/dashboarddata',[DashboardController::class,'managerdashboarddata'])->name('manager.dashboarddata');
 
@@ -410,11 +469,10 @@ Route::delete('/leaderdeletechannel/{id}',[ChannelController::class,'leaderdestr
         Route::post('managerapprovecancelinvoice',[CancelController::class,'managerapprovecancelinvoice'])->name('managerapprovecancelinvoice');
 
 
-        Route::post('managercancelrfo',[RFOController::class,'managercancelrfo'])->name('managercancelrfo');
-        Route::post('managercancelquote',[QuotationController::class,'managercancelquote'])->name('managercancelquote');
+Route::post('managercancelrfo',[RFOController::class,'managercancelrfo'])->name('managercancelrfo');
+Route::post('managercancelquote',[QuotationController::class,'managercancelquote'])->name('managercancelquote');
 
-
-        Route::get('manager/channel/index',[ChannelController::class,'managerindex'])->name('manager.channel.index');
+Route::get('manager/channel/index',[ChannelController::class,'managerindex'])->name('manager.channel.index');
 
 Route::get('manager/channel/create',[ChannelController::class,'managercreate'])->name('manager.channel.create');
 Route::post('manager/channel/simpan',[ChannelController::class,'managerstore'])->name('manager.channel.simpan');
@@ -423,4 +481,18 @@ Route::get('/managertampilchannel/{id}',[ChannelController::class,'managershow']
 Route::post('/managerupdatechannel/{id}',[ChannelController::class,'managerupdate'])->name('managerupdatechannel');
 Route::delete('/managerdeletechannel/{id}',[ChannelController::class,'managerdestroy'])->name('managerdeletechannel');
 
-    });
+Route::get('manager/kategori/index',[KategoriController::class,'managerindex'])->name('manager.kategori.index');
+Route::get('manager/kategori/create',[KategoriController::class,'managercreate'])->name('manager.kategori.create');
+Route::post('manager/kategori/simpan',[KategoriController::class,'managerstore'])->name('manager.kategori.simpan');
+Route::get('/managertampilkategori/{id}',[KategoriController::class,'managershow'])->name('managertampilkategori');
+Route::delete('/managerdelekategori/{id}',[KategoriController::class,'managerdestroy'])->name('managerdeletekategori');
+Route::post('/managerupdatekategori/{id}',[KategoriController::class,'managerupdate'])->name('managerupdatekategori');
+
+Route::get('manager/sumber/index',[SumberController::class,'managerindex'])->name('manager.sumber.index');
+Route::get('manager/sumber/create',[SumberController::class,'managercreate'])->name('manager.sumber.create');
+Route::post('manager/sumber/simpan',[SumberController::class,'managerstore'])->name('manager.sumber.simpan');
+Route::get('/managertampilsumber/{id}',[SumberController::class,'managershow'])->name('managertampilsumber');
+Route::delete('/managerdelesumber/{id}',[SumberController::class,'managerdestroy'])->name('managerdeletesumber');
+Route::post('/managerupdatesumber/{id}',[SumberController::class,'managerupdate'])->name('managerupdatesumber');
+
+});

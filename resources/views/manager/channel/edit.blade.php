@@ -5,7 +5,7 @@
                     
                                 <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
-                                        Tambahkan Channel
+                                        Edit Channel
                                     </div>
                                     <div class="card-body">
                                        <form name="saveform" action="/managerupdatechannel/{{$data->id}}" method="post" onsubmit="return validateForm()">
@@ -60,7 +60,10 @@ else if(namachannel == ""){
     alert("Nama Channel harus diisi");
 return false;
 }
-
+else if (kodechannel === namachannel){
+    alert("Kode channel dan nama channel harus berbeda");
+return false;
+}
 
 }
 

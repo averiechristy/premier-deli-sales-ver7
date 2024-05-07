@@ -35,6 +35,21 @@ class SupplierController extends Controller
 
         $kode = $request->kode_supplier;
         $nama = $request -> nama_supplier;
+
+        $existingcode = Supplier::where('kode_supplier',$kode)->first();
+
+        $existingname = Supplier::where('nama_supplier', $nama)->first();
+
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode supplier sudah ada");
+            return redirect()->route('adminproduk.supplier.index');
+        }
+
+        if($existingname !== null && $existingname) {
+            $request->session()->flash('error', "Data gagal disimpan, nama supplier sudah ada");
+            return redirect()->route('adminproduk.supplier.index');
+        }
+
         $alamat = $request -> alamat_supplier;
 
         Supplier::create([
@@ -74,6 +89,21 @@ class SupplierController extends Controller
 
         $kode = $request->kode_supplier;
         $nama = $request -> nama_supplier;
+
+        $existingcode = Supplier::where('kode_supplier',$kode)->first();
+
+        $existingname = Supplier::where('nama_supplier', $nama)->first();
+
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode supplier sudah ada");
+            return redirect()->route('superadmin.supplier.index');
+        }
+
+        if($existingname !== null && $existingname) {
+            $request->session()->flash('error', "Data gagal disimpan, nama supplier sudah ada");
+            return redirect()->route('superadmin.supplier.index');
+        }
+
         $alamat = $request -> alamat_supplier;
 
         Supplier::create([
@@ -131,6 +161,28 @@ class SupplierController extends Controller
     {
         $data = Supplier::find($id);
 
+        $kode = $request->kode_supplier;
+        $nama = $request -> nama_supplier;
+
+        $existingcode = Supplier::where('kode_supplier',$kode)
+        ->where('id', '!=', $id)
+        ->first();
+
+        $existingname = Supplier::where('nama_supplier', $nama)
+        ->where('id', '!=', $id)
+        ->first();
+
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode supplier sudah ada");
+            return redirect()->route('adminproduk.supplier.index');
+        }
+
+        if($existingname !== null && $existingname) {
+            $request->session()->flash('error', "Data gagal disimpan, nama supplier sudah ada");
+            return redirect()->route('adminproduk.supplier.index');
+        }
+
+
         $data->kode_supplier = $request->kode_supplier;
         $data->nama_supplier = $request->nama_supplier;
         $data->alamat_supplier = $request -> alamat_supplier;
@@ -145,6 +197,27 @@ class SupplierController extends Controller
     public function superadminupdate(Request $request, string $id)
     {
         $data = Supplier::find($id);
+
+        $kode = $request->kode_supplier;
+        $nama = $request -> nama_supplier;
+
+        $existingcode = Supplier::where('kode_supplier',$kode)
+        ->where('id', '!=', $id)
+        ->first();
+
+        $existingname = Supplier::where('nama_supplier', $nama)
+        ->where('id', '!=', $id)
+        ->first();
+
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode supplier sudah ada");
+            return redirect()->route('superadmin.supplier.index');
+        }
+
+        if($existingname !== null && $existingname) {
+            $request->session()->flash('error', "Data gagal disimpan, nama supplier sudah ada");
+            return redirect()->route('superadmin.supplier.index');
+        }
 
         $data->kode_supplier = $request->kode_supplier;
         $data->nama_supplier = $request->nama_supplier;

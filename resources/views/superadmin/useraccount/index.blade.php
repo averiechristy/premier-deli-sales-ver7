@@ -2,12 +2,10 @@
 
 @section('content')
 
-
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">User Akun</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Akun User</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -28,7 +26,7 @@ entries
 </div>
 
 <div id="myDataTable_filter" class="dataTables_filter">
-    <label for="search">Search
+    <label for="search">search
         <input id="search" placeholder>
     </label>
 </div>                            
@@ -39,8 +37,7 @@ entries
                                     <thead>
                                         <tr>                                       
                                             <th>Nama</th>
-                                            <th>Role</th>
-                                            <th>Username</th>
+                                            <th>Role</th>   
                                             <th>Email</th>
                                             <th>No Hp</th>                                          
                                             <th>Action</th>
@@ -51,7 +48,7 @@ entries
                                           <tr>
                                             <td>{{$data -> nama}}</td>
                                             <td>{{$data -> Role -> jenis_role}}</td>
-                                            <td>{{$data -> username}}</td>
+                                         
                                             <td>{{$data -> email}}</td>
                                             <td>{{$data -> no_hp}}</td>                                           
                                             <td> 

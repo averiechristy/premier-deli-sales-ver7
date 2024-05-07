@@ -3,7 +3,6 @@
 @section('content')
 
 <div class="container-fluid">
-
 <!-- Page Heading -->
 
 <!-- DataTales Example -->
@@ -56,14 +55,16 @@ entries
                 <tbody>
              @foreach ($quotation as $data)
             <tr>
-                <td>{{$data->no_quote}}</td>
+                  <td>{{$data->no_quote}}</td>
                   <td>{{$data->nama_customer}}</td>
                   <td>{{$data->nama_penerima}}</td>
                   <td>    
-                  <a href="{{route('tampilpesananquote',$data->id)}}"><button type="button" class="btn btn-link">
+    <a href="{{route('tampilpesananquote',$data->id)}}"><button type="button" class="btn btn-link">
     Lihat Detail Pesanan
-</button></a>
+</button>
+</a>
 </td>
+
 <td>{{$data->status_quote}}</td>
 <td>{{$data -> updated_at}}</td>
 <td>{{ \Carbon\Carbon::parse($data->shipping_date)->format('d-m-Y') }}</td>
@@ -75,20 +76,6 @@ entries
 
 </td>
 
-<script>
-    $(document).ready(function(){
-        // Cek apakah cookie sudah ada
-        if (document.cookie.indexOf('salesOrderClicked{{$data->id}}=true') !== -1) {
-            $('#cetakSalesOrder{{$data->id}}').html('Cetak Quotation <i class="fas fa-check-circle" style="color:green"></i> ');
-        }
-
-        $('#cetakSalesOrder{{$data->id}}').click(function(){
-            $(this).html(' Cetak Quotation <i class="fas fa-check-circle" style="color:green"></i>');
-            // Set cookie saat tombol diklik
-            document.cookie = 'salesOrderClicked{{$data->id}}=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
-        });
-    });
-</script>
 
 <td>
     @if($data->is_download == "Yes")
@@ -100,30 +87,30 @@ entries
 <td>
 @if($data->status_quote =="Proses PO")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Quotation
+    Batalkan Quotation
 </button>
 
 
 @elseif($data->status_quote =="Terbit Invoice")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Quotation
+    Batalkan Quotation
 </button>
 
 @elseif($data->status_quote =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Quotation
+    Batalkan Quotation
 </button>
 
 
 @elseif($data->status_quote =="Menunggu Persetujuan Cancel")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Quotation
+    Batalkan Quotation
 </button>
 
 @elseif($data->status_quote =="Quotation Dibuat")
 
 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Cancel Quotation
+      Batalkan Quotation
 </button>
 
 
@@ -137,7 +124,7 @@ entries
       <div class="modal-dialog " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Cancel {{$data->no_rfo}}</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Cancel {{$data->no_quote}}</h5>
        
       </div>
       <div class="modal-body">

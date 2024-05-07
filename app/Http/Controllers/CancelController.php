@@ -20,7 +20,7 @@ class CancelController extends Controller
      */
     public function index()
     {
-        //
+        
     }
     public function managerinfocancel($id){
 
@@ -273,7 +273,7 @@ foreach ($datacancel as $cancel) {
                
                 
                 $detaildata = DetailSoPo::where('po_id', $poid)->where('kode_supplier', $kodesupplier)->get();
-                
+              
                
         
                 foreach ($detaildata as $item){
@@ -360,16 +360,48 @@ foreach ($datacancel as $cancel) {
                         $datainvoice->status_invoice = "Cancelled";
                         $datainvoice->save();
         
+
+                        $quoteid = $datainvoice->quote_id;
+
+
+                        if($quoteid){
+                        $dataquote = Quotation::find($quoteid);
+
+                        $dataquote -> status_quote = "Cancelled";
+                        $dataquote->save();
+                    }
+
+                  
+
                         $soid = $datainvoice->so_id;
+
+                        if($soid){
                         
                         $dataso = SalesOrder::where('id', $soid)->get();
-                        
+
+
+                       
                       
                         foreach ($dataso as $so) {
                            $so -> status_so = "Cancelled";
                            $so->save();
+
+                           $rfoid = $so -> rfo_id;
+                           $datarfo =  RFO::where('id', $rfoid)->get();
+
+                           foreach ($datarfo as $rfo) {
+                               $rfo -> status_rfo = "Cancelled";
+                               $rfo->save();
+                            }
+                          
                         }
                         
+                   
+                      
+
+                    }
+
+                       
                         
                         $request->session()->flash('success', "Pembatalan Disetujui");
                         

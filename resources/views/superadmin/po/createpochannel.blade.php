@@ -43,21 +43,7 @@
     <input name="po_date" id="po_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
-<script>
-    // Mendapatkan elemen input tanggal
-    var so_date_input = document.getElementById("po_date");
 
-    // Mendapatkan tanggal hari ini
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
-    today = yyyy + '-' + mm + '-' + dd;
-
-    // Set nilai minimum input tanggal ke hari ini
-    so_date_input.min = today;
-</script>
 
 <script>
     // Mendapatkan elemen input tanggal
@@ -130,7 +116,7 @@
 
 </div>
 
-<button type="button" class="btn btn-success mt-3" id="add-product-field">Add Product</button>
+<button type="button" class="btn btn-success mt-3" id="add-product-field">Tambah Produk</button>
 
 <script>
     $(document).ready(function() {
@@ -207,10 +193,7 @@ $(document).on('change', '.product-select', function() {
                 productField.find('.product-select').append('<option value="' + product.id + '">' + product.kode_produk + ' - ' + product.nama_produk + '</option>');
             });
         },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert('Terjadi kesalahan saat mengambil data produk.');
-        }
+        
     });
 }
 
@@ -265,10 +248,16 @@ $(document).on('change', '.product-select', function() {
     </div>
 </div>
 
+
 <script>
     function confirmSubmit() {
-        $('#confirmModal').modal('show'); // Tampilkan modal
-        return false; // Mengembalikan false untuk mencegah pengiriman form secara langsung
+        // Panggil fungsi untuk melakukan validasi form
+        if (validateForm()) {
+            // Jika validasi berhasil, tampilkan modal
+            $('#confirmModal').modal('show');
+        }
+        // Mengembalikan false untuk mencegah pengiriman form secara langsung
+        return false;
     }
 
     // Fungsi untuk menutup modal
@@ -296,9 +285,15 @@ $(document).on('change', '.product-select', function() {
   
             <script>
     function validateForm() {
+        let supplier = document.forms["saveform"]["supplier_id"].value;
         let channel = document.forms["saveform"]["channel_id"].value;
 
-        if(channel == "") {
+        if(supplier == "") {
+        alert("Supplier harus dipilih");
+        closeModal()
+    return false;
+    }
+       else if(channel == "") {
         alert("Channel harus dipilih");
         closeModal()
     return false;
@@ -307,6 +302,11 @@ $(document).on('change', '.product-select', function() {
         var productFields = document.querySelectorAll('.product-field');
         var numProducts = productFields.length;
 
+        if (numProducts === 0) {
+        alert('Minimal satu produk harus dipilih');
+        closeModal();
+        return false;
+    }
         // Jika hanya ada satu produk
         if (numProducts === 1) {
             var productSelect = document.querySelector('select[name="product[]"]');
@@ -382,11 +382,7 @@ function fetchProductsBySupplier(supplierId, productField) {
                 productField.find('.product-select').append('<option value="' + product.id + '">' + product.kode_produk + ' - ' + product.nama_produk + '</option>');
             });
         },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            // Tampilkan pesan kesalahan jika terjadi
-            alert('Terjadi kesalahan saat mengambil data produk.');
-        }
+    
     });
 }
 

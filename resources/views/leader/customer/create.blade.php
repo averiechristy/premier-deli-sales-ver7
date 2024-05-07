@@ -20,21 +20,26 @@
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Kategori</label>
     <select name="kategori" class="form-control" style="border-color: #01004C;" aria-label=".form-select-lg example" >
-        <option value="" selected disabled>-- Pilih Kategori --</option>
-     
-        <option value="Hotel"> Hotel</option>
-                <option value="Restaurant"> Restaurant</option>
-                <option value="Cafe"> Cafe</option>
-                <option value="Household/Retail"> Household / Retail</option>
-                <option value="Reseller"> Reseller</option>
-                <option value="Consignment">Consignment</option>
+                <option value="" selected disabled>-- Pilih Kategori --</option>
+        @foreach ($kategori as $item)
+                <option value="{{$item->id}}"> {{$item -> kategori}}</option>
+        @endforeach
     </select>
 </div>
 
+
+
+
 <div class="form-group mb-4">
-        <label for="" class="form-label" style="color:black;">Sumber</label>
-    <input name="sumber" type="text"  class="form-control " style="border-color: #01004C;" value="" />
+    <label for="" class="form-label" style="color:black;">Sumber</label>
+    <select name="sumber" class="form-control" style="border-color: #01004C;" aria-label=".form-select-lg example" >
+                <option value="" selected disabled>-- Pilih Sumber --</option>
+        @foreach ($sumber as $item)
+                <option value="{{$item->id}}"> {{$item -> sumber}}</option>
+        @endforeach
+    </select>
 </div>
+
 
 <div class="form-group mb-4">
         <label for="" class="form-label" style="color:black;">Nama PIC</label>

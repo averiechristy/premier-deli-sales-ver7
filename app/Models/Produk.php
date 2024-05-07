@@ -47,4 +47,10 @@ class Produk extends Model
 
         return $this->hasMany(DetailDO::class);
     }
+
+    public function supplier()
+    {
+
+        return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
 }

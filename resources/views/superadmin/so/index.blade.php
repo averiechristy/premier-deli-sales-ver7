@@ -111,15 +111,15 @@ entries
 <td>    
 @if($data->status_so =="Terbit Invoice")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel SO
+    Batalkan SO
 </button>
 @elseif($data->status_so =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel SO
+    Batalkan SO
 </button>
     @else
 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Cancel SO
+      Batalkan SO
 </button>
 @endif
 </td> 

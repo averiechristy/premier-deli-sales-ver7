@@ -197,6 +197,17 @@ public function simpanpochannel(Request $request){
 
 
     $po = new PurchaseOrder;
+
+
+     
+           
+            $existingdata = PurchaseOrder::where('no_po', $ponumber)->first();
+
+            if($existingdata !== null && $existingdata) {
+                $request->session()->flash('error', "Data gagal disimpan, PO sudah ada");
+                return redirect()->route('admininvoice.po.index');
+            }
+
     $po->no_po = $ponumber;
     $po->po_date = $request->po_date;
     $po->user_id = $userid;
@@ -383,6 +394,13 @@ public function superadminsimpanpochannel(Request $request){
 
 
     $po = new PurchaseOrder;
+
+    $existingdata = PurchaseOrder::where('no_po', $ponumber)->first();
+
+    if($existingdata !== null && $existingdata) {
+        $request->session()->flash('error', "Data gagal disimpan, PO sudah ada");
+        return redirect()->route('superadmin.po.index');
+    }
     $po->no_po = $ponumber;
     $po->po_date = $request->po_date;
     $po->user_id = $userid;
@@ -998,6 +1016,17 @@ $month =$tanggalHariIni->month;
         $userid = $loggedInUser->id;
         
         $po = new PurchaseOrder;
+
+
+        
+        $ponumber = $poNumbers[$kodeSupplier][0]; 
+
+        $existingdata = PurchaseOrder::where('no_po', $ponumber)->first();
+
+        if($existingdata !== null && $existingdata) {
+            $request->session()->flash('error', "Data gagal disimpan, PO sudah ada");
+            return redirect()->route('admininvoice.po.index');
+        }
         $po->no_po = $poNumbers[$kodeSupplier][0]; 
         $po->po_date = $request->po_date;
         $po->user_id = $userid;
@@ -1086,6 +1115,7 @@ foreach ($mergedIds as $id) {
                     'no_po' => $datapo->no_po,
                     'no_rfo' => null,
                     'no_quote' => $quote -> no_quote,
+                    'kode_supplier' => $quote->kode_supplier,
                 ]);
 
               
@@ -1149,6 +1179,16 @@ $month =$tanggalHariIni->month;
         $userid = $loggedInUser->id;
         
         $po = new PurchaseOrder;
+
+        $ponumber = $poNumbers[$kodeSupplier][0]; 
+
+        $existingdata = PurchaseOrder::where('no_po', $ponumber)->first();
+
+        if($existingdata !== null && $existingdata) {
+            $request->session()->flash('error', "Data gagal disimpan, PO sudah ada");
+            return redirect()->route('admininvoice.po.index');
+        }
+
         $po->no_po = $poNumbers[$kodeSupplier][0]; 
         $po->po_date = $request->po_date;
         $po->user_id = $userid;
@@ -1213,7 +1253,9 @@ foreach ($mergedIds as $id) {
                     'rfo_id' => $so->rfo_id,
                     'no_so' => $so->no_so,
                     'no_po' => $datapo->no_po,
-                    'no_rfo' => $so->no_rfo
+                    'no_rfo' => $so->no_rfo,
+                    'kode_supplier' => $so->kode_supplier,
+                    
                 ]);
         
                 $rfo = RFO::find($so->rfo_id);
@@ -1235,6 +1277,7 @@ foreach ($mergedIds as $id) {
                     'no_po' => $datapo->no_po,
                     'no_rfo' => null,
                     'no_quote' => $quote -> no_quote,
+                    'kode_supplier' => $quote->kode_supplier,
                 ]);
 
               
@@ -1356,13 +1399,13 @@ foreach ($mergedIds as $id) {
         ]));
 
      }
-
      public function superadmincancelpo(Request $request){
         
         $po = PurchaseOrder::orderBy('created_at', 'desc')->get();
         $poid = $request -> po_id;
-        
-        $detaildata = DetailSoPo::where('po_id', $poid)->get();
+        $podata = PurchaseOrder::find($poid);
+        $kodesupplier = $podata -> kode_supplier;
+        $detaildata = DetailSoPo::where('po_id', $poid)->where('kode_supplier', $kodesupplier)->get();
 
         foreach ($detaildata as $item){
             if($item->quote_id) {

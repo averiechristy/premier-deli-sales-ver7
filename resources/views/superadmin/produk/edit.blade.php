@@ -86,21 +86,27 @@ function validasiNumber(input) {
     let hargajual = document.forms["saveform"]["harga_jual"].value;
     
 
-    if(kodeproduk == "") {
+    if (supplier == "") {
+        alert("Supplier harus dipilih");
+        return false;
+    } else if (kodeproduk == "") {
         alert("Kode produk tidak boleh kosong");
-    return false;
-    }
-
-    else if (namaproduk == "" ) {
-    alert("Nama produk tidak boleh kosong");
-    return false;
-    } else if (hargabeli == ""){
+        return false;
+    } else if (namaproduk == "") {
+        alert("Nama produk tidak boleh kosong");
+        return false;
+    } else if (hargabeli == "") {
         alert("Harga beli tidak boleh kosong");
-    return false;
-    }
-    else if(hargajual == ""){
+        return false;
+    } else if (parseFloat(hargabeli) === 0) {
+        alert("Harga beli tidak boleh 0, isi angka lain");
+        return false;
+    } else if (hargajual == "") {
         alert("Harga jual tidak boleh kosong");
-    return false;
+        return false;
+    } else if (parseFloat(hargajual) === 0) {
+        alert("Harga jual tidak boleh 0, isi angka lain");
+        return false;
     }
 
     }

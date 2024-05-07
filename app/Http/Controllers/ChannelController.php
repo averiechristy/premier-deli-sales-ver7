@@ -35,6 +35,20 @@ class ChannelController extends Controller
         $kodechannel = $request -> kode_channel;
         $namachannel = $request -> nama_channel;
 
+        $existingcode = Channel::where('kode_channel',$kodechannel)->first();
+
+        $existingname = Channel::where('nama_channel', $namachannel)->first();
+
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            return redirect()->route('superadmin.channel.index');
+        }
+
+        if($existingname !== null && $existingname) {
+            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            return redirect()->route('superadmin.channel.index');
+        }
+
         Channel::create([
            'kode_channel' => $kodechannel,
            'nama_channel' => $namachannel,
@@ -56,13 +70,36 @@ class ChannelController extends Controller
     public function superadminupdate(Request $request, $id){
 
         $data = Channel::find($id);
+    
+        $kodechannel = $request->kode_channel;
+        $namachannel = $request->nama_channel;
+    
+        $existingcode = Channel::where('kode_channel', $kodechannel)
+                               ->where('id', '!=', $id) // Mengecualikan entitas yang sedang diedit
+                               ->first();
+    
+        $existingname = Channel::where('nama_channel', $namachannel)
+                               ->where('id', '!=', $id) // Mengecualikan entitas yang sedang diedit
+                               ->first();
+    
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            return redirect()->route('superadmin.channel.index');
+        }
+    
+        if($existingname !== null && $existingname) {
+            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            return redirect()->route('superadmin.channel.index');
+        }
+    
         $data->kode_channel = $request->kode_channel;
-        $data -> nama_channel = $request -> nama_channel;
+        $data->nama_channel = $request->nama_channel;
         $data->save();
         $request->session()->flash('success', 'Channel berhasil diubah');
-
+    
         return redirect(route('superadmin.channel.index'));
     }
+    
 
     public function adminprodukdestroy(Request $request, $id)
     {
@@ -102,6 +139,20 @@ class ChannelController extends Controller
         $kodechannel = $request -> kode_channel;
         $namachannel = $request -> nama_channel;
 
+        $existingcode = Channel::where('kode_channel',$kodechannel)->first();
+
+        $existingname = Channel::where('nama_channel', $namachannel)->first();
+
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            return redirect()->route('leader.channel.index');
+        }
+
+        if($existingname !== null && $existingname) {
+            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            return redirect()->route('leader.channel.index');
+        }
+
         Channel::create([
            'kode_channel' => $kodechannel,
            'nama_channel' => $namachannel,
@@ -123,6 +174,27 @@ class ChannelController extends Controller
     public function leaderupdate(Request $request, $id){
 
         $data = Channel::find($id);
+    
+        $kodechannel = $request->kode_channel;
+        $namachannel = $request->nama_channel;
+    
+        $existingcode = Channel::where('kode_channel', $kodechannel)
+                               ->where('id', '!=', $id) // Mengecualikan entitas yang sedang diedit
+                               ->first();
+    
+        $existingname = Channel::where('nama_channel', $namachannel)
+                               ->where('id', '!=', $id) // Mengecualikan entitas yang sedang diedit
+                               ->first();
+    
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            return redirect()->route('leader.channel.index');
+        }
+    
+        if($existingname !== null && $existingname) {
+            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            return redirect()->route('leader.channel.index');
+        }
         $data->kode_channel = $request->kode_channel;
         $data -> nama_channel = $request -> nama_channel;
         $data->save();
@@ -169,6 +241,20 @@ class ChannelController extends Controller
         $kodechannel = $request -> kode_channel;
         $namachannel = $request -> nama_channel;
 
+        $existingcode = Channel::where('kode_channel',$kodechannel)->first();
+
+        $existingname = Channel::where('nama_channel', $namachannel)->first();
+
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            return redirect()->route('manager.channel.index');
+        }
+
+        if($existingname !== null && $existingname) {
+            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            return redirect()->route('manager.channel.index');
+        }
+
         Channel::create([
            'kode_channel' => $kodechannel,
            'nama_channel' => $namachannel,
@@ -190,6 +276,27 @@ class ChannelController extends Controller
     public function managerupdate(Request $request, $id){
 
         $data = Channel::find($id);
+    
+        $kodechannel = $request->kode_channel;
+        $namachannel = $request->nama_channel;
+    
+        $existingcode = Channel::where('kode_channel', $kodechannel)
+                               ->where('id', '!=', $id) // Mengecualikan entitas yang sedang diedit
+                               ->first();
+    
+        $existingname = Channel::where('nama_channel', $namachannel)
+                               ->where('id', '!=', $id) // Mengecualikan entitas yang sedang diedit
+                               ->first();
+    
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            return redirect()->route('manager.channel.index');
+        }
+    
+        if($existingname !== null && $existingname) {
+            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            return redirect()->route('manager.channel.index');
+        }
         $data->kode_channel = $request->kode_channel;
         $data -> nama_channel = $request -> nama_channel;
         $data->save();

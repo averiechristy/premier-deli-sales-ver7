@@ -78,7 +78,7 @@
 
             <!-- Sidebar Toggle (Topbar) -->
             <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                <i class="fa fa-bars"></i>
+                <i class="fas fa-bars"></i>
             </button>
 
            
@@ -117,5 +117,15 @@
 
         </nav>
 
+        <style>
+            .nav-link .fas,
+.nav-link .fa {
+    width: 20px; /* Sesuaikan lebar ikon */
+}
+
+.nav-link span {
+    margin-left: 1px; /* Sesuaikan jarak antara ikon dan teks */
+}
+        </style>
 
         <!-- End of Topbar -->

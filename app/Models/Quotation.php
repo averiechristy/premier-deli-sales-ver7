@@ -26,6 +26,7 @@ class Quotation extends Model
         'discount',
         'ppn',
         'kode_channel',
+        'kode_supplier',
     ];
 
     public function customer()

@@ -92,20 +92,7 @@ entries
         Cetak Sales Order
     </a>  
 </td>
-<script>
-    $(document).ready(function(){
-        // Cek apakah item sudah dicetak sebelumnya
-        if (localStorage.getItem('salesOrderClicked{{$data->id}}') === 'true') {
-            $('#cetakSalesOrder{{$data->id}}').html('Cetak Sales Order <i class="fas fa-check-circle" style="color:green"></i> ');
-        }
 
-        $('#cetakSalesOrder{{$data->id}}').click(function(){
-            $(this).html(' Cetak Sales Order <i class="fas fa-check-circle" style="color:green"></i>');
-            // Set localStorage saat tombol diklik
-            localStorage.setItem('salesOrderClicked{{$data->id}}', 'true');
-        });
-    });
-</script>
 
 <td>
     @if($data->is_download == "Yes")

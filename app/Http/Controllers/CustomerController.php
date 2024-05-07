@@ -7,8 +7,10 @@ use App\Exports\TemplateCustomerExportSA;
 use App\Imports\CustomerImport;
 use App\Models\Customer;
 use App\Models\Inovice;
+use App\Models\Kategori;
 use App\Models\RFO;
 use App\Models\SalesOrder;
+use App\Models\Sumber;
 use Exception;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -91,7 +93,7 @@ class CustomerController extends Controller
             Excel::import(new CustomerImport, $file);
     
             // Jika impor berhasil, tampilkan pesan sukses
-            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+            $request->session()->flash('success', "Data customer berhasil ditambahkan.");
         } catch (Exception $e) {
             // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
             $request->session()->flash('error',  $e->getMessage());
@@ -113,7 +115,7 @@ class CustomerController extends Controller
             Excel::import(new CustomerImport, $file);
     
             // Jika impor berhasil, tampilkan pesan sukses
-            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+            $request->session()->flash('success', "Data customer berhasil ditambahkan.");
         } catch (Exception $e) {
             // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
             $request->session()->flash('error',  $e->getMessage());
@@ -131,20 +133,19 @@ class CustomerController extends Controller
 
         try {
             $file = $request->file('file');
-    
-            // Lakukan impor
+           
+
             Excel::import(new CustomerImport, $file);
     
             // Jika impor berhasil, tampilkan pesan sukses
-            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+            $request->session()->flash('success', "Data customer berhasil ditambahkan.");
         } catch (Exception $e) {
             // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
             $request->session()->flash('error',  $e->getMessage());
         }
     
         return redirect()->route('leader.customer.index');
-
-
+        
     }
 
     public function managerimportcustomer(Request $request)
@@ -160,7 +161,7 @@ class CustomerController extends Controller
             Excel::import(new CustomerImport, $file);
     
             // Jika impor berhasil, tampilkan pesan sukses
-            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+            $request->session()->flash('success', "Data customer berhasil ditambahkan.");
         } catch (Exception $e) {
             // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
             $request->session()->flash('error',  $e->getMessage());
@@ -174,15 +175,32 @@ public function admininvoicecreate(){
 }
 
 public function superadmincreate(){
-    return view ('superadmin.customer.create');
+    $kategori = Kategori::all();
+    $sumber = Sumber::all();
+    return view ('superadmin.customer.create',[
+        'kategori' => $kategori,
+        'sumber' => $sumber
+    ]);
 }
 
 public function leadercreate(){
-    return view ('leader.customer.create');
+    $kategori = Kategori::all();
+    $sumber = Sumber::all();
+    return view ('leader.customer.create',[
+        'kategori' => $kategori,
+        'sumber' => $sumber
+    ]);
 }
 
 public function managercreate(){
-    return view ('manager.customer.create');
+
+    $kategori = Kategori::all();
+    $sumber = Sumber::all();
+
+    return view ('manager.customer.create',[
+        'kategori' => $kategori,
+        'sumber' => $sumber
+    ]);
 }
 
 public function admininvoicedestroy(Request $request, $id){
@@ -282,6 +300,18 @@ public function superadminstore(Request $request){
     $lokasi = $request->lokasi;
     $existingdata = Customer::where('nama_customer', $namacustomer)->first();
 
+    $kategoriid = $request->kategori;
+    $sumberid = $request -> sumber;
+
+    $datakategori = Kategori::find($kategoriid);
+
+    $kategori = $datakategori -> kategori;
+
+
+    $datasumber = Sumber::find($sumberid);
+
+    $sumber = $datasumber -> sumber;
+
     if($existingdata){
         $request->session()->flash('error', "Gagal menyimpan data, nama customer sudah ada.");
 
@@ -298,6 +328,8 @@ public function superadminstore(Request $request){
         'email' => $email,
         'lokasi' => $lokasi,
         'produk_sebelumnya' => $request->produk_sebelumnya,
+        'kategori_id' => $kategoriid,
+        'sumber_id' => $sumberid,
       ]);
     
 
@@ -308,14 +340,25 @@ public function superadminstore(Request $request){
 public function leaderstore(Request $request){
 
     $namacustomer = $request->nama_customer;
-    $kategori = $request->kategori;
-    $sumber = $request->sumber;
+  
     $namapic = $request->nama_pic;
     $jabatanpic = $request->jabatan_pic;
     $nohp = $request->no_hp;
     $email = $request->email;
     $lokasi = $request->lokasi;
     $existingdata = Customer::where('nama_customer', $namacustomer)->first();
+
+    $kategoriid = $request->kategori;
+    $sumberid = $request -> sumber;
+
+    $datakategori = Kategori::find($kategoriid);
+
+    $kategori = $datakategori -> kategori;
+
+
+    $datasumber = Sumber::find($sumberid);
+
+    $sumber = $datasumber -> sumber;
 
     if($existingdata){
         $request->session()->flash('error', "Gagal menyimpan data, nama customer sudah ada.");
@@ -332,6 +375,8 @@ public function leaderstore(Request $request){
         'email' => $email,
         'lokasi' => $lokasi,
         'produk_sebelumnya' => $request->produk_sebelumnya,
+        'kategori_id' => $kategoriid,
+        'sumber_id' => $sumberid,
       ]);
     
 
@@ -339,17 +384,31 @@ public function leaderstore(Request $request){
 
       return redirect()->route('leader.customer.index');
 }
+
 public function managerstore(Request $request){
 
     $namacustomer = $request->nama_customer;
-    $kategori = $request->kategori;
-    $sumber = $request->sumber;
+    $kategoriid = $request->kategori;
+  
     $namapic = $request->nama_pic;
     $jabatanpic = $request->jabatan_pic;
     $nohp = $request->no_hp;
     $email = $request->email;
     $lokasi = $request->lokasi;
     $existingdata = Customer::where('nama_customer', $namacustomer)->first();
+
+
+    $sumberid = $request -> sumber;
+
+    $datakategori = Kategori::find($kategoriid);
+
+    $kategori = $datakategori -> kategori;
+
+
+    $datasumber = Sumber::find($sumberid);
+
+    $sumber = $datasumber -> sumber;
+
 
     if($existingdata){
         $request->session()->flash('error', "Gagal menyimpan data, nama customer sudah ada.");
@@ -366,6 +425,8 @@ public function managerstore(Request $request){
         'email' => $email,
         'lokasi' => $lokasi,
         'produk_sebelumnya' => $request->produk_sebelumnya,
+        'kategori_id' => $kategoriid,
+        'sumber_id' => $sumberid,
       ]);
     
 
@@ -417,18 +478,24 @@ public function admininvoicestore(Request $request){
 public  function admininvoiceshow($id){
     $data = Customer::find($id);
 
-    
+    $kategori = Kategori::all();
+
+    $sumber = Sumber::all();
     return view ('admininvoice.customer.edit',[
         'data' => $data,
+        'kategori' => $kategori,
+        'sumber' => $sumber,
     ]);
 
 }
 public  function superadminshow($id){
     $data = Customer::find($id);
-
-    
+    $sumber = Sumber::all();
+    $kategori = Kategori::all();
     return view ('superadmin.customer.edit',[
         'data' => $data,
+        'kategori' => $kategori,
+        'sumber' => $sumber,
     ]);
 
 }
@@ -436,10 +503,13 @@ public  function superadminshow($id){
 
 public  function leadershow($id){
     $data = Customer::find($id);
-
+    $sumber = Sumber::all();
     
+      $kategori = Kategori::all();
     return view ('leader.customer.edit',[
         'data' => $data,
+        'kategori' => $kategori,
+        'sumber' => $sumber,
     ]);
 
 }
@@ -447,10 +517,13 @@ public  function leadershow($id){
 
 public  function managershow($id){
     $data = Customer::find($id);
+    $sumber = Sumber::all();
+    $kategori = Kategori::all();
 
-    
     return view ('manager.customer.edit',[
         'data' => $data,
+        'kategori' => $kategori,
+        'sumber' => $sumber,
     ]);
 
 }
@@ -475,11 +548,23 @@ public function admininvoiceupdate(Request $request, $id)
 
 public function superadminupdatecustomer(Request $request, $id)
 {  
-    
+
     $data = Customer::find($id);
+
+    $kategoriid = $request->kategori;
+    $sumberid = $request -> sumber;
+
+    $datakategori = Kategori::find($kategoriid);
+
+    $kategori = $datakategori -> kategori;
+
+
+    $datasumber = Sumber::find($sumberid);
+    $sumber = $datasumber -> sumber;
+
     $data->nama_customer = $request->nama_customer;
-    $data->kategori = $request->kategori;
-    $data -> sumber = $request->sumber;
+    $data->kategori = $kategori;
+    $data -> sumber = $sumber;
     $data -> nama_pic = $request->nama_pic;
     $data -> jabatan_pic = $request-> jabatan_pic;
     $data -> no_hp = $request->no_hp;
@@ -487,7 +572,8 @@ public function superadminupdatecustomer(Request $request, $id)
     $data -> lokasi = $request -> lokasi;
     $data->produk_sebelumnya = $request->produk_sebelumnya;
    
-
+    $data -> kategori_id = $kategoriid;
+    $data -> sumber_id = $sumberid;
     $data->save();
     $request->session()->flash('success', "Data customer berhasil diupdate.");
 
@@ -498,15 +584,29 @@ public function superadminupdatecustomer(Request $request, $id)
 public function leaderupdatecustomer(Request $request, $id)
 {  
     $data = Customer::find($id);
+
+    $kategoriid = $request->kategori;
+    $sumberid = $request -> sumber;
+
+    $datakategori = Kategori::find($kategoriid);
+
+    $kategori = $datakategori -> kategori;
+
+
+    $datasumber = Sumber::find($sumberid);
+
+    $sumber = $datasumber -> sumber;
     $data->nama_customer = $request->nama_customer;
-    $data->kategori = $request->kategori;
-    $data -> sumber = $request->sumber;
+    $data->kategori = $kategori;
+    $data -> sumber = $sumber;
     $data -> nama_pic = $request->nama_pic;
     $data -> jabatan_pic = $request-> jabatan_pic;
     $data -> no_hp = $request->no_hp;
     $data -> email = $request->email;
     $data -> lokasi = $request -> lokasi;
     $data->produk_sebelumnya = $request->produk_sebelumnya;
+    $data -> kategori_id = $kategoriid;
+    $data -> sumber_id = $sumberid;
 
     $data->save();
     $request->session()->flash('success', "Data customer berhasil diupdate.");
@@ -517,15 +617,31 @@ public function leaderupdatecustomer(Request $request, $id)
 public function managerupdatecustomer(Request $request, $id)
 {  
     $data = Customer::find($id);
+
+
+    $kategoriid = $request->kategori;
+    $sumberid = $request -> sumber;
+
+    $datakategori = Kategori::find($kategoriid);
+
+    $kategori = $datakategori -> kategori;
+
+
+    $datasumber = Sumber::find($sumberid);
+
+    $sumber = $datasumber -> sumber;
+
     $data->nama_customer = $request->nama_customer;
-    $data->kategori = $request->kategori;
-    $data -> sumber = $request->sumber;
+    $data->kategori = $kategori;
+    $data -> sumber = $sumber;
     $data -> nama_pic = $request->nama_pic;
     $data -> jabatan_pic = $request-> jabatan_pic;
     $data -> no_hp = $request->no_hp;
     $data -> email = $request->email;
     $data -> lokasi = $request -> lokasi;
     $data->produk_sebelumnya = $request->produk_sebelumnya;
+    $data -> kategori_id = $kategoriid;
+    $data -> sumber_id = $sumberid;
 
     $data->save();
     $request->session()->flash('success', "Data customer berhasil diupdate.");

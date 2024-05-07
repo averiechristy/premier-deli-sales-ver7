@@ -30,15 +30,28 @@
 
     <li class="nav-item {{ Request::is('superadmin/channel/index') ||  Request::is('superadmin/channel/create')? 'active' : '' }}">
         <a class="nav-link" href="{{route('superadmin.channel.index')}}">
-            <i class="fa fa-shopping-cart"></i>
+            <i class="fas fa-shopping-cart"></i>
             <span>Channel</span></a>
     </li>
-    
+    <li class="nav-item {{ Request::is('superadmin/kategori/index') ||  Request::is('superadmin/kategori/create')? 'active' : '' }}">
+        <a class="nav-link" href="{{route('superadmin.kategori.index')}}">
+            <i class="fas fa-table"></i>
+            <span>Kategori</span></a>
+    </li>
+
+    <li class="nav-item {{ Request::is('superadmin/sumber/index') ||  Request::is('superadmin/sumber/create')? 'active' : '' }}">
+        <a class="nav-link" href="{{route('superadmin.sumber.index')}}">
+            <i class="fa fa-newspaper-o"></i>
+            <span>Sumber</span></a>
+    </li>
+
+
     <li class="nav-item {{ Request::is('superadmin/customer/index') ||  Request::is('superadmin/customer/create')? 'active' : '' }}">
         <a class="nav-link" href="{{route('superadmin.customer.index')}}">
-            <i class="fas fa-fw fa-building"></i>
+            <i class="fas fa-building"></i>
             <span>Customer</span></a>
     </li>
+
 
     <li class="nav-item {{ Request::is('superadmin/supplier/index') ||  Request::is('superadmin/supplier/create')? 'active' : '' }}">
         <a class="nav-link"  href="{{route('superadmin.supplier.index')}}">
@@ -49,32 +62,40 @@
     <li class="nav-item {{ Request::is('superadmin/produk/index') ||  Request::is('superadmin/produk/create')? 'active' : '' }}">
         <a class="nav-link"  href="{{route('superadmin.produk.index')}}">
             <i class="fa fa-cutlery"></i>
-            <span>Produk</span></a>
+            <span>Product</span></a>
     </li>
     
     <li class="nav-item {{ Request::is('superadmin/rfo/index') ||  Request::is('superadmin/rfo/create')? 'active' : '' }}">
         <a class="nav-link"   href="{{route('superadmin.rfo.index')}}">
       
-        <i class="fa fa-list" aria-hidden="true"></i>
-            <span>List RFO</span></a>
+        <i class="fas fa-list" aria-hidden="true"></i>
+            <span>RFO</span></a>
+    </li>
+
+        
+    <li class="nav-item {{ Request::is('superadmin/quotation/index') ||  Request::is('superadmin/quotation/create')? 'active' : '' }}">
+        <a class="nav-link"   href="{{route('superadmin.quotation.index')}}">
+      
+        <i class="fa fa-list-alt" aria-hidden="true"></i>
+            <span>Quotation</span></a>
     </li>
 
     <li class="nav-item {{ Request::is('superadmin/so/index') ||  Request::is('superadmin/so/showrfo')? 'active' : '' }}">
         <a class="nav-link"   href="{{route('superadmin.so.index')}}">
-        <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+        <i class="fas fa-shopping-basket" aria-hidden="true"></i>
             <span>Sales Order</span></a>
     </li>
 
     <li class="nav-item {{ Request::is('superadmin/po/index') ||  Request::is('superadmin/po/showso')? 'active' : '' }}">
         <a class="nav-link"  href="{{route('superadmin.po.index')}}">
-        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
             <span>Purchase Order</span></a>
     </li>
 
 
     <li class="nav-item {{ Request::is('superadmin/invoice/index') ||  Request::is('superadmin/invoice/showso')? 'active' : '' }}">
         <a class="nav-link"  href="{{route('superadmin.invoice.index')}}">
-        <i class="fa fa-file-text" aria-hidden="true"></i>
+        <i class="fas fa-file-text" aria-hidden="true"></i>
             <span>Invoice</span></a>
     </li>
 <!-- 
@@ -162,4 +183,15 @@
             </ul>
 
         </nav>
+
+        <style>
+            .nav-link .fas,
+.nav-link .fa {
+    width: 20px; /* Sesuaikan lebar ikon */
+}
+
+.nav-link span {
+    margin-left: 1px; /* Sesuaikan jarak antara ikon dan teks */
+}
+        </style>
         <!-- End of Topbar -->

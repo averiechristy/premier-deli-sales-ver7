@@ -50,6 +50,7 @@ entries
                         <th>Tanggal Bayar</th>
                         <th>Action</th>
                         <th></th>
+                        <th></th>
                     </tr>
 
                 </thead>
@@ -77,34 +78,40 @@ entries
 </a>
 
 </td>
-
+<td>
+    @if($data->is_download == "Yes")
+      <span>Quotation Sudah didownload </span> <i class="fas fa-check-circle" style="color:green;"></i> 
+    @else
+       Quotation Belum didownload
+    @endif
+</td>
 <td>
 @if($data->status_quote =="Proses PO")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Quotation
+    Batalkan Quotation
 </button>
 
 
 @elseif($data->status_quote =="Terbit Invoice")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Quotation
+    Batalkan Quotation
 </button>
 
 @elseif($data->status_quote =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Quotation
+    Batalkan Quotation
 </button>
 
 
 @elseif($data->status_quote =="Menunggu Persetujuan Cancel")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Quotation
+    Batalkan Quotation
 </button>
 
 @elseif($data->status_quote =="Quotation Dibuat")
 
 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Cancel Quotation
+      Batalkan Quotation
 </button>
 
 
@@ -118,7 +125,7 @@ entries
       <div class="modal-dialog " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Cancel {{$data->no_rfo}}</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Cancel {{$data->no_quote}}</h5>
        
       </div>
       <div class="modal-body">

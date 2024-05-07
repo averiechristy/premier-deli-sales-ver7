@@ -19,6 +19,7 @@ class DetailQuotation extends Model
         'total_price',
         'kode_supplier',
         'kode_channel',
+        'kode_supplier'
     ];
 
     public function produk()

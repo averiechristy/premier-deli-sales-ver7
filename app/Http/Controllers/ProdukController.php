@@ -221,23 +221,30 @@ class ProdukController extends Controller
 
     public function adminprodukupdate(Request $request, $id){
         $data = Produk::find($id);
+       
+        $kodeproduk = $request->kode_produk;
 
-        $supplierid = $request ->supplier_id;
+
+        $existingcode = Produk::where('kode_produk',$kodeproduk)
+        ->where('id', '!=', $id)
+        ->first();
+       
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode produk yang Anda masukkan sudah ada dalam sistem kami. Harap pastikan untuk menggunakan kode produk yang unik");
+            return redirect()->route('adminproduk.produk.index');
+        }
+       
+        $supplierid = $request->supplier_id;
         $datasupplier = Supplier::find($supplierid);
 
-        $kodesupplier = $datasupplier -> kode_supplier;
-        $namasupplier = $datasupplier -> nama_supplier;
-
-
-        $data-> kode_produk = $request-> kode_produk;
-        $data-> nama_produk = $request-> nama_produk;
-        $data->harga_beli = $request-> harga_beli;
-        $data-> harga_jual = $request-> harga_jual;
-        $data->kode_supplier =  $kodesupplier;
-        $data->nama_supplier = $namasupplier ;
+        $data -> kode_produk = $request -> kode_produk;
+        $data -> nama_produk = $request -> nama_produk;
+        $data -> harga_beli = $request -> harga_beli;
+        $data -> harga_jual = $request -> harga_jual;
         $data -> supplier_id = $supplierid;
-
-       
+        $data -> nama_supplier = $datasupplier -> nama_supplier;
+        $data -> kode_supplier = $datasupplier -> kode_supplier;
+        
         $data->save();
 
         $request->session()->flash('success', "Data produk berhasil diubah");
@@ -266,6 +273,16 @@ class ProdukController extends Controller
         $supplierid = $request ->supplier_id;
         $datasupplier = Supplier::find($supplierid);
 
+        $kodeproduk = $request->kode_produk;
+
+        $existingcode = Produk::where('kode_produk',$kodeproduk)
+        ->where('id', '!=', $id)
+        ->first();
+       
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Data gagal disimpan, kode produk yang Anda masukkan sudah ada dalam sistem kami. Harap pastikan untuk menggunakan kode produk yang unik");
+            return redirect()->route('superadmin.produk.index');
+        }
         $kodesupplier = $datasupplier -> kode_supplier;
         $namasupplier = $datasupplier -> nama_supplier;
         $data-> kode_produk = $request-> kode_produk;

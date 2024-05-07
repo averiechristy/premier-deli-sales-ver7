@@ -61,7 +61,10 @@ else if(namachannel == ""){
 return false;
 }
 
-
+else if (kodechannel === namachannel){
+    alert("Kode channel dan nama channel harus berbeda");
+return false;
+}
 }
 
 </script>

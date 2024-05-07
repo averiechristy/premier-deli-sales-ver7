@@ -97,36 +97,6 @@ entries
 </a>
 
 </td>
-<script>
-    $(document).ready(function(){
-        // Cek apakah item sudah dicetak sebelumnya
-        if (localStorage.getItem('salesOrderClicked{{$data->id}}') === 'true') {
-            $('#cetakSalesOrder{{$data->id}}').html('Cetak Invoice <i class="fas fa-check-circle" style="color:green"></i> ');
-        }
-
-        $('#cetakSalesOrder{{$data->id}}').click(function(){
-            $(this).html(' Cetak Invoice <i class="fas fa-check-circle" style="color:green"></i>');
-            // Set localStorage saat tombol diklik
-            localStorage.setItem('salesOrderClicked{{$data->id}}', 'true');
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function(){
-        // Cek apakah item sudah dicetak sebelumnya
-        if (localStorage.getItem('deliveryOrderClicked{{$data->id}}') === 'true') {
-            $('#cetakDeliveryOrder{{$data->id}}').html('Cetak Delivery Order <i class="fas fa-check-circle" style="color:green"></i> ');
-        }
-
-        $('#cetakDeliveryOrder{{$data->id}}').click(function(){
-            $(this).html(' Cetak Delivery Order <i class="fas fa-check-circle" style="color:green"></i>');
-            // Set localStorage saat tombol diklik
-            localStorage.setItem('deliveryOrderClicked{{$data->id}}', 'true');
-        });
-    });
-</script>
-
 
 <td>
     @if($data->is_download == "Yes")
@@ -260,10 +230,10 @@ entries
       Nama Customer : {{$data->nama_customer}}
         
       <br>
-      Jika data sudah benar, silahkan isi kolom dibawah ini dengan "Confirm"
+      Jika data sudah benar, silahkan isi kolom dibawah ini dengan "CONFIRM"
       <div class="form-group">
                     
-                        <input class="form-control" id="" name="confirm" rows="3" required></input>
+      <input class="form-control" id="confirm" name="confirm" rows="3" pattern="CONFIRM" title="Harap masukkan CONFIRM" required>
                     </div>
 
       </div>

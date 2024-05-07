@@ -301,7 +301,7 @@ class UserAccountController extends Controller
     }
     public function superadminstore(Request $request){
 
- 
+
         $roleid = $request->role_id;
         $namauser = $request->nama_user;
         $username = $request->username;
@@ -351,7 +351,7 @@ class UserAccountController extends Controller
 
     public function superadminupdate(Request $request, $id){
 
-     
+     dd($request->all());
 
         if($request->role_id =='5'){
             $data = User::find($id);

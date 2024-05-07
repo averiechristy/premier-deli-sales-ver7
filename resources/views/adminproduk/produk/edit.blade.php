@@ -17,8 +17,8 @@
     <label for="" class="form-label" style="color:black;">Pilih Supplier</label>
     <select name="supplier_id" id="supplier_id" class="form-control" style="border-color: #01004C;" aria-label=".form-select-lg example" >
         <option value="" selected disabled>-- Pilih Supplier --</option>
-        @foreach ($supplier as $supplier)
-                <option value="{{$supplier->id}}"{{ old('supplier_id', $data->supplier_id) == $supplier->id ? 'selected' : '' }}> {{$supplier -> kode_supplier}} - {{$supplier -> nama_supplier}}</option>
+        @foreach ($supplier as $item)
+                <option value="{{$item->id}}"{{ old('supplier_id', $data->supplier_id) == $item->id ? 'selected' : '' }}> {{$item -> kode_supplier}} - {{$item -> nama_supplier}}</option>
       @endforeach
     </select>
 </div>
@@ -86,21 +86,27 @@ function validasiNumber(input) {
     let hargajual = document.forms["saveform"]["harga_jual"].value;
     
 
-    if(kodeproduk == "") {
+    if (supplier == "") {
+        alert("Supplier harus dipilih");
+        return false;
+    } else if (kodeproduk == "") {
         alert("Kode produk tidak boleh kosong");
-    return false;
-    }
-
-    else if (namaproduk == "" ) {
-    alert("Nama produk tidak boleh kosong");
-    return false;
-    } else if (hargabeli == ""){
+        return false;
+    } else if (namaproduk == "") {
+        alert("Nama produk tidak boleh kosong");
+        return false;
+    } else if (hargabeli == "") {
         alert("Harga beli tidak boleh kosong");
-    return false;
-    }
-    else if(hargajual == ""){
+        return false;
+    } else if (parseFloat(hargabeli) === 0) {
+        alert("Harga beli tidak boleh 0, isi angka lain");
+        return false;
+    } else if (hargajual == "") {
         alert("Harga jual tidak boleh kosong");
-    return false;
+        return false;
+    } else if (parseFloat(hargajual) === 0) {
+        alert("Harga jual tidak boleh 0, isi angka lain");
+        return false;
     }
 
     }

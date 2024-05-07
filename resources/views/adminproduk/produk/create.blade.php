@@ -13,7 +13,7 @@
                                     <form name="saveform" action="{{route('adminproduk.produk.simpan')}}" method="post" onsubmit="return validateForm()">
                                         @csrf                       
 
-                                        <div class="form-group mb-4">
+<div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Pilih Supplier</label>
     <select name="supplier_id" id="supplier_id" class="form-control" style="border-color: #01004C;" aria-label=".form-select-lg example" >
         <option value="" selected disabled>-- Pilih Supplier --</option>
@@ -35,13 +35,13 @@
 
 <div class="form-group mb-4">
         <label for="" class="form-label" style="color:black;">Harga Beli</label>
-    <input name="harga_beli" type="number"  class="form-control " style="border-color: #01004C;"  value="" oninput="validasiNumber(this)"/>
+    <input name="harga_beli" type="number"  class="form-control " style="border-color: #01004C;"  value="0" oninput="validasiNumber(this)"/>
 </div>
 
 
 <div class="form-group mb-4">
         <label for="" class="form-label" style="color:black;">Harga Jual</label>
-    <input name="harga_jual" type="number"  class="form-control " style="border-color: #01004C;" value="" oninput="validasiNumber(this)"/>
+    <input name="harga_jual" type="number"  class="form-control " style="border-color: #01004C;" value="0" oninput="validasiNumber(this)"/>
 </div>
 
 <!-- <div class="form-group mb-4">
@@ -87,25 +87,27 @@ function validasiNumber(input) {
     let hargabeli = document.forms["saveform"]["harga_beli"].value;
     let hargajual = document.forms["saveform"]["harga_jual"].value;
     
-    if(supplier == "") {
+    if (supplier == "") {
         alert("Supplier harus dipilih");
-    return false;
-    }
-    else if(kodeproduk == "") {
+        return false;
+    } else if (kodeproduk == "") {
         alert("Kode produk tidak boleh kosong");
-    return false;
-    }
-
-    else if (namaproduk == "" ) {
-    alert("Nama produk tidak boleh kosong");
-    return false;
-    } else if (hargabeli == ""){
+        return false;
+    } else if (namaproduk == "") {
+        alert("Nama produk tidak boleh kosong");
+        return false;
+    } else if (hargabeli == "") {
         alert("Harga beli tidak boleh kosong");
-    return false;
-    }
-    else if(hargajual == ""){
+        return false;
+    } else if (parseFloat(hargabeli) === 0) {
+        alert("Harga beli tidak boleh 0, isi angka lain");
+        return false;
+    } else if (hargajual == "") {
         alert("Harga jual tidak boleh kosong");
-    return false;
+        return false;
+    } else if (parseFloat(hargajual) === 0) {
+        alert("Harga jual tidak boleh 0, isi angka lain");
+        return false;
     }
     
     }

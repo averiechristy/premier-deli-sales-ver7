@@ -18,14 +18,14 @@
                     <form action="{{ route('filter') }}" method="GET">
                         <div class="row">
                             <div class="col-md-4">
-                                <select name="bulan" class="form-control">
-                                    <option value="">Pilih Bulan</option>
-                                    @for ($i = 1; $i <= 12; $i++)
-                                        <option value="{{ $i }}" {{ (isset($bulan) && $bulan == $i) ? 'selected' : '' }}>
-                                            {{ date('F', mktime(0, 0, 0, $i, 1)) }}
-                                        </option>
-                                    @endfor
-                                </select>
+                            <select name="bulan" class="form-control">
+    <option value="">Pilih Bulan</option>
+    @for ($i = 1; $i <= 12; $i++)
+        <option value="{{ $i }}" {{ (isset($bulan) && $bulan == $i) ? 'selected' : ($i == date('n') ? 'selected' : '') }}>
+            {{ date('F', mktime(0, 0, 0, $i, 1)) }}
+        </option>
+    @endfor
+</select>
                             </div>
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary">Filter</button>

@@ -1,28 +1,30 @@
 <?php
-
 namespace App\Imports;
 
 use App\Models\Customer;
+use App\Models\Kategori;
+use App\Models\Sumber;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Illuminate\Support\Facades\Session;
 
-class CustomerImport implements ToModel, WithStartRow
+class CustomerImport implements ToModel, WithStartRow, WithHeadingRow
 {
     private $lastId;
-    private $allowedCategories = [
-        'Hotel',
-        'Restaurant',
-        'Cafe',
-        'Household/Retail',
-        'Reseller',
-        'Consignment'
-    ];
+    private $allowedCategories = [];
+    
+    private $allowedSumber = [];
+
+    
     public function __construct()
     {
         $this->lastId = Customer::latest()->value('id') ?? 0;
+        $this->allowedCategories = Kategori::pluck('kategori')->toArray();
+
+        $this->allowedSumber = Sumber::pluck('sumber')->toArray();
     }
 
     public function startRow(): int
@@ -32,21 +34,52 @@ class CustomerImport implements ToModel, WithStartRow
 
     public function model(array $row)
     {            
+        $expectedHeaders = [
+            'nama_customer',
+            'kategori',
+            'sumber',
+            'nama_pic',
+            'jabatan_pic',
+            'no_hp',
+            'email',
+            'alamat',
+            'produk_yang_digunakan_sebelumnya'
+        ];
+    
+        $diff = array_diff($expectedHeaders, array_keys($row));
+        if (!empty($diff)) {
+            throw new \Exception("Template tidak sesuai");
+        }
+
         // Validasi format email
-        $email = $row['6'];
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $email = $row['email'];
+        if ($email !== null && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new \Exception("Format email $email tidak valid");
         }
-        $noHp = $row['5'];
-        if (!is_numeric($noHp)) {
-            throw new \Exception("Nomor HP $noHp harus berupa angka");
-        }
-        $kategori = $row['1'];
+        
+        $kategori = $row['kategori'];
+
         if (!in_array($kategori, $this->allowedCategories)) {
             $allowedCategoriesStr = implode(', ', $this->allowedCategories);
             throw new \Exception("Kategori $kategori tidak valid, hanya boleh $allowedCategoriesStr");
         }
-        $existingCust = Customer::where('nama_customer', $row['0'])->first();
+
+        $sumber = $row['sumber'];
+
+        if (!in_array($sumber, $this->allowedSumber)) {
+            $allowedSumberStr = implode(', ', $this->allowedCategories);
+            throw new \Exception("Sumber $sumber tidak valid, hanya boleh $allowedSumberStr");
+        }
+
+        $datakategori = Kategori::where('kategori', $kategori)->first();
+
+        $kategoriid = $datakategori -> id;
+
+        $datasumber = Sumber::where('sumber', $sumber)->first();
+        $sumberid = $datasumber->id;
+       
+
+        $existingCust = Customer::where('nama_customer', $row['nama_customer'])->first();
 
         if ($existingCust) {
             return null;
@@ -56,15 +89,17 @@ class CustomerImport implements ToModel, WithStartRow
 
         return new Customer([
             'id' => $this->lastId,
-            'nama_customer' => $row['0'],
-            'kategori' => $row['1'],
-            'sumber' => $row['2'],
-            'nama_pic' => $row['3'],
-            'jabatan_pic' => $row['4'],
-            'no_hp' => $row['5'],
-            'email' => $row['6'],
-            'lokasi' => $row['7'],
-            'produk_sebelumnya' => $row['8'],
+            'nama_customer' => $row['nama_customer'],
+            'kategori' => $row['kategori'],
+            'sumber' => $row['sumber'],
+            'nama_pic' => $row['nama_pic'],
+            'jabatan_pic' => $row['jabatan_pic'],
+            'no_hp' => $row['no_hp'],
+            'email' => $row['email'],
+            'lokasi' => $row['alamat'],
+            'produk_sebelumnya' => $row['produk_yang_digunakan_sebelumnya'],
+            'kategori_id' => $kategoriid,
+            'sumber_id' => $sumberid,
         ]);
     }
 }

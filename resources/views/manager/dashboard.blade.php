@@ -56,6 +56,29 @@
                 </a>
             </div>
         </div>
+
+        <div class="col-md-4 mt-2">
+            <div class="card quotation-card p-4" style="height: 200px;">
+            <a href="{{route('manager.kategori.index')}}">
+                <div class="card-body">
+                <i class="fas fa-table" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
+                <h4 class="card-title mt-3" style="color: black;">Kategori</h4>
+                </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mt-2">
+            <div class="card quotation-card p-4" style="height: 200px;">
+            <a href="{{route('manager.sumber.index')}}">
+                <div class="card-body">
+                <i class="fa fa-newspaper-o" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
+                <h4 class="card-title mt-3" style="color: black;">Sumber Data Customer</h4>
+                </div>
+                </a>
+            </div>
+        </div>
+
     </div>
 </div>
 <style>

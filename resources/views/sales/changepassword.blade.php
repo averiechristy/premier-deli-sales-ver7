@@ -14,8 +14,7 @@
                        
                             <img src="{{asset('img/undraw_profile.svg')}}" style="height: 100px; width: 100px;">
                             <h3 style="margin-top: 34px; margin-left: 12px;"> {{ Auth::user()->nama }}</h3>
-                            
-
+                        
                            
                        
                     </div>

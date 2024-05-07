@@ -1,10 +1,6 @@
 @extends('layouts.leader.app')
 
 @section('content')
-
-<!-- Begin Page Content -->
-<div class="container-fluid" id="container-fluid">
-
 <div class="buttons">
 <!-- Di bagian bawah tampilan -->
 <button id="exportPdfButton" style="float: right;" class=" d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-3" >
@@ -14,113 +10,157 @@
                                 class="fas fa-print fa-sm text-white-50"></i> Print Quotation</button>
 
 </div>
-<br>
-<br>
+<!-- Begin Page Content -->
+<div class="container-fluid" id="container-fluid">
+
+
     <!-- Page Heading -->
 
-    <div class="row">
+    <div class="row" >
         <!-- Logo -->
        
-        <img src="{{asset('img/logopremier.png')}}"style="max-width: 250px; margin-top:-50px;">
+        <img src="{{asset('img/logopremier.png')}}"style="max-width: 250px; margin-top:-60px;">
         
         <!-- Text -->
       
             <div class="tulisan" style="margin-top:35px;">
-                <h6 style="color:black; font-family: Arial, sans-serif; font-weight:bold;">Premier Deli Indonesia</h6>
-                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold;">Graha Arteri Mas Kav 31, Kedoya Selatan</h6>
-                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold;">Jakarta Barat,11520</h6>
+                <h6 style="color:black; font-family: Arial, sans-serif; font-weight:bold; font-size:12px;">Premier Deli Indonesia</h6>
+                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold; font-size:12px;">JL. Pulau Bira D . I No. 12 A
+Kembangan Utara, Kembangan
+</h6>
+                <h6 style="color:black; font-family: Arial, sans-serif;  font-weight:bold; font-size:12px;">Jakarta Barat - DKI Jakarta 11610</h6>
             </div>
       
     </div>
 
-    <hr style=" border: 1px solid black;">
-    <h2 class="h3 mb-2 " style="color:black; font-weight:bold; font-family: Arial, sans-serif;">Quotation</h2>
+    <hr style=" border: 1px solid black; margin-top:-51px;">
+    <h2 class="h3 mb-2 " style="color:black; font-weight:bold; font-family: Arial, sans-serif; font-size:20px;">Quotation</h2>
 
     <!-- Split the content into two columns -->
     <div class ="informasi" style="display: flex;">
 
         <!-- Left column -->
-        <div style="flex: 1; margin-right: 10px;">
-            <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Nama Customer</span> <span style="margin-left:10px;">:</span> {{$quote -> customer -> nama_customer}} </h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Alamat</span> <span style="margin-left:80px;">:</span> {{$quote -> alamat}} </h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Nama PIC</span> <span style="margin-left:59px;">:</span> {{$quote -> nama_pic}} </h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Email</span> <span style="margin-left:91px;">:</span> {{$quote -> email}} </h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Phone</span> <span style="margin-left: 85px;">:</span> {{$quote -> customer -> no_hp}} </h6>
+        <div style="flex: 2; margin-right: 5px;">
+            <h6 style="color:black; font-family: Arial, sans-serif;  font-size:12px;"><span style="font-weight:bold;">Nama Customer</span> <span style="margin-left:10px;">:</span> {{$quote -> customer -> nama_customer}} </h6>
+            <h6 style="color:black; font-family: Arial, sans-serif; font-size:12px; word-wrap: break-word;">
+    <span style="font-weight:bold;">Alamat</span>
+    <span style="margin-left:63px;">:</span> 
+    <?php 
+    if(strlen($quote->alamat) > 55) {
+        $alamat_wrapped = wordwrap($quote->alamat, 55, "<br>\n", true);
+        $alamat_with_spaces = str_replace("<br>", "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $alamat_wrapped);
+        echo $alamat_with_spaces;
+    } else {
+        echo $quote->alamat;
+    }
+    ?> 
+</h6>
+
+
+            <h6 style="color:black; font-family: Arial, sans-serif;  font-size:12px;"><span style="font-weight:bold;">Nama PIC</span> <span style="margin-left:48px;">:</span> {{$quote -> nama_pic}} </h6>
+            <h6 style="color:black; font-family: Arial, sans-serif;  font-size:12px;"><span style="font-weight:bold;">Email</span> <span style="margin-left:72px;">:</span> {{$quote -> email}} </h6>
+            <h6 style="color:black; font-family: Arial, sans-serif;  font-size:12px;"><span style="font-weight:bold;">Phone</span> <span style="margin-left: 68px;">:</span> {{$quote -> customer -> no_hp}} </h6>
         </div>
 
         <!-- Right column -->
-        <div style="flex: 1; margin-left: 10px;">
-            <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">No Order</span> <span style="margin-left:43px;">:</span> {{$quote -> no_quote}}</h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Tanggal</span> <span style="margin-left:52px;">:</span> <?php echo date('d - m - Y', strtotime($quote->quote_date)); ?></h6>
-            <h6 style="color:black; font-family: Arial, sans-serif;"><span style="font-weight:bold;">Tanggal Valid</span> <span style="margin-left:10px;">:</span> <?php echo date('d - m - Y', strtotime($quote->valid_date)); ?></h6>
+        <div style="flex: 1; ">
+            <h6 style="color:black; font-family: Arial, sans-serif;  font-size:12px;"><span style="font-weight:bold;">No</span> <span style="margin-left:65px;">:</span> {{$quote -> no_quote}}</h6>
+            <h6 style="color:black; font-family: Arial, sans-serif;  font-size:12px;"><span style="font-weight:bold;">Tanggal</span> <span style="margin-left:36px;">:</span> <?php echo date('d - m - Y', strtotime($quote->quote_date)); ?></h6>
+            <h6 style="color:black; font-family: Arial, sans-serif;  font-size:12px;"><span style="font-weight:bold;">Tanggal Valid</span> <span style="margin-left:5px;">:</span> <?php echo date('d - m - Y', strtotime($quote->valid_date)); ?></h6>
 
 
         </div>
 
     </div>
+<style>
+    /* Tambahkan kode CSS ini di bagian head atau dalam file CSS Anda */
+.informasi h6 {
+    min-width: 200px; /* Sesuaikan lebar sesuai kebutuhan */
+}
 
-
+</style>
     <!-- Tabel Produk -->
 
-    <div class="produk" style="margin-top:50px;">
+    <div class="produk">
         <!-- <h4 class="mb-4 mt-4 text-center" style="color:black;">Informasi Produk</h4> -->
         <div class="table-responsive">
         <table class="table table-bordered" >
-            <thead>
-                <tr>
-                    <th  scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">No</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Kode Produk</th>
+  
+    <thead style="text-align: center;">
+    <tr>
+        <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;width: 1px; vertical-align: top;">No</th>
+        <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;width: 10px; vertical-align: top;">Kode Produk</th>
+        <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px; vertical-align: top;">Nama Produk</th>
+        <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 5px;vertical-align: top;">Jumlah Produk</th>
+        <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px; vertical-align: top;">Harga Jual</th>
+        <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px; vertical-align: top;">Total Harga</th>
+    </tr>
+    </thead>
+<style>
+    thead {
+    display: table-header-group;
+}
+</style>
 
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Nama Produk</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Qty</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Unit Price</th>
-                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 15px;">Total Price</th>
-                </tr>
-            </thead>
             <tbody>
             @php
         $counter = 1; // Inisialisasi nomor urutan
         @endphp
                 @foreach ($detailquote as $detail)
                 <tr>
-                <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{ $counter++ }}</td> 
-                <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail -> kode_produk}}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail -> nama_produk}}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$detail->qty}}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($detail->quote_price, 0, ',', '.') }}</td>
-                    <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($detail->total_price, 0, ',', '.') }}</td>
+                <td style="color:black; font-family: Arial, sans-serif; text-align: center; font-size: 10px;width: 1px;">{{ $counter++ }}</td> 
+                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px;width: 10px;">{{$detail -> kode_produk}}</td>
+                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 350px;">
+  {{$detail->nama_produk}}
+</td>
+<td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 5px; text-align: center;">{{$detail->qty}}</td>
+<td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($detail->quote_price, 0, ',', '.') }}
+</td>
+<td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($detail->total_price, 0, ',', '.') }}
+</td>
                 </tr>
                @endforeach 
-                <!-- End of data produk -->
+              
             </tbody>
 
             <tfoot>
     <tr>
         <td colspan="4"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">Sub Total</td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; ">
-    {{ 'Rp ' . number_format($subtotal, 0, ',', '.') }}
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold;">Sub Total</td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($subtotal, 0, ',', '.') }}
 </td>
     </tr>
     <tr>
         <td colspan="4"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">Discount</td>
-        @if ($tipe == 'persen')
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{$discountasli}} %</td>
-        @elseif ($tipe == 'amount')
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($discountasli, 0, ',', '.') }} </td>
-        @endif
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold;">Discount</td>
+       
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($discount, 0, ',', '.') }}
+    </td>      
     </tr>
     <tr>
         <td colspan="4"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold;">PPN</td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;">{{ $ppnpersen }} %</td>
-    </tr>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold;">PPN</td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($ppn, 0, ',', '.') }}
+</td>    
+
+</tr>
     <tr>
         <td colspan="4"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px; font-weight: bold; ">Total</td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 15px;"> {{ 'Rp ' . number_format($total, 0, ',', '.') }}</td>
-    </tr>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold; ">Total</td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($total, 0, ',', '.') }}
+</td>    </tr>
    
  
     <tr> <!-- Baris baru untuk menambahkan tulisan -->
@@ -143,10 +183,8 @@
 
 
 
-
-
 <script>
-   document.getElementById('exportPdfButton').addEventListener('click', function() {
+    document.getElementById('exportPdfButton').addEventListener('click', function() {
     var salesOrderId = '<?php echo $quote->id; ?>'; // Ganti ini dengan cara yang sesuai untuk mendapatkan ID sales order
     var url = '{{ route("leaderquotation.download", ":id") }}'; // Ganti 'sales-order.download' dengan nama rute yang sesuai jika perlu
 
@@ -159,7 +197,7 @@
         },
         body: JSON.stringify({
             noSO: '<?php echo $quote->no_quote; ?>',
-            customerName: '<?php echo $quote->nama_customer; ?>'
+            customerName: '<?php echo $quote->customer->nama_customer; ?>'
         })
     })
     .then(response => {
@@ -167,8 +205,8 @@
             // Jika permintaan berhasil, lanjutkan dengan membuat dan mengunduh PDF
             var chartContainer = document.getElementById('container-fluid').cloneNode(true);
             var options = {
-                filename: 'Quote - <?php echo $quote->no_quote; ?> - <?php echo $quote->nama_customer; ?>.pdf',
-                margin: [5, 5, 5, 5],
+                filename: 'Quote - <?php echo $quote->no_quote; ?> - <?php echo $quote->customer->nama_customer; ?>.pdf',
+              
                 // konfigurasi untuk unduhan PDF
             };
             html2pdf(chartContainer, options);

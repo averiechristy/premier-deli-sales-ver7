@@ -2,51 +2,10 @@
 
 @section('content')
 
-<style>
-        .container {
-            display: grid;
-            grid-template-columns: 30% 70%; /* Membagi halaman menjadi dua kolom dengan lebar 20% dan 80% */
-            gap: 20px; /* Jarak antar kolom */
-        }
-        .left-column, .right-column {
-            padding: 20px;
-            /* border: 1px solid #ccc; */
-        }
-        /* Menyesuaikan ukuran kolom agar tidak terlalu besar di layar kecil */
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr; /* Ketika layar kecil, tampilkan satu kolom penuh */
-            }
-        }
-    </style>
+
 
 <div class="container">
-        <div class="left-column">
-
        
-
-        <div class="card mt-3">
-    <div class="card-body">
-        <h5 class="card-title" style="color:black;">Informasi Pelanggan</h5>
-        <p class="card-text"  style="color:black;">Nama Customer: {{$data->nama_customer}}</p>
-        <p class="card-text"  style="color:black;">Alamat: {{$data->alamat}}</p>
-        <p class="card-text"  style="color:black;">Tanggal Pengiriman: {{ \Carbon\Carbon::parse($data->shipping_date)->format('d-m-Y') }}</p>
-    </div>
-</div>
-
-<div class="card mt-3">
-    <div class="card-body">
-        <h5 class="card-title" style="color:black;">Daftar Produk</h5>
-        <ul class="list-group list-group-flush">
-            @foreach ($rfo as $item)
-            <li  style="color:black;" class="list-group-item">{{$item->kode_produk}} {{$item->nama_produk}} - {{$item->qty}}</li>
-            @endforeach
-        </ul>
-    </div>
-</div>
-
-        
-        </div>
         <div class="right-column">
             <!-- Tempatkan form input di sini -->
             <div class="card mt-3">
@@ -63,11 +22,7 @@
 
 
 
-                                        <div class="form-group mb-4">
-    <label for="" class="form-label" style="color:black;">No Sales Order</label>
-    <input name="no_so" type="text" class="form-control" style="border-color: #01004C; width:50%;" value="{{ $orderNumber }}" readonly />
-</div>
-
+   
 
 
 
@@ -76,21 +31,8 @@
     <input name="so_date" id="so_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
-<script>
-    // Mendapatkan elemen input tanggal
-    var so_date_input = document.getElementById("so_date");
 
-    // Mendapatkan tanggal hari ini
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
 
-    today = yyyy + '-' + mm + '-' + dd;
-
-    // Set nilai minimum input tanggal ke hari ini
-    so_date_input.min = today;
-</script>
 <script>
     // Mendapatkan elemen input tanggal
     var orderDateInput = document.getElementById('so_date');
@@ -143,46 +85,70 @@
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Tanggal Pengiriman</label>
-    <input name="shipping_date"  type="date" class="form-control" style="border-color: #01004C; width:50%;" value="{{$data->shipping_date}}" />
+    <input name="shipping_date" id="shipping_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="{{$data->shipping_date}}" />
 </div>
 
 <div id="product-fields">
-    
-@foreach ($rfo as $index => $detaildata)
-    <div class="row product-field">
-        <div class="col-md-4">
-            <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Produk</label>
-                <!-- Berikan id yang unik untuk setiap elemen select -->
-                <select name="product[]" class="form-control product-select" id="productselect{{$index}}" style="border-color: #01004C;max-width: 100%;" aria-label=".form-select-lg example" readonly>
-                    <option value="" selected disabled>-- Pilih Produk --</option>
-                    @foreach ($produk as $item)
-                        <option value="{{$item->id}}" {{ old('product[]', $detaildata->product_id) == $item->id ? 'selected' : '' }} >{{$item->kode_produk}} - {{$item->nama_produk}}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-
-
-        <div class="col-md-3">
-            <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Harga</label>
-                <input name="price[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata  -> harga_jual}}" readonly/>
-            </div>
-        </div>
+@foreach ($rfoGrouped as $kodeSupplier => $detailRFOs)
+   
+       
+            <h5 style="display:none;">Supplier: {{ $kodeSupplier }}</h5>
+            <input type="text" value="{{ $orderNumbers[$kodeSupplier] }}" name="order_number[{{$kodeSupplier}}][]" hidden>
+            <input type="text" value={{$kodeSupplier}} name="kode_supplier[{{$kodeSupplier}}][]" hidden>
+           
         
-        <div class="col-md-2">
-            <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
-                <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata -> qty}}" readonly />
+        @foreach ($detailRFOs as $index => $detaildata)
+            <div class="row product-field">
+                <div class="col-md-4">
+                <div class="form-group mb-4">
+                            <label for="" class="form-label" style="color:black;">Produk</label>
+                            <select name="product[{{$kodeSupplier}}][]" class="form-control product-select" readonly>
+                                <option value="" selected disabled>-- Pilih Produk --</option>
+                                @foreach ($produk as $item)
+                                    <option value="{{$item->id}}" {{ old('product[]', $detaildata->product_id) == $item->id ? 'selected' : '' }} >{{$item->kode_produk}} - {{$item->nama_produk}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                </div>
+        
+                <div class="col-md-3">
+                <div class="form-group mb-4">
+                            <label for="" class="form-label" style="color:black;">Harga</label>
+                            <input name="price[{{$kodeSupplier}}][]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata->harga_jual}}" readonly/>
+                        </div>
+                </div>
+                
+                <div class="col-md-2">
+                <div class="form-group mb-4">
+                            <label for="" class="form-label" style="color:black;">Quantity</label>
+                            <input name="quantity[{{$kodeSupplier}}][]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata->qty}}" readonly />
+                        </div>
+                </div>
+                <div class="col-md-2">
+                    <label for="" class="form-label" style="color:black; display:none;">Action</label>
+                    <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1" style="display:none;" >Remove</button>
+                </div>
             </div>
-        </div>
-        <div class="col-md-2">
-            <label for="" class="form-label" style="color:black; display:none;">Action</label>
-            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1" style="display:none;" >Remove</button>
-        </div>
-    </div>
-@endforeach
+            <script>
+    // Menonaktifkan interaksi pengguna dengan elemen select
+    $(document).ready(function() {
+    // Gunakan event delegation untuk menangkap event mousedown pada elemen parent dengan class '.product-field'
+    $(document).on('mousedown', '.product-field .product-select', function(e) {
+        e.preventDefault();
+        $(this).blur();
+        return false;
+    });
+
+    $(document).on('keydown', '.product-field .product-select', function(e) {
+        e.preventDefault();
+        return false;
+    });
+});
+
+</script>
+        @endforeach
+    @endforeach
+
 
 <!-- <script>
     $(document).ready(function() {
@@ -195,18 +161,7 @@
     });
 </script> -->
 
-<script>
-    // Menonaktifkan interaksi pengguna dengan elemen select
-    document.getElementById('productselect{{$index}}').addEventListener('mousedown', function(e) {
-        e.preventDefault();
-        this.blur();
-        return false;
-    });
-    document.getElementById('productselect{{$index}}').addEventListener('keydown', function(e) {
-        e.preventDefault();
-        return false;
-    });
-</script>
+
 
 
 </div>
@@ -393,11 +348,7 @@ $(document).on('change', '.product-select', function() {
                 }
             }
         }
-        if (!isValidProduct) {
-            alert("Minimal satu produk harus dipilih");
-            closeModal();
-            return false;
-        }
+        
         // Validasi radiobutton
         var radioValue = document.querySelector('input[name="inlineRadioOptions"]:checked');
         if (!radioValue) {

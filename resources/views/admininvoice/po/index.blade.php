@@ -133,20 +133,7 @@ entries
 
 </td>
 
-<script>
-    $(document).ready(function(){
-        // Cek apakah item sudah dicetak sebelumnya
-        if (localStorage.getItem('salesOrderClicked{{$item->id}}') === 'true') {
-            $('#cetakSalesOrder{{$item->id}}').html('Cetak Purchase Order <i class="fas fa-check-circle" style="color:green"></i> ');
-        }
 
-        $('#cetakSalesOrder{{$item->id}}').click(function(){
-            $(this).html(' Cetak Purchase Order <i class="fas fa-check-circle" style="color:green"></i>');
-            // Set localStorage saat tombol diklik
-            localStorage.setItem('salesOrderClicked{{$item->id}}', 'true');
-        });
-    });
-</script>
 
 <td>
     @if($item->is_download == "Yes")
@@ -163,22 +150,22 @@ entries
 
 @if($item->status_po =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-     Cancel PO
+     Batalkan PO
 </button>
 
 @elseif ($item->status_po =="Menunggu Persetujuan Cancel")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-     Cancel PO
+     Batalkan PO
 </button>
 
 @elseif ($item->is_cancel =="No")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-     Cancel PO
+     Batalkan PO
 </button>
 @else
   
 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$item->id}}">
-      Cancel PO
+      Batalkan PO
 </button>
 @endif
 

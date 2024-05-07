@@ -149,7 +149,37 @@ if ($currentYearMonth != $lastYearMonth) {
             'orderNumber' => $orderNumber,
         ]);
     }
+    public function superadmincreate()
+    {
 
+        $customer = Customer::orderBy('nama_customer', 'asc')->get();
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
+
+        $lastRFO = RFO::latest()->first(); // Mendapatkan data SO terakhir dari database
+
+        $currentYearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
+        $lastYearMonth = $lastRFO ? substr($lastRFO->no_rfo, 6, 4) : '0000'; // Mengambil empat digit tahun dan bulan dari nomor SO terakhir
+        
+        
+        if ($currentYearMonth != $lastYearMonth) {
+            // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor SO terakhir,
+            // maka nomor urutan direset menjadi 1
+            $orderNumber = 'RFO - ' . $currentYearMonth . '0001';
+        } else {
+            // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor SO terakhir,
+            // maka nomor urutan diincrement
+            $lastOrder = $lastRFO ? intval(substr($lastRFO->no_rfo, -4)) : 0; // Mengambil nomor urutan terakhir
+            $orderNumber = 'RFO - ' . $currentYearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
+        }        
+        
+      
+       
+        return view('superadmin.rfo.create',[
+            'customer' => $customer,
+            'produk' => $produk,
+            'orderNumber' => $orderNumber,
+        ]);
+    }
     public function managercreate()
     {
 
@@ -189,6 +219,15 @@ if ($currentYearMonth != $lastYearMonth) {
         $nama = $loggedInUser -> nama;
 
         $rfo = new RFO;
+
+        $rfonumber =  $request->no_rfo;
+        $existingdata = RFO::where('no_rfo', $rfonumber)->first();
+
+        if($existingdata !== null && $existingdata) {
+            $request->session()->flash('error', "Data gagal disimpan, RFO sudah ada");
+            return redirect()->route('sales.rfo.index');
+        }
+
         $rfo -> nama_penerima = $request->nama_penerima;
         $rfo -> no_rfo = $request->no_rfo;
         $rfo -> tanggal_order = $request->order_date;
@@ -231,7 +270,65 @@ if ($currentYearMonth != $lastYearMonth) {
         return redirect()->route('sales.rfo.index');
         
     }
+    public function superadminstore(Request $request){
+       
+        $loggedInUser = auth()->user();
 
+        $userid = $loggedInUser ->id;
+        $nama = $loggedInUser -> nama;
+
+        $rfo = new RFO;
+
+        $rfonumber =  $request->no_rfo;
+        $existingdata = RFO::where('no_rfo', $rfonumber)->first();
+
+        if($existingdata !== null && $existingdata) {
+            $request->session()->flash('error', "Data gagal disimpan, RFO sudah ada");
+            return redirect()->route('superadmin.rfo.index');
+        }
+
+        $rfo -> nama_penerima = $request->nama_penerima;
+        $rfo -> no_rfo = $request->no_rfo;
+        $rfo -> tanggal_order = $request->order_date;
+        $rfo->cust_id = $request->customer_id;
+        $rfo->nama_customer = $request->nama_customer;
+        $rfo->alamat = $request->alamat;
+        $rfo->shipping_date = $request->shipping_date;
+        $rfo ->payment_date = $request -> payment_date;
+        $rfo->status_rfo = "Request Terkirim";
+        $rfo -> created_by = $userid;
+        $rfo -> nama_pembuat = $nama;
+
+        $rfo -> save();
+
+        $rfoDetails = [];
+
+        
+       
+
+        if ($request->has('product') && $request->has('quantity')) {
+            foreach ($request->product as $index => $productId) {
+                $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+                if ($product) {
+                    $rfoDetails[] = [
+                        'rfo_id' => $rfo->id,
+                        'product_id' => $productId,
+                        'qty' => $request->quantity[$index],
+                        'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                        'harga_jual' => $product -> harga_jual,
+                        'kode_supplier' => $product -> kode_supplier,
+                    ];
+                }
+            }
+            DetailRFO::insert($rfoDetails); 
+        }
+        
+        $request->session()->flash('success', "Pesanan berhasil dikirim");
+
+        return redirect()->route('superadmin.rfo.index');
+        
+    }
     public function leaderstore(Request $request){
        
         $loggedInUser = auth()->user();
@@ -240,6 +337,14 @@ if ($currentYearMonth != $lastYearMonth) {
         $nama = $loggedInUser -> nama;
 
         $rfo = new RFO;
+
+        $rfonumber =  $request->no_rfo;
+        $existingdata = RFO::where('no_rfo', $rfonumber)->first();
+
+        if($existingdata !== null && $existingdata) {
+            $request->session()->flash('error', "Data gagal disimpan, RFO sudah ada");
+            return redirect()->route('leader.rfo.index');
+        }
         $rfo -> nama_penerima = $request->nama_penerima;
         $rfo -> no_rfo = $request->no_rfo;
         $rfo -> tanggal_order = $request->order_date;
@@ -290,6 +395,14 @@ if ($currentYearMonth != $lastYearMonth) {
         $nama = $loggedInUser -> nama;
 
         $rfo = new RFO;
+
+        $rfonumber =  $request->no_rfo;
+        $existingdata = RFO::where('no_rfo', $rfonumber)->first();
+
+        if($existingdata !== null && $existingdata) {
+            $request->session()->flash('error', "Data gagal disimpan, RFO sudah ada");
+            return redirect()->route('manager.rfo.index');
+        }
         $rfo -> nama_penerima = $request->nama_penerima;
         $rfo -> no_rfo = $request->no_rfo;
         $rfo -> tanggal_order = $request->order_date;
@@ -392,6 +505,45 @@ if ($currentYearMonth != $lastYearMonth) {
         ]));
 
      }
+
+
+
+     public function superadmincancelorder(Request $request){
+        $rfo = RFO::orderBy('created_at', 'desc')->get();
+        
+
+        $rfoid = $request->rfo_id;
+        $loggedInUser = auth()->user();
+        $rfodata = RFO::find($request->rfo_id);
+
+
+        if ($rfodata) {
+            $rfodata->status_rfo = 'Cancelled'; // Ganti dengan status yang sesuai
+            $rfodata->save();
+        }
+
+
+        $sodata = SalesOrder::where('rfo_id', $rfoid)->get();
+        
+        foreach ($sodata as $so) {
+            $so -> status_so = "Cancelled";
+            $so->save();
+         }
+         
+
+        $roleid = $loggedInUser -> role_id;
+        $report = $loggedInUser -> report_to;
+        
+        
+
+        $request->session()->flash('success', "Cancel RFO berhasil");
+        return redirect(route('superadmin.rfo.index',[
+            'rfo' => $rfo,
+        ]));
+
+     }
+
+
      public function leadercancelorder(Request $request){
         $rfo = RFO::orderBy('created_at', 'desc')->get();
         

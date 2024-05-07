@@ -15,6 +15,18 @@ class QuotationController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
+     public function superadminindex()
+     {
+         $loggedInUser = auth()->user();
+         $userid = $loggedInUser ->id;
+         $quotation = Quotation::orderBy('created_at', 'desc')->get();
+         
+         return view ('superadmin.quotation.index',[
+             'quotation' => $quotation,
+         ]);
+     }
   
     public function salesindex()
     {
@@ -103,6 +115,43 @@ class QuotationController extends Controller
               
        
         return view('sales.createquotation',[
+            'customer' => $customer,
+            'produk' => $produk,
+            'orderNumber' => $orderNumber,
+        ]);
+    }
+
+    public function superadmincreate()
+    {
+
+        $customer = Customer::orderBy('nama_customer', 'asc')->get();
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
+
+       
+        
+        $lastquote = Quotation::latest()->first(); // Mendapatkan data invoice terakhir dari database
+
+        $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+        $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
+        
+        $lastYear = $lastquote ? substr($lastquote->no_quote, 14, 2) : '00'; // Mengambil dua digit tahun dari nomor quote terakhir
+        $lastMonth = $lastquote ? substr($lastquote->no_quote, 11, 2) : '00'; // Mengambil dua digit bulan dari nomor quote terakhir
+        
+      
+
+        if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
+            // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor quote terakhir,
+            // maka nomor urutan direset menjadi 1
+            $orderNumber = 'QUOTE/0001/' . $currentMonth . '/' . $currentYear;
+        } else {
+            // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor quote terakhir,
+            // maka nomor urutan diincrement
+            $lastOrder = $lastquote ? intval(substr($lastquote->no_quote, 6, 4)) : 0; // Mengambil nomor urutan terakhir
+            $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $currentMonth . '/' . $currentYear;
+        }
+              
+       
+        return view('superadmin.quotation.create',[
             'customer' => $customer,
             'produk' => $produk,
             'orderNumber' => $orderNumber,
@@ -209,6 +258,34 @@ class QuotationController extends Controller
         return response()->json(['message' => 'Sales order has been downloaded successfully']);
     }
 
+    public function managerdownload(Request $request, $id)
+    {
+        // Mengambil sales order dari database berdasarkan ID
+        $quote = Quotation::findOrFail($id);
+    
+        // Menandai bahwa sales order telah diunduh
+        $quote->is_download = true;
+    
+        // Menyimpan sales order tanpa mempengaruhi updated_at
+        $quote->save(['timestamps' => false]);
+    
+        // Mengembalikan respons sebagai JSON jika diperlukan
+        return response()->json(['message' => 'Sales order has been downloaded successfully']);
+    }
+    public function leaderdownload(Request $request, $id)
+    {
+        // Mengambil sales order dari database berdasarkan ID
+        $quote = Quotation::findOrFail($id);
+    
+        // Menandai bahwa sales order telah diunduh
+        $quote->is_download = true;
+    
+        // Menyimpan sales order tanpa mempengaruhi updated_at
+        $quote->save(['timestamps' => false]);
+    
+        // Mengembalikan respons sebagai JSON jika diperlukan
+        return response()->json(['message' => 'Sales order has been downloaded successfully']);
+    }
     public function dowleaderdownloadnload(Request $request, $id)
     {
         // Mengambil sales order dari database berdasarkan ID
@@ -257,6 +334,35 @@ class QuotationController extends Controller
         ]));
 
      }
+
+     public function superadmincancelquotation(Request $request){
+        $quotation = Quotation::orderBy('created_at', 'desc')->get();
+        
+
+        $quoteid = $request->quote_id;
+        $loggedInUser = auth()->user();
+        $quotedata = Quotation::find($request->quote_id);
+
+
+        if ($quotedata) {
+            $quotedata->status_quote = 'Cancelled'; // Ganti dengan status yang sesuai
+            $quotedata->save();
+        }
+
+
+        $roleid = $loggedInUser -> role_id;
+        $report = $loggedInUser -> report_to;
+        
+        
+
+      
+
+        $request->session()->flash('success', "Request Cancel terkirim");
+        return redirect(route('superadmin.quotation.index',[
+            'quotation' => $quotation,
+        ]));
+
+     }
      public function leadercancelquotation(Request $request){
         $quotation = Quotation::orderBy('created_at', 'desc')->get();
         
@@ -291,7 +397,7 @@ class QuotationController extends Controller
         ]));
 
      }
-    public function salesstore(Request $request){
+     public function salesstore(Request $request){
      
         $loggedInUser = auth()->user();
         $userid = $loggedInUser ->id;
@@ -334,59 +440,296 @@ class QuotationController extends Controller
             }
         }
 
-        $quote = new Quotation;
-        $quote -> no_quote = $request->no_quote;
-        $quote -> quote_date = $request -> quote_date;
-        $quote -> valid_date = $request -> valid_date;
-        $quote -> cust_id = $request -> customer_id;
-        $quote -> nama_customer = $request -> nama_customer;
-        $quote -> alamat = $request -> alamat;
-        $quote -> nama_penerima = $request ->nama_penerima;
-        $quote -> shipping_date = $request -> shipping_date;
-        $quote -> payment_date = $request -> payment_date;
-        $quote -> nama_pic = $nama_pic;
-        $quote -> no_hp = $nohp;
-        $quote -> email = $email;
-        $quote -> status_quote = "Quotation Dibuat";
-        $quote -> discount = $request -> discount;
-        $quote -> created_by = $userid;
-        $quote -> ppn = $request -> ppn;
-        $quote -> nama_pembuat = $nama;
-        $quote -> is_persen = $request -> inlineRadioOptions;
 
-        $quote -> save();
-       
-       
-       $quotationDetails = [];
+        $produk = $request-> product;
+      
+     
+        $produkIds = $request->product; // Array of product IDs
+
+        // Membuat array untuk mengelompokkan produk berdasarkan kode supplier
+        $produkBySupplier = [];
+        
+        foreach ($produkIds as $produkId) {
+            $produk = Produk::find($produkId); // Assuming 'Product' is your model name
+            if ($produk) {
+                $kodeSupplier = $produk->kode_supplier;
+                $produkBySupplier[$kodeSupplier][] = $produk;
+            } else {
+                // Handle case where product with given ID is not found
+            }
+        }
+
+      
+        
+        foreach ($produkBySupplier as $kodeSupplier => $produkGroup) {
+          
            
-       if ($request->has('product') && $request->has('quantity')) {
-           foreach ($request->product as $index => $productId) {
-               $product = Produk::find($productId);
-               $qty = $request->quantity[$index];
-               $harga = $product -> harga_jual;
-               $totalprice = $qty * $harga;
-               
-               if ($product) {
-                   $quotationDetails[] = [
-                       'quote_id' => $quote->id,
-                       'product_id' => $productId,
-                       'qty' => $request->quantity[$index],
-                       'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
-                       'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
-                       'quote_price' => $product -> harga_jual,
-                       'total_price' => $totalprice,
-                       'kode_supplier' => $product->kode_supplier,
-                   ];
-               }
-           }
-           DetailQuotation::insert($quotationDetails); 
-       }
+            $lastquote = Quotation::latest()->orderBy('id', 'desc')->first(); 
+            
+
+            $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+            $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
+            
+            $lastYear = $lastquote ? substr($lastquote->no_quote, 14, 2) : '00'; // Mengambil dua digit tahun dari nomor quote terakhir
+            $lastMonth = $lastquote ? substr($lastquote->no_quote, 11, 2) : '00'; // Mengambil dua digit bulan dari nomor quote terakhir
+            
+          
+    
+            if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
+                // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor quote terakhir,
+                // maka nomor urutan direset menjadi 1
+                $orderNumber = 'QUOTE/0001/' . $currentMonth . '/' . $currentYear;
+            } else {
+                // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor quote terakhir,
+                // maka nomor urutan diincrement
+                $lastOrder = $lastquote ? intval(substr($lastquote->no_quote, 6, 4)) : 0; // Mengambil nomor urutan terakhir
+                $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $currentMonth . '/' . $currentYear;
+            }
+            
+            $quote = new Quotation;
+
+          
+            $existingdata = Quotation::where('no_quote', $orderNumber)->first();
+    
+            if($existingdata !== null && $existingdata) {
+                $request->session()->flash('error', "Data gagal disimpan, Quotation sudah ada");
+                return redirect()->route('sales.quotation.index');
+            }
+
+            $quote -> no_quote = $orderNumber;
+            $quote -> quote_date = $request -> quote_date;
+            $quote -> valid_date = $request -> valid_date;
+            $quote -> cust_id = $request -> customer_id;
+            $quote -> nama_customer = $request -> nama_customer;
+            $quote -> alamat = $request -> alamat;
+            $quote -> nama_penerima = $request ->nama_penerima;
+            $quote -> shipping_date = $request -> shipping_date;
+            $quote -> payment_date = $request -> payment_date;
+            $quote -> nama_pic = $nama_pic;
+            $quote -> no_hp = $nohp;
+            $quote -> email = $email;
+            $quote -> status_quote = "Quotation Dibuat";
+            $quote -> discount = $request -> discount;
+            $quote -> created_by = $userid;
+            $quote -> ppn = $request -> ppn;
+            $quote -> nama_pembuat = $nama;
+            $quote -> is_persen = $request -> inlineRadioOptions;
+            $quote -> kode_supplier = $kodeSupplier;
+    
+          $quote -> save();
+
+            $quotationDetails = [];
+           
+         
+                foreach ($produkGroup as $index => $productId) {
+
+                  $id = $productId->id;
+                  
+                    $product = Produk::find($id);
+                  
+                    $qty = $request->quantity[$index];
+                    $harga = $product -> harga_jual;
+                    $totalprice = $qty * $harga;
+                  
+                    
+                    if ($product) {
+                     $supplierKey = $product->kode_supplier;
+                 
+                        $quotationDetails[] = [
+                            'quote_id' => $quote->id,
+                            'product_id' => $id,
+                            'qty' => $request->quantity[$index],
+                            'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                            'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                            'quote_price' => $product -> harga_jual,
+                            'total_price' => $totalprice,
+                            'kode_supplier' => $product->kode_supplier,
+                            'kode_channel' => "BPM",
+                            
+                        ];
+                    }
+                }
+        
+                DetailQuotation::insert($quotationDetails); 
+            
+        }
+
+     
+       
+       
+   
 
        $request->session()->flash('success', "Quotation berhasil dibuat");
 
        return redirect()->route('sales.quotation.index');
 
-    }
+    }  
+
+    public function superadminstore(Request $request){
+     
+        $loggedInUser = auth()->user();
+        $userid = $loggedInUser ->id;
+        $customer = Customer::find($request->customer_id);
+
+        $nama_pic = $customer ->nama_pic;
+        $email = $customer -> email;
+        $nohp = $customer -> no_hp;
+       
+        $nama = $loggedInUser -> nama;
+
+        $jenisdiskon = $request -> inlineRadioOptions;
+        if ($jenisdiskon == "persen"){
+            $nilaidiskon = $request->discount;
+            if($nilaidiskon >= 15){
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('superadmin.quotation.index');
+            }
+        }
+        elseif ($jenisdiskon == "amount") {
+            $subtotal = 0;
+            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+                foreach ($request->product as $index => $productId) {
+                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+    
+                    $qty = $request->quantity[$index];
+                    $harga = $product->harga_jual;
+                    $totalprice = $qty * $harga;
+    
+                    $subtotal += $totalprice;
+                }
+            }
+    
+            $diskonAmount = $request->discount;
+            $maxAllowedDiscount = 0.15 * $subtotal;
+    
+            if ($diskonAmount > $maxAllowedDiscount) {
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('superadmin.quotation.index');
+            }
+        }
+
+
+        $produk = $request-> product;
+      
+     
+        $produkIds = $request->product; // Array of product IDs
+
+        // Membuat array untuk mengelompokkan produk berdasarkan kode supplier
+        $produkBySupplier = [];
+        
+        foreach ($produkIds as $produkId) {
+            $produk = Produk::find($produkId); // Assuming 'Product' is your model name
+            if ($produk) {
+                $kodeSupplier = $produk->kode_supplier;
+                $produkBySupplier[$kodeSupplier][] = $produk;
+            } else {
+                // Handle case where product with given ID is not found
+            }
+        }
+
+      
+        
+        foreach ($produkBySupplier as $kodeSupplier => $produkGroup) {
+          
+           
+            $lastquote = Quotation::latest()->orderBy('id', 'desc')->first(); 
+            
+
+            $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+            $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
+            
+            $lastYear = $lastquote ? substr($lastquote->no_quote, 14, 2) : '00'; // Mengambil dua digit tahun dari nomor quote terakhir
+            $lastMonth = $lastquote ? substr($lastquote->no_quote, 11, 2) : '00'; // Mengambil dua digit bulan dari nomor quote terakhir
+            
+          
+    
+            if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
+                // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor quote terakhir,
+                // maka nomor urutan direset menjadi 1
+                $orderNumber = 'QUOTE/0001/' . $currentMonth . '/' . $currentYear;
+            } else {
+                // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor quote terakhir,
+                // maka nomor urutan diincrement
+                $lastOrder = $lastquote ? intval(substr($lastquote->no_quote, 6, 4)) : 0; // Mengambil nomor urutan terakhir
+                $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $currentMonth . '/' . $currentYear;
+            }
+            
+            $quote = new Quotation;
+
+            $existingdata = Quotation::where('no_quote', $orderNumber)->first();
+    
+            if($existingdata !== null && $existingdata) {
+                $request->session()->flash('error', "Data gagal disimpan, Quotation sudah ada");
+                return redirect()->route('superadmin.quotation.index');
+            }
+            $quote -> no_quote = $orderNumber;
+            $quote -> quote_date = $request -> quote_date;
+            $quote -> valid_date = $request -> valid_date;
+            $quote -> cust_id = $request -> customer_id;
+            $quote -> nama_customer = $request -> nama_customer;
+            $quote -> alamat = $request -> alamat;
+            $quote -> nama_penerima = $request ->nama_penerima;
+            $quote -> shipping_date = $request -> shipping_date;
+            $quote -> payment_date = $request -> payment_date;
+            $quote -> nama_pic = $nama_pic;
+            $quote -> no_hp = $nohp;
+            $quote -> email = $email;
+            $quote -> status_quote = "Quotation Dibuat";
+            $quote -> discount = $request -> discount;
+            $quote -> created_by = $userid;
+            $quote -> ppn = $request -> ppn;
+            $quote -> nama_pembuat = $nama;
+            $quote -> is_persen = $request -> inlineRadioOptions;
+            $quote -> kode_supplier = $kodeSupplier;
+    
+          $quote -> save();
+
+            $quotationDetails = [];
+           
+         
+                foreach ($produkGroup as $index => $productId) {
+
+                  $id = $productId->id;
+                  
+                    $product = Produk::find($id);
+                  
+                    $qty = $request->quantity[$index];
+                    $harga = $product -> harga_jual;
+                    $totalprice = $qty * $harga;
+                  
+                    
+                    if ($product) {
+                     $supplierKey = $product->kode_supplier;
+                 
+                        $quotationDetails[] = [
+                            'quote_id' => $quote->id,
+                            'product_id' => $id,
+                            'qty' => $request->quantity[$index],
+                            'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                            'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                            'quote_price' => $product -> harga_jual,
+                            'total_price' => $totalprice,
+                            'kode_supplier' => $product->kode_supplier,
+                            'kode_channel' => "BPM",
+                            
+                        ];
+                    }
+                }
+        
+                DetailQuotation::insert($quotationDetails); 
+            
+        }
+
+     
+       
+       
+   
+
+       $request->session()->flash('success', "Quotation berhasil dibuat");
+
+       return redirect()->route('superadmin.quotation.index');
+
+    }  
 
     public function leaderstore(Request $request){
      
@@ -431,54 +774,122 @@ class QuotationController extends Controller
             }
         }
 
-        $quote = new Quotation;
-        $quote -> no_quote = $request->no_quote;
-        $quote -> quote_date = $request -> quote_date;
-        $quote -> valid_date = $request -> valid_date;
-        $quote -> cust_id = $request -> customer_id;
-        $quote -> nama_customer = $request -> nama_customer;
-        $quote -> alamat = $request -> alamat;
-        $quote -> nama_penerima = $request ->nama_penerima;
-        $quote -> shipping_date = $request -> shipping_date;
-        $quote -> payment_date = $request -> payment_date;
-        $quote -> nama_pic = $nama_pic;
-        $quote -> no_hp = $nohp;
-        $quote -> email = $email;
-        $quote -> status_quote = "Quotation Dibuat";
-        $quote -> discount = $request -> discount;
-        $quote -> created_by = $userid;
-        $quote -> ppn = $request -> ppn;
-        $quote -> nama_pembuat = $nama;
-        $quote -> is_persen = $request -> inlineRadioOptions;
 
-        $quote -> save();
-       
-       
-       $quotationDetails = [];
+        $produk = $request-> product;
+      
+     
+        $produkIds = $request->product; // Array of product IDs
+
+        // Membuat array untuk mengelompokkan produk berdasarkan kode supplier
+        $produkBySupplier = [];
+        
+        foreach ($produkIds as $produkId) {
+            $produk = Produk::find($produkId); // Assuming 'Product' is your model name
+            if ($produk) {
+                $kodeSupplier = $produk->kode_supplier;
+                $produkBySupplier[$kodeSupplier][] = $produk;
+            } else {
+                // Handle case where product with given ID is not found
+            }
+        }
+
+      
+        
+        foreach ($produkBySupplier as $kodeSupplier => $produkGroup) {
+          
            
-       if ($request->has('product') && $request->has('quantity')) {
-           foreach ($request->product as $index => $productId) {
-               $product = Produk::find($productId);
-               $qty = $request->quantity[$index];
-               $harga = $product -> harga_jual;
-               $totalprice = $qty * $harga;
-               
-               if ($product) {
-                   $quotationDetails[] = [
-                       'quote_id' => $quote->id,
-                       'product_id' => $productId,
-                       'qty' => $request->quantity[$index],
-                       'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
-                       'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
-                       'quote_price' => $product -> harga_jual,
-                       'total_price' => $totalprice,
-                       'kode_supplier' => $product->kode_supplier,
-                       'kode_channel' => "BPM",
-                   ];
-               }
-           }
-           DetailQuotation::insert($quotationDetails); 
-       }
+            $lastquote = Quotation::latest()->orderBy('id', 'desc')->first(); 
+            
+
+            $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+            $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
+            
+            $lastYear = $lastquote ? substr($lastquote->no_quote, 14, 2) : '00'; // Mengambil dua digit tahun dari nomor quote terakhir
+            $lastMonth = $lastquote ? substr($lastquote->no_quote, 11, 2) : '00'; // Mengambil dua digit bulan dari nomor quote terakhir
+            
+          
+    
+            if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
+                // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor quote terakhir,
+                // maka nomor urutan direset menjadi 1
+                $orderNumber = 'QUOTE/0001/' . $currentMonth . '/' . $currentYear;
+            } else {
+                // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor quote terakhir,
+                // maka nomor urutan diincrement
+                $lastOrder = $lastquote ? intval(substr($lastquote->no_quote, 6, 4)) : 0; // Mengambil nomor urutan terakhir
+                $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $currentMonth . '/' . $currentYear;
+            }
+            
+            $quote = new Quotation;
+
+            $existingdata = Quotation::where('no_quote', $orderNumber)->first();
+    
+            if($existingdata !== null && $existingdata) {
+                $request->session()->flash('error', "Data gagal disimpan, Quotation sudah ada");
+                return redirect()->route('leader.quotation.index');
+            }
+            $quote -> no_quote = $orderNumber;
+            $quote -> quote_date = $request -> quote_date;
+            $quote -> valid_date = $request -> valid_date;
+            $quote -> cust_id = $request -> customer_id;
+            $quote -> nama_customer = $request -> nama_customer;
+            $quote -> alamat = $request -> alamat;
+            $quote -> nama_penerima = $request ->nama_penerima;
+            $quote -> shipping_date = $request -> shipping_date;
+            $quote -> payment_date = $request -> payment_date;
+            $quote -> nama_pic = $nama_pic;
+            $quote -> no_hp = $nohp;
+            $quote -> email = $email;
+            $quote -> status_quote = "Quotation Dibuat";
+            $quote -> discount = $request -> discount;
+            $quote -> created_by = $userid;
+            $quote -> ppn = $request -> ppn;
+            $quote -> nama_pembuat = $nama;
+            $quote -> is_persen = $request -> inlineRadioOptions;
+            $quote -> kode_supplier = $kodeSupplier;
+    
+          $quote -> save();
+
+            $quotationDetails = [];
+           
+         
+                foreach ($produkGroup as $index => $productId) {
+
+                  $id = $productId->id;
+                  
+                    $product = Produk::find($id);
+                  
+                    $qty = $request->quantity[$index];
+                    $harga = $product -> harga_jual;
+                    $totalprice = $qty * $harga;
+                  
+                    
+                    if ($product) {
+                     $supplierKey = $product->kode_supplier;
+                 
+                        $quotationDetails[] = [
+                            'quote_id' => $quote->id,
+                            'product_id' => $id,
+                            'qty' => $request->quantity[$index],
+                            'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                            'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                            'quote_price' => $product -> harga_jual,
+                            'total_price' => $totalprice,
+                            'kode_supplier' => $product->kode_supplier,
+                            'kode_channel' => "BPM",
+                            
+                        ];
+                    }
+                }
+        
+                DetailQuotation::insert($quotationDetails); 
+            
+        }
+
+     
+       
+       
+   
 
        $request->session()->flash('success', "Quotation berhasil dibuat");
 
@@ -530,54 +941,121 @@ class QuotationController extends Controller
         }
 
 
-        $quote = new Quotation;
-        $quote -> no_quote = $request->no_quote;
-        $quote -> quote_date = $request -> quote_date;
-        $quote -> valid_date = $request -> valid_date;
-        $quote -> cust_id = $request -> customer_id;
-        $quote -> nama_customer = $request -> nama_customer;
-        $quote -> alamat = $request -> alamat;
-        $quote -> nama_penerima = $request ->nama_penerima;
-        $quote -> shipping_date = $request -> shipping_date;
-        $quote -> payment_date = $request -> payment_date;
-        $quote -> nama_pic = $nama_pic;
-        $quote -> no_hp = $nohp;
-        $quote -> email = $email;
-        $quote -> status_quote = "Quotation Dibuat";
-        $quote -> discount = $request -> discount;
-        $quote -> created_by = $userid;
-        $quote -> ppn = $request -> ppn;
-        $quote -> nama_pembuat = $nama;
-        $quote -> is_persen = $request -> inlineRadioOptions;
+        $produk = $request-> product;
+      
+     
+        $produkIds = $request->product; // Array of product IDs
 
-        $quote -> save();
-       
-       
-       $quotationDetails = [];
+        // Membuat array untuk mengelompokkan produk berdasarkan kode supplier
+        $produkBySupplier = [];
+        
+        foreach ($produkIds as $produkId) {
+            $produk = Produk::find($produkId); // Assuming 'Product' is your model name
+            if ($produk) {
+                $kodeSupplier = $produk->kode_supplier;
+                $produkBySupplier[$kodeSupplier][] = $produk;
+            } else {
+                // Handle case where product with given ID is not found
+            }
+        }
+
+      
+        
+        foreach ($produkBySupplier as $kodeSupplier => $produkGroup) {
+          
            
-       if ($request->has('product') && $request->has('quantity')) {
-           foreach ($request->product as $index => $productId) {
-               $product = Produk::find($productId);
-               $qty = $request->quantity[$index];
-               $harga = $product -> harga_jual;
-               $totalprice = $qty * $harga;
-               
-               if ($product) {
-                   $quotationDetails[] = [
-                       'quote_id' => $quote->id,
-                       'product_id' => $productId,
-                       'qty' => $request->quantity[$index],
-                       'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
-                       'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
-                       'quote_price' => $product -> harga_jual,
-                       'total_price' => $totalprice,
-                       'kode_supplier' => $product->kode_supplier,
-                       'kode_channel' => "BPM",
-                   ];
-               }
-           }
-           DetailQuotation::insert($quotationDetails); 
-       }
+            $lastquote = Quotation::latest()->orderBy('id', 'desc')->first(); 
+            
+
+            $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
+            $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
+            
+            $lastYear = $lastquote ? substr($lastquote->no_quote, 14, 2) : '00'; // Mengambil dua digit tahun dari nomor quote terakhir
+            $lastMonth = $lastquote ? substr($lastquote->no_quote, 11, 2) : '00'; // Mengambil dua digit bulan dari nomor quote terakhir
+            
+          
+    
+            if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
+                // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor quote terakhir,
+                // maka nomor urutan direset menjadi 1
+                $orderNumber = 'QUOTE/0001/' . $currentMonth . '/' . $currentYear;
+            } else {
+                // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor quote terakhir,
+                // maka nomor urutan diincrement
+                $lastOrder = $lastquote ? intval(substr($lastquote->no_quote, 6, 4)) : 0; // Mengambil nomor urutan terakhir
+                $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $currentMonth . '/' . $currentYear;
+            }
+            
+            $quote = new Quotation;
+
+            $existingdata = Quotation::where('no_quote', $orderNumber)->first();
+    
+            if($existingdata !== null && $existingdata) {
+                $request->session()->flash('error', "Data gagal disimpan, Quotation sudah ada");
+                return redirect()->route('manager.quotation.index');
+            }
+            $quote -> no_quote = $orderNumber;
+            $quote -> quote_date = $request -> quote_date;
+            $quote -> valid_date = $request -> valid_date;
+            $quote -> cust_id = $request -> customer_id;
+            $quote -> nama_customer = $request -> nama_customer;
+            $quote -> alamat = $request -> alamat;
+            $quote -> nama_penerima = $request ->nama_penerima;
+            $quote -> shipping_date = $request -> shipping_date;
+            $quote -> payment_date = $request -> payment_date;
+            $quote -> nama_pic = $nama_pic;
+            $quote -> no_hp = $nohp;
+            $quote -> email = $email;
+            $quote -> status_quote = "Quotation Dibuat";
+            $quote -> discount = $request -> discount;
+            $quote -> created_by = $userid;
+            $quote -> ppn = $request -> ppn;
+            $quote -> nama_pembuat = $nama;
+            $quote -> is_persen = $request -> inlineRadioOptions;
+            $quote -> kode_supplier = $kodeSupplier;
+    
+          $quote -> save();
+
+            $quotationDetails = [];
+           
+         
+                foreach ($produkGroup as $index => $productId) {
+
+                  $id = $productId->id;
+                  
+                    $product = Produk::find($id);
+                  
+                    $qty = $request->quantity[$index];
+                    $harga = $product -> harga_jual;
+                    $totalprice = $qty * $harga;
+                  
+                    
+                    if ($product) {
+                     $supplierKey = $product->kode_supplier;
+                 
+                        $quotationDetails[] = [
+                            'quote_id' => $quote->id,
+                            'product_id' => $id,
+                            'qty' => $request->quantity[$index],
+                            'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                            'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                            'quote_price' => $product -> harga_jual,
+                            'total_price' => $totalprice,
+                            'kode_supplier' => $product->kode_supplier,
+                            'kode_channel' => "BPM",
+                            
+                        ];
+                    }
+                }
+        
+                DetailQuotation::insert($quotationDetails); 
+            
+        }
+
+     
+       
+       
+   
 
        $request->session()->flash('success', "Quotation berhasil dibuat");
 
@@ -598,7 +1076,19 @@ class QuotationController extends Controller
        ]);
 
     }
+    public function superadmintampilpesananquote($id)
+    {
+    
+       $pesanan = DetailQuotation::with('quotation')->where('quote_id', $id)->get();
+       $quote = Quotation::find($id);
+       $noquote = $quote->no_quote;
+      
+       return view('superadmin.quotation.detail',[
+           'pesanan' =>$pesanan,
+           'noquote' => $noquote,
+       ]);
 
+    }
     public function leadertampilpesananquote($id)
     {
     
@@ -657,6 +1147,51 @@ class QuotationController extends Controller
         $total = $subtotalafterdiscount + $ppn;
 
         return view('sales.quotation.tampilquote',[
+            'subtotal' => $subtotal,
+            'discount' => $discount,
+            'ppn' => $ppn,
+            'total' => $total,
+           
+            'quote' => $quote,
+            'detailquote' => $detailquote,
+           
+            'tipe' => $tipe,
+            'discountasli' => $discountasli,
+            'ppnpersen' => $ppnpersen,
+        ]);
+
+    }
+
+    public function superadmintampilquote($id){
+
+        $quote = Quotation::find($id);
+        $detailquote = DetailQuotation::with('quotation')->orWhereNull('keterangan') ->where('quote_id', $id)->get();
+
+
+        $discountasli = $quote->discount;
+        $tipe = $quote->is_persen;
+
+        $subtotal = 0;
+        foreach ($detailquote as $detail) {
+            $subtotal += $detail->total_price;
+        }
+    
+        if ($tipe == 'persen') {
+            $discount =  ($discountasli / 100) * $subtotal;
+        } elseif ($tipe == 'amount'){
+            $discount = $quote->discount;
+        }
+    
+        $subtotalafterdiscount = $subtotal - $discount;
+    
+      $ppnpersen = $quote -> ppn;
+      
+      $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
+    
+    
+        $total = $subtotalafterdiscount + $ppn;
+
+        return view('superadmin.quotation.tampilquote',[
             'subtotal' => $subtotal,
             'discount' => $discount,
             'ppn' => $ppn,

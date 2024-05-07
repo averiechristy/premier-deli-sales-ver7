@@ -56,7 +56,7 @@
     }
 
     else if (kodesupplier.length != 3) {
-            alert("Kode produk harus terdiri dari 3 karakter");
+            alert("Kode supplier harus terdiri dari 3 karakter");
             return false;
         }
 

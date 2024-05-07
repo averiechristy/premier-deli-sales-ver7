@@ -8,6 +8,7 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">List RFO</h1>
+                    <a href="{{route('superadmin.createrfo')}}" class="btn btn-pd btn-sm mb-2">Tambah RFO</a>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -46,6 +47,7 @@ entries
                         <th>Tanggal Bayar</th>
                         <th>Status</th>
                         <th>Status Update</th>
+                        <th></th>
                     </tr>
                 </thead>
                 
@@ -85,6 +87,69 @@ entries
 </td>
 <td>{{$data->updated_at}}</td>
 
+<td>
+@if($data->status_rfo =="Proses PO")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Batalkan RFO
+</button>
+
+
+@elseif($data->status_rfo =="Terbit Invoice")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Batalkan RFO
+</button>
+
+@elseif($data->status_rfo =="Cancelled")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Batalkan RFO
+</button>
+
+
+@elseif($data->status_rfo =="Menunggu Persetujuan Cancel")
+    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Batalkan RFO
+</button>
+
+@elseif($data->status_rfo =="Request Terkirim")
+
+<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
+      Batalkan RFO
+</button>
+
+@elseif($data->status_rfo =="Terbit SO")
+
+<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
+      Batalkan RFO
+</button>
+
+@endif
+</td>
+
+
+<div class="modal fade" id="exampleModal{{$data->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Cancel {{$data->no_rfo}}</h5>
+       
+      </div>
+      <div class="modal-body">
+      <form action="{{route('superadmincancelorder')}}" method="post">
+        @csrf
+      <input type="hidden" name="rfo_id" value="{{$data->id}}">
+                    <div class="form-group">
+        
+                    </div>
+                
+      </div>
+      <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            </form>
+    </div>
+  </div>
+</div>
             </tr>
                  
 @endforeach

@@ -69,36 +69,36 @@ entries
 <td>
 @if($data->status_rfo =="Proses PO")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Request
+    Batalkan RFO
 </button>
 
 
 @elseif($data->status_rfo =="Terbit Invoice")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Request
+    Batalkan RFO
 </button>
 
 @elseif($data->status_rfo =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Request
+    Batalkan RFO
 </button>
 
 
 @elseif($data->status_rfo =="Menunggu Persetujuan Cancel")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Request
+    Batalkan RFO
 </button>
 
 @elseif($data->status_rfo =="Request Terkirim")
 
 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Cancel Request
+      Batalkan RFO
 </button>
 
 @elseif($data->status_rfo =="Terbit SO")
 
 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Cancel Request
+      Batalkan RFO
 </button>
 
 @endif

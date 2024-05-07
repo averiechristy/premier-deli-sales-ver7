@@ -23,15 +23,23 @@
     <select name="kategori" class="form-control" style="border-color: #01004C;" aria-label=".form-select-lg example" >
         <option value="" selected disabled>-- Pilih Kategori --</option>
      
-                <option value="Hotel"{{ old('role_id', $data->kategori) == 'Hotel' ? 'selected' : '' }}> Hotel</option>
-                <option value="Restaurant"{{ old('role_id', $data->kategori) == 'Restaurant' ? 'selected' : '' }}> Restaurant</option>
-                <option value="Cafe"{{ old('role_id', $data->kategori) == 'Cafe' ? 'selected' : '' }}> Cafe</option>
+        @foreach ($kategori as $item)
+                <option value="{{$item->id}}"{{ old('kategori_id', $data->kategori_id) == $item->id ? 'selected' : '' }}> {{$item -> kategori}}</option>
+      @endforeach
     </select>
 </div>
 
+
+
 <div class="form-group mb-4">
-        <label for="" class="form-label" style="color:black;">Sumber</label>
-    <input name="sumber" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->sumber}}" />
+    <label for="" class="form-label" style="color:black;">Sumber</label>
+    <select name="sumber" class="form-control" style="border-color: #01004C;" aria-label=".form-select-lg example" >
+        <option value="" selected disabled>-- Pilih Sumber --</option>
+     
+        @foreach ($sumber as $item)
+                <option value="{{$item->id}}"{{ old('sumber_id', $data->sumber_id) == $item->id ? 'selected' : '' }}> {{$item -> sumber}}</option>
+      @endforeach
+    </select>
 </div>
 
 <div class="form-group mb-4">

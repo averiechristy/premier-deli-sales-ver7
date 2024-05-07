@@ -19,6 +19,8 @@ class Customer extends Model
         'email',
         'produk_sebelumnya',
         'lokasi',
+        'kategori_id',
+        'sumber_id'
     ];
 
     public function rfo()
@@ -49,5 +51,17 @@ class Customer extends Model
     {
 
         return $this->hasMany(DeliveryOrder::class);
+    }
+
+    public function kategori()
+    {
+
+        return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
+
+    public function sumber()
+    {
+
+        return $this->belongsTo(Sumber::class, 'sumber_id');
     }
 }

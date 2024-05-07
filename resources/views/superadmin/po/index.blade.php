@@ -136,7 +136,7 @@ entries
 
 @if($item->status_po =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel PO
+   Batalkan PO
 </button>
 
 @elseif($item->status_po =="Menunggu Persetujuan Cancel")
@@ -145,13 +145,13 @@ entries
       Penganjuan Cancel
 </button> -->
 <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel PO
+   Batalkan PO
 </button>
 
 @else
   
 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$item->id}}">
-      Cancel PO
+     Batalkan PO
 </button>
 @endif
 

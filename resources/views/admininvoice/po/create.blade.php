@@ -22,21 +22,6 @@
     <input name="po_date" id="po_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
-<script>
-    // Mendapatkan elemen input tanggal
-    var so_date_input = document.getElementById("po_date");
-
-    // Mendapatkan tanggal hari ini
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
-    today = yyyy + '-' + mm + '-' + dd;
-
-    // Set nilai minimum input tanggal ke hari ini
-    so_date_input.min = today;
-</script>
 
 <script>
     // Mendapatkan elemen input tanggal

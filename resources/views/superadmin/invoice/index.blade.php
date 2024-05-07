@@ -212,10 +212,10 @@ entries
       Nama Customer : {{$data->nama_customer}}
         
       <br>
-      Jika data sudah benar, silahkan isi kolom dibawah ini dengan "Confirm"
+      Jika data sudah benar, silahkan isi kolom dibawah ini dengan "CONFIRM"
       <div class="form-group">
                     
-                        <input class="form-control" id="" name="confirm" rows="3" required></input>
+      <input class="form-control" id="confirm" name="confirm" rows="3" pattern="CONFIRM" title="Harap masukkan CONFIRM" required>
                     </div>
 
       </div>

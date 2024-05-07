@@ -24,7 +24,7 @@ class InvoiceController extends Controller
      */
 
      public function updateinvoice($id, Request $request){
-
+        
      
         $invid = $request->invoice_id;
 
@@ -35,30 +35,33 @@ class InvoiceController extends Controller
         $soid = $datainvoice->so_id;
         $quoteid = $datainvoice -> quote_id;
 
- 
+        $datainvoice -> invoice_date = $request -> invoice_date;
+        $datainvoice -> save();
 
         if($quoteid){
-
+        
             $dataquote = Quotation::find($quoteid);
             $detailquote = DetailQuotation::where('quote_id', $quoteid)->get();
+            
+            $produkIdsInDetailInv = $detailinv->pluck('product_id')->toArray();
 
             $produk = $request->product;
-
-            $produkIdsInDetailInv = $detailinv->pluck('product_id')->toArray();
     
     // Mengumpulkan id_produk dari $produk yang diterima melalui permintaan
     $produkIdsRequested = collect($produk)->pluck('id')->toArray();
     
     // Mencari id_produk yang berbeda antara produk pada detail invoice dan produk yang diterima melalui permintaan
     $differentProdukIds = array_diff($produkIdsInDetailInv, $produk);
+
     
     // Jika Anda ingin mendapatkan informasi lebih lanjut tentang produk yang berbeda, Anda dapat melakukan sesuatu seperti ini:
     $differentProduk = Produk::whereIn('id', $differentProdukIds)->get();
     
     // Sekarang Anda dapat melakukan apa pun yang Anda inginkan dengan $differentProduk
     
-    
+  
     if (!empty($differentProdukIds)) {
+       
         foreach ($detailinv as $detail) {
             if (in_array($detail->product_id, $differentProdukIds)) {
             
@@ -75,7 +78,7 @@ class InvoiceController extends Controller
     
     }
         }
-
+      
         if($soid){
        
 
@@ -140,6 +143,7 @@ return redirect()->route('admininvoice.invoice.index');
 
      public function superadminupdateinvoice($id, Request $request){
 
+    
      
         $invid = $request->invoice_id;
 
@@ -406,7 +410,7 @@ return redirect()->route('superadmin.invoice.index');
         $dataQuote = Quotation::where('id', $quoteid)->get();
 
         foreach($dataQuote as $item){
-            dd($item);
+          
             $item -> status_quote ="Cancelled";
             $item->save();
         }
@@ -825,13 +829,15 @@ public function tampilinvoice($id){
     
 
     $sisatagihan = $total - $pembayaran;
- 
+    
 
     return view('admininvoice.invoice.tampilinvoice',[
         'invoice' => $invoice,
         'detailinvoice' => $detailinvoice,
         'subtotal' => $subtotal,
         'total' => $total,
+        'ppn' => $ppn,
+        'discount' => $discount,
         'sisatagihan' => $sisatagihan,
     ]);
 }
@@ -880,6 +886,8 @@ public function superadmintampilinvoice($id){
         'detailinvoice' => $detailinvoice,
         'subtotal' => $subtotal,
         'total' => $total,
+        'ppn' => $ppn,
+        'discount' => $discount,
         'sisatagihan' => $sisatagihan,
     ]);
 }
@@ -918,6 +926,16 @@ public function superadmintampilinvoice($id){
        }
 
         $invoice = new Inovice;
+
+        $noinvoice = $request -> invoice_no;
+
+        $existingdata = Inovice::where('invoice_no', $noinvoice)->first();
+
+        if($existingdata !== null && $existingdata) {
+            $request->session()->flash('error', "Data gagal disimpan, Invoice sudah ada");
+            return redirect()->route('admininvoice.invoice.index');
+        }
+
         $invoice->so_id = $request->so_id;
         $invoice->invoice_no = $request -> invoice_no;
         $invoice->invoice_date = $request -> invoice_date;
@@ -998,6 +1016,15 @@ public function superadmintampilinvoice($id){
        }
 
         $invoice = new Inovice;
+
+        $noinvoice = $request -> invoice_no;
+
+        $existingdata = Inovice::where('invoice_no', $noinvoice)->first();
+
+        if($existingdata !== null && $existingdata) {
+            $request->session()->flash('error', "Data gagal disimpan, Invoice sudah ada");
+            return redirect()->route('superadmin.invoice.index');
+        }
         $invoice->so_id = $request->so_id;
         $invoice->invoice_no = $request -> invoice_no;
         $invoice->invoice_date = $request -> invoice_date;

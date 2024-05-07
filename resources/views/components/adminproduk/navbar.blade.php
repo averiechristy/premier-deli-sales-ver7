@@ -17,7 +17,7 @@
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
         <a class="nav-link" href="{{route('adminproduk.dashboard')}}" >
-        <i class="fas fa-fw fa-desktop"></i>
+        <i class="fas fa-desktop"></i>
             <span>Dashboard</span></a>
     </li>
     <hr class="sidebar-divider my-0">
@@ -34,7 +34,7 @@
     <li class="nav-item" >
         <a class="nav-link"  href="{{route('adminproduk.produk.index')}}">
             <i class="fa fa-cutlery"></i>
-            <span>Produk</span></a>
+            <span>Product</span></a>
     </li>
 
   
@@ -104,4 +104,16 @@
             </ul>
 
         </nav>
+
+        
+        <style>
+            .nav-link .fas,
+.nav-link .fa {
+    width: 20px; /* Sesuaikan lebar ikon */
+}
+
+.nav-link span {
+    margin-left: 1px; /* Sesuaikan jarak antara ikon dan teks */
+}
+        </style>
         <!-- End of Topbar -->

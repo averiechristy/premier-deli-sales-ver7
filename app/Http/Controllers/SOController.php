@@ -79,8 +79,10 @@ public function admininvoicecreate($id)
     $rfoGrouped = DetailRFO::with('rfo')->where('rfo_id', $id)->get()->groupBy('kode_supplier');
     $produk = Produk::orderBy('nama_produk', 'asc')->get();
 
-    $lastSO = SalesOrder::latest()->first(); // Mendapatkan data SO terakhir dari database
-
+    $lastSO = SalesOrder::latest()->orderBy('id', 'desc')->first(); // Mengambil entri dengan ID terbesar
+  
+     // Mendapatkan data SO terakhir dari database
+ 
     $currentYearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
     $lastYearMonth = $lastSO ? substr($lastSO->no_so, 0, 4) : '0000'; // Mendapatkan format tahun dan bulan dari nomor SO terakhir
 
@@ -102,8 +104,9 @@ public function admininvoicecreate($id)
         } else {
             // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor SO terakhir,
             // maka nomor urutan diincrement
-          
+         
             $lastOrder += 1; // Increment nomor urutan terakhir
+           
             $orderNumber = $currentYearMonth . str_pad($lastOrder, 4, '0', STR_PAD_LEFT);
         }
 
@@ -124,34 +127,46 @@ public function admininvoicecreate($id)
     {
         $data = RFO::find($id);
         $customer = Customer::orderBy('nama_customer', 'asc')->get();
-        $rfo = DetailRFO::with('rfo')->where('rfo_id', $id)->get();
+        $rfoGrouped = DetailRFO::with('rfo')->where('rfo_id', $id)->get()->groupBy('kode_supplier');
         $produk = Produk::orderBy('nama_produk', 'asc')->get();
-
-        $lastSO = SalesOrder::latest()->first(); // Mendapatkan data SO terakhir dari database
-
+    
+        $lastSO = SalesOrder::latest()->orderBy('id', 'desc')->first(); // Mengambil entri dengan ID terbesar
+            
         $currentYearMonth = now()->format('ym'); // Mendapatkan format tahun dan bulan saat ini tanpa empat digit pertama (tahun)
         $lastYearMonth = $lastSO ? substr($lastSO->no_so, 0, 4) : '0000'; // Mendapatkan format tahun dan bulan dari nomor SO terakhir
+    
+        $lastOrder = $lastSO ? intval(substr($lastSO->no_so, -4)) : 0; // Mengambil nomor urutan terakhir
+    
+        $orderNumbers = []; // Inisialisasi array untuk menyimpan nomor SO untuk setiap supplier
+    
         
     
-
-        if ($currentYearMonth != $lastYearMonth) {
-            // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor SO terakhir,
-            // maka nomor urutan direset menjadi 1
-            $orderNumber = $currentYearMonth . '0001';
-        } else {
-            // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor SO terakhir,
-            // maka nomor urutan diincrement
-            $lastOrder = $lastSO ? intval(substr($lastSO->no_so, -4)) : 0; // Mengambil nomor urutan terakhir
-            $orderNumber = $currentYearMonth . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT); // Menggabungkan tahun, bulan, dan urutan
-        }
-        
+        foreach ($rfoGrouped as $kodeSupplier => $detailRFOs) {
+            $orderNumber = '';
+    
+            if ($currentYearMonth != $lastYearMonth) {
+                $lastOrder += 1;
                
-        return view ('superadmin.so.create',[
+                // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor SO terakhir,
+                // maka nomor urutan direset menjadi 1
+                $orderNumber = $currentYearMonth . str_pad($lastOrder, 4, '0', STR_PAD_LEFT);
+            } else {
+                // Jika tahun dan bulan saat ini sama dengan tahun dan bulan dari nomor SO terakhir,
+                // maka nomor urutan diincrement
+              
+                $lastOrder += 1; // Increment nomor urutan terakhir
+                $orderNumber = $currentYearMonth . str_pad($lastOrder, 4, '0', STR_PAD_LEFT);
+            }
+    
+            $orderNumbers[$kodeSupplier] = $orderNumber;
+        }
+    
+        return view('superadmin.so.create', [
             'data' => $data,
-            'rfo' => $rfo,
+            'rfoGrouped' => $rfoGrouped,
             'customer' => $customer,
             'produk' => $produk,
-            'orderNumber' => $orderNumber
+            'orderNumbers' => $orderNumbers
         ]);
 
     }
@@ -225,7 +240,200 @@ public function admininvoicecreate($id)
     public function admininvoicestore(Request $request){
       
         $kodeSuppliers = $request->input('kode_supplier');
+        $jenisdiskon = $request -> inlineRadioOptions;
+
+
+
+
+        if ($jenisdiskon == "persen"){
+            $nilaidiskon = $request->discount;
+          
+            if($nilaidiskon > 15){
+                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('admininvoice.so.index');
+            }
+            
+        }elseif ($jenisdiskon == "amount") {
+            $subtotal = 0;
+
+            $produk = $request->product;
+           
+            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+ 
+                foreach ($kodeSuppliers as $kodeSupplier => $soData) {
+                foreach ($request->product[$kodeSupplier] as $index => $productId) {
+                   
+                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+  
+               
+                    $qty = $request->quantity[$kodeSupplier][$index];
+                
+                    $harga = $product->harga_jual;
+                   
+                    $totalprice = $qty * $harga;
+    
+                    $subtotal += $totalprice;
+                }
+            }
+            }
+           
+      
+            $diskonAmount = $request->discount;
+            $maxAllowedDiscount = 0.15 * $subtotal;
+    
+            if ($diskonAmount > $maxAllowedDiscount) {
+                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('admininvoice.so.index');
+            }
+        }
+        
+
+        $custid = $request -> cust_id;
+
+        $customer = Customer::find($custid);
+
+        $namacust = $customer->nama_customer;
+
+        $rfo = RFO::find($request->rfo_id);
+
+        $prices = $request->input('price');
+        $quantities = $request->input('quantity');
+
+        $orderNumbers = $request->input('order_number');
    
+       
+        foreach ($kodeSuppliers as $kodeSupplier => $soData) {
+
+
+            $so = new SalesOrder;
+
+   
+            $nomorso = $orderNumbers[$kodeSupplier][0];
+           
+            $existingdata = SalesOrder::where('no_so', $nomorso)->first();
+
+            if($existingdata !== null && $existingdata) {
+                $request->session()->flash('error', "Data gagal disimpan, SO sudah ada");
+                return redirect()->route('admininvoice.so.index');
+            }
+
+            $so -> no_so = $orderNumbers[$kodeSupplier][0];
+            $so -> cust_id = $request -> cust_id;
+            $so -> nama_customer = $namacust;
+            $so -> alamat = $request -> alamat;
+            $so -> so_date = $request-> so_date;
+            $so -> rfo_id = $request-> rfo_id;
+           
+            $so -> no_rfo = $rfo -> no_rfo;
+            $so -> discount = $request -> discount;
+            $so -> ppn = $request -> ppn;
+            $so -> pembayaran = $request -> pembayaran;
+            $so -> is_persen = $request -> inlineRadioOptions;
+            $so -> status_so = "PO Belum Dikerjakan";
+            $so -> kode_supplier = $kodeSuppliers[$kodeSupplier][0];
+    
+            
+    
+            $so -> save();
+    
+            if ($rfo) {
+                $rfo->status_rfo = 'Terbit SO'; // Ganti dengan status yang sesuai
+                $rfo->save();
+            }
+
+
+            $soId = $so->id;
+            $datapo = SalesOrder::find($soId);
+            $soDetails = [];
+
+            $coba = $request->product[$kodeSupplier];
+            
+           
+
+            foreach ($request->product[$kodeSupplier] as $index => $productId) {
+
+                
+                
+                $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+
+                $qty = $quantities[$kodeSupplier][$index];
+                $harga = $prices[$kodeSupplier][$index];
+                $totalprice = $qty * $harga;
+
+                if ($product) {
+                    $soDetails[] = [
+                        'so_id' => $so->id,
+                        'product_id' => $productId,
+                        'qty' => $qty,
+                        'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                        'so_price' => $product->harga_jual, // Menyimpan kode_produk
+                        'total_price' => $totalprice,
+                        'kode_supplier' => $product->kode_supplier,
+                        'kode_channel' => "BPM",
+                    ];
+                }
+            }
+            DetailSO::insert($soDetails); 
+        }
+
+      
+    
+        
+    
+
+        $request->session()->flash('success', "Sales Order berhasil dibuat");
+
+        return redirect()->route('admininvoice.so.index');
+    }
+
+    public function superadminstore(Request $request)
+    {
+        $kodeSuppliers = $request->input('kode_supplier');
+        $jenisdiskon = $request -> inlineRadioOptions;
+
+
+        if ($jenisdiskon == "persen"){
+            $nilaidiskon = $request->discount;
+          
+            if($nilaidiskon > 15){
+                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('superadmin.so.index');
+            }
+            
+        }elseif ($jenisdiskon == "amount") {
+            $subtotal = 0;
+
+            $produk = $request->product;
+           
+            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+ 
+                foreach ($kodeSuppliers as $kodeSupplier => $soData) {
+                foreach ($request->product[$kodeSupplier] as $index => $productId) {
+                   
+                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+  
+               
+                    $qty = $request->quantity[$kodeSupplier][$index];
+                
+                    $harga = $product->harga_jual;
+                   
+                    $totalprice = $qty * $harga;
+    
+                    $subtotal += $totalprice;
+                }
+            }
+            }
+           
+      
+            $diskonAmount = $request->discount;
+            $maxAllowedDiscount = 0.15 * $subtotal;
+    
+            if ($diskonAmount > $maxAllowedDiscount) {
+                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('superadmin.so.index');
+            }
+        }
 
         $custid = $request -> cust_id;
 
@@ -248,7 +456,14 @@ public function admininvoicecreate($id)
 
            
 
-   
+            $nomorso = $orderNumbers[$kodeSupplier][0];
+           
+            $existingdata = SalesOrder::where('no_so', $nomorso)->first();
+
+            if($existingdata !== null && $existingdata) {
+                $request->session()->flash('error', "Data gagal disimpan, SO sudah ada");
+                return redirect()->route('superadmin.so.index');
+            }
 
             $so -> no_so = $orderNumbers[$kodeSupplier][0];
             $so -> cust_id = $request -> cust_id;
@@ -316,111 +531,6 @@ public function admininvoicecreate($id)
         
 
 
-
-        $request->session()->flash('success', "Sales Order berhasil dibuat");
-
-        return redirect()->route('admininvoice.so.index');
-    }
-
-    public function superadminstore(Request $request)
-    {
-        $custid = $request -> cust_id;
-
-        $customer = Customer::find($custid);
-
-        $namacust = $customer->nama_customer;
-
-        $rfo = RFO::find($request->rfo_id);
-      
-        $jenisdiskon = $request -> inlineRadioOptions;
-
-
-        if ($jenisdiskon == "persen"){
-            $nilaidiskon = $request->discount;
-          
-            if($nilaidiskon > 15){
-                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
-                return redirect()->route('superadmin.so.index');
-            }
-            
-        } elseif ($jenisdiskon == "amount") {
-            $subtotal = 0;
-            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
-                foreach ($request->product as $index => $productId) {
-                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
-    
-                    $qty = $request->quantity[$index];
-                    $harga = $product->harga_jual;
-                    $totalprice = $qty * $harga;
-    
-                    $subtotal += $totalprice;
-                }
-            }
-    
-            $diskonAmount = $request->discount;
-            $maxAllowedDiscount = 0.15 * $subtotal;
-    
-            if ($diskonAmount > $maxAllowedDiscount) {
-                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
-                return redirect()->route('superadmin.so.index');
-            }
-        }
-        
-
-        $so = new SalesOrder;
-
-
-        $so -> no_so = $request -> no_so;
-        $so -> cust_id = $request -> cust_id;
-        $so -> nama_customer = $namacust;
-        $so -> alamat = $request -> alamat;
-        $so -> so_date = $request-> so_date;
-        $so -> rfo_id = $request-> rfo_id;
-       
-        $so -> no_rfo = $rfo -> no_rfo;
-        $so -> discount = $request -> discount;
-        $so -> ppn = $request -> ppn;
-        $so -> pembayaran = $request -> pembayaran;
-        $so -> is_persen = $request -> inlineRadioOptions;
-        $so -> status_so = "PO Belum Dikerjakan";
-
-        $so -> save();
-
-        if ($rfo) {
-            $rfo->status_rfo = 'Terbit SO'; // Ganti dengan status yang sesuai
-            $rfo->save();
-        }
-    
-        
-        $soDetails = [];
-
-
-        if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
-            foreach ($request->product as $index => $productId) {
-                $product = Produk::find($productId); // Mendapatkan data produk dari basis data
-
-                $qty = $request->quantity[$index];
-                $harga = $product -> harga_jual;
-                $totalprice = $qty * $harga;
-
-                if ($product) {
-                    $soDetails[] = [
-                        'so_id' => $so->id,
-                        'product_id' => $productId,
-                        'qty' => $request->quantity[$index],
-                        'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
-                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
-                        'so_price' => $product->harga_jual, // Menyimpan kode_produk
-                        'total_price' => $totalprice,
-                        'kode_supplier' => $product->kode_supplier,
-                        'kode_channel' => "BPM",
-                    ];
-                }
-            }
-            DetailSO::insert($soDetails); 
-            
-          
-        }
 
         $request->session()->flash('success', "Sales Order berhasil dibuat");
 
