@@ -173,21 +173,28 @@
     });
 });
 
-    document.getElementById('printButton').addEventListener('click', function() {
-        // Select the chart container element
-        var chartContainer = document.getElementById('container-fluid').cloneNode(true); // Clone the container
-        
-        // Remove any buttons from the cloned container (optional)
-        var buttons = chartContainer.querySelectorAll('button');
-        buttons.forEach(function(button) {
-            button.remove();
-        });
-
-        // Print the cloned chart container
-        var originalContents = document.body.innerHTML;
-        document.body.innerHTML = chartContainer.innerHTML;
-        window.print();
-        document.body.innerHTML = originalContents;
+document.getElementById('printButton').addEventListener('click', function() {
+    // Select the chart container element
+    var chartContainer = document.getElementById('container-fluid').cloneNode(true); // Clone the container
+    
+    // Remove any buttons from the cloned container (optional)
+    var buttons = chartContainer.querySelectorAll('button');
+    buttons.forEach(function(button) {
+        button.remove();
     });
+
+    // Set up the original contents
+    var originalContents = document.body.innerHTML;
+    
+    // Event listener to refresh the page after printing or canceling
+    window.onafterprint = function() {
+        document.body.innerHTML = originalContents;
+        window.location.reload();
+    };
+
+    // Print the cloned chart container
+    document.body.innerHTML = chartContainer.innerHTML;
+    window.print();
+});
 </script>
 @endsection

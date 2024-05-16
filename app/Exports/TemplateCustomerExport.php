@@ -43,12 +43,33 @@ class TemplateCustomerExport implements FromCollection, WithHeadings, WithEvents
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
-
                 
                 $event->sheet->getStyle('1:100000')->getProtection()->setLocked(false);
                 $sheet->getStyle('A1:XFD1')->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
-    
                 $sheet->getProtection()->setSheet(true);
+                $sheet->getProtection()->setSelectLockedCells(false);
+                $sheet->getProtection()->setSelectUnlockedCells(false);
+                $sheet->getProtection()->setFormatCells(false);
+                $sheet->getProtection()->setFormatColumns(false);
+                $sheet->getProtection()->setFormatRows(false);
+                $sheet->getProtection()->setInsertHyperlinks(false);
+                $sheet->getProtection()->setInsertRows(false);
+                $sheet->getProtection()->setDeleteRows(false);
+                $sheet->getProtection()->setSort(false);
+                $sheet->getProtection()->setAutoFilter(false);
+                $sheet->getProtection()->setPivotTables(false);
+                $sheet->getProtection()->setObjects(false);
+                $sheet->getProtection()->setScenarios(false);
+
+                $sheet->getColumnDimension('A')->setWidth(20);
+                $sheet->getColumnDimension('B')->setWidth(20);
+                $sheet->getColumnDimension('C')->setWidth(20);
+                $sheet->getColumnDimension('D')->setWidth(20);
+                $sheet->getColumnDimension('E')->setWidth(20);
+                $sheet->getColumnDimension('F')->setWidth(20);
+                $sheet->getColumnDimension('G')->setWidth(20);
+                $sheet->getColumnDimension('H')->setWidth(20);
+                $sheet->getColumnDimension('I')->setWidth(50);
                 
                 $categories = Kategori::pluck('kategori')->toArray();
             

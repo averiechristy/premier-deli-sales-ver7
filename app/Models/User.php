@@ -23,7 +23,7 @@ class User extends Authenticatable
         'role_id',
         'email',
         'password',
-        'creted_by',
+        'created_by',
         'no_hp',
         'updated_by',
         'report_to',

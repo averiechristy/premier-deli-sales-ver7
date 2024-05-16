@@ -39,7 +39,11 @@ entries
                                             <th>Nama</th>
                                             <th>Role</th>   
                                             <th>Email</th>
-                                            <th>No Hp</th>                                          
+                                            <th>No Hp</th>       
+                                            <th>Created At</th>
+<th>Created By</th>
+<th>Updated At</th>
+<th>Updated By</th>                             
                                             <th>Action</th>
                                         </tr>
                                     </thead>                                    
@@ -50,7 +54,12 @@ entries
                                             <td>{{$data -> Role -> jenis_role}}</td>
                                          
                                             <td>{{$data -> email}}</td>
-                                            <td>{{$data -> no_hp}}</td>                                           
+                                            <td>{{$data -> no_hp}}</td> 
+                                            
+                                            <td>{{$data -> created_at}}</td>
+    <td>{{$data -> created_by}}</td>
+    <td>{{$data -> updated_at}}</td>
+    <td>{{$data -> updated_by}}</td>
                                             <td> 
                 <form action="{{ route('superadmin.reset-password', ['user' => $data->id]) }}" method="POST">
                 @csrf

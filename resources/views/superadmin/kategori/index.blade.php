@@ -39,6 +39,10 @@ entries
                                     <thead>
                                        <tr>
                                         <th>Kategori</th>
+                                        <th>Created At</th>
+<th>Created By</th>
+<th>Updated At</th>
+<th>Updated By</th>
                                         <th>Action</th>
                                        </tr>
                                     </thead>                                    
@@ -48,6 +52,10 @@ entries
 
                                     <tr>
                                         <td>{{$item -> kategori}}</td>
+                                        <td>{{$item -> created_at}}</td>
+    <td>{{$item -> created_by}}</td>
+    <td>{{$item -> updated_at}}</td>
+    <td>{{$item -> updated_by}}</td>
                                         <td> 
                                            
                                            <a href="{{route('superadmintampilkategori', $item->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 

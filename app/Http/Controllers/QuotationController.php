@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CancelApproval;
+use App\Models\Catatan;
 use App\Models\Customer;
 use App\Models\DetailQuotation;
 use App\Models\Produk;
@@ -101,7 +102,7 @@ class QuotationController extends Controller
         $lastMonth = $lastquote ? substr($lastquote->no_quote, 11, 2) : '00'; // Mengambil dua digit bulan dari nomor quote terakhir
         
       
-
+        $catatan = Catatan::all();
         if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
             // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor quote terakhir,
             // maka nomor urutan direset menjadi 1
@@ -118,6 +119,7 @@ class QuotationController extends Controller
             'customer' => $customer,
             'produk' => $produk,
             'orderNumber' => $orderNumber,
+            'catatan' => $catatan,
         ]);
     }
 
@@ -137,8 +139,8 @@ class QuotationController extends Controller
         $lastYear = $lastquote ? substr($lastquote->no_quote, 14, 2) : '00'; // Mengambil dua digit tahun dari nomor quote terakhir
         $lastMonth = $lastquote ? substr($lastquote->no_quote, 11, 2) : '00'; // Mengambil dua digit bulan dari nomor quote terakhir
         
+        $catatan = Catatan::all();
       
-
         if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
             // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor quote terakhir,
             // maka nomor urutan direset menjadi 1
@@ -150,11 +152,12 @@ class QuotationController extends Controller
             $orderNumber = 'QUOTE/' . str_pad($lastOrder + 1, 4, '0', STR_PAD_LEFT) . '/' . $currentMonth . '/' . $currentYear;
         }
               
-       
+        
         return view('superadmin.quotation.create',[
             'customer' => $customer,
             'produk' => $produk,
             'orderNumber' => $orderNumber,
+            'catatan' => $catatan,
         ]);
     }
     public function managercancelquote(Request $request){
@@ -175,7 +178,7 @@ class QuotationController extends Controller
         $customer = Customer::orderBy('nama_customer', 'asc')->get();
         $produk = Produk::orderBy('nama_produk', 'asc')->get();
 
-       
+        $catatan = Catatan::all();
         
         $lastquote = Quotation::latest()->first(); // Mendapatkan data invoice terakhir dari database
 
@@ -203,16 +206,16 @@ class QuotationController extends Controller
             'customer' => $customer,
             'produk' => $produk,
             'orderNumber' => $orderNumber,
+            'catatan' => $catatan,
         ]);
     }  
     
     public function managercreate()
     {
-
         $customer = Customer::orderBy('nama_customer', 'asc')->get();
         $produk = Produk::orderBy('nama_produk', 'asc')->get();
 
-       
+        $catatan = Catatan::all();
         
         $lastquote = Quotation::latest()->first(); // Mendapatkan data invoice terakhir dari database
 
@@ -240,6 +243,7 @@ class QuotationController extends Controller
             'customer' => $customer,
             'produk' => $produk,
             'orderNumber' => $orderNumber,
+            'catatan' => $catatan,
         ]);
     } 
 
@@ -355,8 +359,6 @@ class QuotationController extends Controller
         
         
 
-      
-
         $request->session()->flash('success', "Request Cancel terkirim");
         return redirect(route('superadmin.quotation.index',[
             'quotation' => $quotation,
@@ -398,7 +400,7 @@ class QuotationController extends Controller
 
      }
      public function salesstore(Request $request){
-     
+   
         $loggedInUser = auth()->user();
         $userid = $loggedInUser ->id;
         $customer = Customer::find($request->customer_id);
@@ -458,15 +460,12 @@ class QuotationController extends Controller
                 // Handle case where product with given ID is not found
             }
         }
-
-      
-        
+       
         foreach ($produkBySupplier as $kodeSupplier => $produkGroup) {
           
-           
+            
             $lastquote = Quotation::latest()->orderBy('id', 'desc')->first(); 
             
-
             $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
             $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
             
@@ -515,12 +514,12 @@ class QuotationController extends Controller
             $quote -> nama_pembuat = $nama;
             $quote -> is_persen = $request -> inlineRadioOptions;
             $quote -> kode_supplier = $kodeSupplier;
-    
-          $quote -> save();
+            $quote -> catatan_id = $request -> catatan_id;
+            $quote -> catatan = $request -> isi_catatan;
+            $quote -> save();
 
             $quotationDetails = [];
-           
-         
+                    
                 foreach ($produkGroup as $index => $productId) {
 
                   $id = $productId->id;
@@ -554,11 +553,6 @@ class QuotationController extends Controller
             
         }
 
-     
-       
-       
-   
-
        $request->session()->flash('success', "Quotation berhasil dibuat");
 
        return redirect()->route('sales.quotation.index');
@@ -574,10 +568,11 @@ class QuotationController extends Controller
         $nama_pic = $customer ->nama_pic;
         $email = $customer -> email;
         $nohp = $customer -> no_hp;
-       
+
         $nama = $loggedInUser -> nama;
 
         $jenisdiskon = $request -> inlineRadioOptions;
+        
         if ($jenisdiskon == "persen"){
             $nilaidiskon = $request->discount;
             if($nilaidiskon >= 15){
@@ -585,9 +580,11 @@ class QuotationController extends Controller
                 return redirect()->route('superadmin.quotation.index');
             }
         }
+
         elseif ($jenisdiskon == "amount") {
             $subtotal = 0;
-            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+            if ($request->has('product') && $request->has('quantity') && $request->has('price')) 
+            {
                 foreach ($request->product as $index => $productId) {
                     $product = Produk::find($productId); // Mendapatkan data produk dari basis data
     
@@ -608,10 +605,8 @@ class QuotationController extends Controller
             }
         }
 
-
         $produk = $request-> product;
       
-     
         $produkIds = $request->product; // Array of product IDs
 
         // Membuat array untuk mengelompokkan produk berdasarkan kode supplier
@@ -627,21 +622,16 @@ class QuotationController extends Controller
             }
         }
 
-      
-        
         foreach ($produkBySupplier as $kodeSupplier => $produkGroup) {
-          
            
             $lastquote = Quotation::latest()->orderBy('id', 'desc')->first(); 
-            
-
+                  
             $currentYear = now()->format('y'); // Mendapatkan dua digit tahun saat ini
             $currentMonth = now()->format('m'); // Mendapatkan dua digit bulan saat ini
             
             $lastYear = $lastquote ? substr($lastquote->no_quote, 14, 2) : '00'; // Mengambil dua digit tahun dari nomor quote terakhir
             $lastMonth = $lastquote ? substr($lastquote->no_quote, 11, 2) : '00'; // Mengambil dua digit bulan dari nomor quote terakhir
             
-          
     
             if ($currentYear != $lastYear || $currentMonth != $lastMonth) {
                 // Jika tahun atau bulan saat ini berbeda dengan tahun atau bulan dari nomor quote terakhir,
@@ -662,6 +652,7 @@ class QuotationController extends Controller
                 $request->session()->flash('error', "Data gagal disimpan, Quotation sudah ada");
                 return redirect()->route('superadmin.quotation.index');
             }
+
             $quote -> no_quote = $orderNumber;
             $quote -> quote_date = $request -> quote_date;
             $quote -> valid_date = $request -> valid_date;
@@ -681,12 +672,13 @@ class QuotationController extends Controller
             $quote -> nama_pembuat = $nama;
             $quote -> is_persen = $request -> inlineRadioOptions;
             $quote -> kode_supplier = $kodeSupplier;
+            $quote -> catatan_id = $request -> catatan_id;
+            $quote -> catatan = $request -> isi_catatan;
     
-          $quote -> save();
+            $quote -> save();
 
             $quotationDetails = [];
            
-         
                 foreach ($produkGroup as $index => $productId) {
 
                   $id = $productId->id;
@@ -732,7 +724,8 @@ class QuotationController extends Controller
     }  
 
     public function leaderstore(Request $request){
-     
+
+
         $loggedInUser = auth()->user();
         $userid = $loggedInUser ->id;
         $customer = Customer::find($request->customer_id);
@@ -847,6 +840,8 @@ class QuotationController extends Controller
             $quote -> nama_pembuat = $nama;
             $quote -> is_persen = $request -> inlineRadioOptions;
             $quote -> kode_supplier = $kodeSupplier;
+            $quote -> catatan_id = $request -> catatan_id;
+            $quote -> catatan = $request -> isi_catatan;
     
           $quote -> save();
 
@@ -1013,6 +1008,8 @@ class QuotationController extends Controller
             $quote -> nama_pembuat = $nama;
             $quote -> is_persen = $request -> inlineRadioOptions;
             $quote -> kode_supplier = $kodeSupplier;
+            $quote -> catatan_id = $request -> catatan_id;
+            $quote -> catatan = $request -> isi_catatan;
     
           $quote -> save();
 

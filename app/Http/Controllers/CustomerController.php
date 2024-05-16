@@ -88,7 +88,32 @@ class CustomerController extends Controller
        
         try {
             $file = $request->file('file');
+            $reader = Excel::toArray([], $file);
+            $headingRow = $reader[0][0];
+
+          
+            $expectedHeaders = [
+                'Nama Customer',
+                'Kategori',
+                'Sumber',
+                'Nama PIC',
+                'Jabatan PIC',
+                'No Hp',
+                'Email',
+                'Alamat',
+                'Produk yang digunakan sebelumnya',
+            ];
     
+            if ($headingRow !== $expectedHeaders) {
+                throw new Exception("Template tidak sesuai.");
+            }
+            
+            $data = Excel::toCollection(new CustomerImport, $file);
+
+            if ($data->isEmpty() || $data->first()->isEmpty()) {
+                throw new Exception("Tidak ada data dalam file");
+
+            }
             // Lakukan impor
             Excel::import(new CustomerImport, $file);
     
@@ -110,7 +135,31 @@ class CustomerController extends Controller
 
         try {
             $file = $request->file('file');
+            $reader = Excel::toArray([], $file);
+            $headingRow = $reader[0][0];
+
+          
+            $expectedHeaders = [
+                'Nama Customer',
+                'Kategori',
+                'Sumber',
+                'Nama PIC',
+                'Jabatan PIC',
+                'No Hp',
+                'Email',
+                'Alamat',
+                'Produk yang digunakan sebelumnya',
+            ];
     
+            if ($headingRow !== $expectedHeaders) {
+                throw new Exception("Template tidak sesuai.");
+            }
+            $data = Excel::toCollection(new CustomerImport, $file);
+
+            if ($data->isEmpty() || $data->first()->isEmpty()) {
+                throw new Exception("Tidak ada data dalam file");
+
+            }
             // Lakukan impor
             Excel::import(new CustomerImport, $file);
     
@@ -133,8 +182,31 @@ class CustomerController extends Controller
 
         try {
             $file = $request->file('file');
-           
+            $reader = Excel::toArray([], $file);
+            $headingRow = $reader[0][0];
 
+          
+            $expectedHeaders = [
+                'Nama Customer',
+                'Kategori',
+                'Sumber',
+                'Nama PIC',
+                'Jabatan PIC',
+                'No Hp',
+                'Email',
+                'Alamat',
+                'Produk yang digunakan sebelumnya',
+            ];
+    
+            if ($headingRow !== $expectedHeaders) {
+                throw new Exception("Template tidak sesuai.");
+            }
+            $data = Excel::toCollection(new CustomerImport, $file);
+
+            if ($data->isEmpty() || $data->first()->isEmpty()) {
+                throw new Exception("Tidak ada data dalam file");
+
+            }
             Excel::import(new CustomerImport, $file);
     
             // Jika impor berhasil, tampilkan pesan sukses
@@ -156,7 +228,31 @@ class CustomerController extends Controller
 
         try {
             $file = $request->file('file');
+            $reader = Excel::toArray([], $file);
+            $headingRow = $reader[0][0];
+
+          
+            $expectedHeaders = [
+                'Nama Customer',
+                'Kategori',
+                'Sumber',
+                'Nama PIC',
+                'Jabatan PIC',
+                'No Hp',
+                'Email',
+                'Alamat',
+                'Produk yang digunakan sebelumnya',
+            ];
     
+            if ($headingRow !== $expectedHeaders) {
+                throw new Exception("Template tidak sesuai.");
+            }
+            $data = Excel::toCollection(new CustomerImport, $file);
+
+            if ($data->isEmpty() || $data->first()->isEmpty()) {
+                throw new Exception("Tidak ada data dalam file");
+            }
+            
             // Lakukan impor
             Excel::import(new CustomerImport, $file);
     
@@ -289,7 +385,8 @@ public function managerdestroy(Request $request, $id){
 }
 
 public function superadminstore(Request $request){
-
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
     $namacustomer = $request->nama_customer;
     $kategori = $request->kategori;
     $sumber = $request->sumber;
@@ -330,6 +427,7 @@ public function superadminstore(Request $request){
         'produk_sebelumnya' => $request->produk_sebelumnya,
         'kategori_id' => $kategoriid,
         'sumber_id' => $sumberid,
+        'created_by' => $loggedInUsername,
       ]);
     
 
@@ -338,7 +436,8 @@ public function superadminstore(Request $request){
       return redirect()->route('superadmin.customer.index');
 }
 public function leaderstore(Request $request){
-
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
     $namacustomer = $request->nama_customer;
   
     $namapic = $request->nama_pic;
@@ -377,6 +476,7 @@ public function leaderstore(Request $request){
         'produk_sebelumnya' => $request->produk_sebelumnya,
         'kategori_id' => $kategoriid,
         'sumber_id' => $sumberid,
+        'created_by' => $loggedInUsername,
       ]);
     
 
@@ -386,7 +486,8 @@ public function leaderstore(Request $request){
 }
 
 public function managerstore(Request $request){
-
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
     $namacustomer = $request->nama_customer;
     $kategoriid = $request->kategori;
   
@@ -427,6 +528,7 @@ public function managerstore(Request $request){
         'produk_sebelumnya' => $request->produk_sebelumnya,
         'kategori_id' => $kategoriid,
         'sumber_id' => $sumberid,
+        'created_by' => $loggedInUsername,
       ]);
     
 
@@ -437,7 +539,8 @@ public function managerstore(Request $request){
 public function admininvoicestore(Request $request){
 
 
-
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
     $namacustomer = $request->nama_customer;
     $kategori = $request->kategori;
     $sumber = $request->sumber;
@@ -465,6 +568,7 @@ public function admininvoicestore(Request $request){
         'email' => $email,
         'lokasi' => $lokasi,
         'produk_sebelumnya' => $request->produk_sebelumnya,
+        'created_by' => $loggedInUsername,
       ]);
     
 
@@ -528,7 +632,8 @@ public  function managershow($id){
 
 }
 public function admininvoiceupdate(Request $request, $id)
-{  
+{     $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
     $data = Customer::find($id);
     $data->nama_customer = $request->nama_customer;
     $data->kategori = $request->kategori;
@@ -539,16 +644,18 @@ public function admininvoiceupdate(Request $request, $id)
     $data -> email = $request->email;
     $data -> lokasi = $request -> lokasi;
     $data->produk_sebelumnya = $request->produk_sebelumnya;
+$data -> updated_by = $loggedInUsername;
 
     $data->save();
-    $request->session()->flash('success', "Data customer berhasil diupdate.");
+    $request->session()->flash('success', "Data customer berhasil diubah.");
 
     return redirect()->route('admininvoice.customer.index');
 }
 
 public function superadminupdatecustomer(Request $request, $id)
 {  
-
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
     $data = Customer::find($id);
 
     $kategoriid = $request->kategori;
@@ -571,11 +678,12 @@ public function superadminupdatecustomer(Request $request, $id)
     $data -> email = $request->email;
     $data -> lokasi = $request -> lokasi;
     $data->produk_sebelumnya = $request->produk_sebelumnya;
+    $data ->updated_by = $loggedInUsername;
    
     $data -> kategori_id = $kategoriid;
     $data -> sumber_id = $sumberid;
     $data->save();
-    $request->session()->flash('success', "Data customer berhasil diupdate.");
+    $request->session()->flash('success', "Data customer berhasil diubah.");
 
      return redirect()->route('superadmin.customer.index');
 }
@@ -591,7 +699,8 @@ public function leaderupdatecustomer(Request $request, $id)
     $datakategori = Kategori::find($kategoriid);
 
     $kategori = $datakategori -> kategori;
-
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
 
     $datasumber = Sumber::find($sumberid);
 
@@ -608,8 +717,10 @@ public function leaderupdatecustomer(Request $request, $id)
     $data -> kategori_id = $kategoriid;
     $data -> sumber_id = $sumberid;
 
+    $data-> updated_by = $loggedInUsername;
+
     $data->save();
-    $request->session()->flash('success', "Data customer berhasil diupdate.");
+    $request->session()->flash('success', "Data customer berhasil diubah.");
 
     return redirect()->route('leader.customer.index');
 }
@@ -617,7 +728,8 @@ public function leaderupdatecustomer(Request $request, $id)
 public function managerupdatecustomer(Request $request, $id)
 {  
     $data = Customer::find($id);
-
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
 
     $kategoriid = $request->kategori;
     $sumberid = $request -> sumber;
@@ -642,9 +754,10 @@ public function managerupdatecustomer(Request $request, $id)
     $data->produk_sebelumnya = $request->produk_sebelumnya;
     $data -> kategori_id = $kategoriid;
     $data -> sumber_id = $sumberid;
+    $data -> updated_by = $loggedInUsername;
 
     $data->save();
-    $request->session()->flash('success', "Data customer berhasil diupdate.");
+    $request->session()->flash('success', "Data customer berhasil diubah.");
 
     return redirect()->route('manager.customer.index');
 }

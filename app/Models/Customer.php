@@ -20,7 +20,9 @@ class Customer extends Model
         'produk_sebelumnya',
         'lokasi',
         'kategori_id',
-        'sumber_id'
+        'sumber_id',
+        'created_by',
+        'updated_by',
     ];
 
     public function rfo()

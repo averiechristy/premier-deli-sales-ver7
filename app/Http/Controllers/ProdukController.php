@@ -51,7 +51,27 @@ class ProdukController extends Controller
 
         try {
             $file = $request->file('file');
+
+            $reader = Excel::toArray([], $file);
+            $headingRow = $reader[0][0];
+
+            $expectedHeaders = [
+                'Kode Produk',
+                'Nama Produk',
+                'Harga Beli',
+                'Harga Jual',
+                'Kode Supplier',
+            ];
     
+            if ($headingRow !== $expectedHeaders) {
+                throw new Exception("Template tidak sesuai.");
+            }
+            $data = Excel::toCollection(new ProductImport, $file);
+
+            if ($data->isEmpty() || $data->first()->isEmpty()) {
+                throw new Exception("Tidak ada data dalam file");
+
+            }
             // Lakukan impor
             Excel::import(new ProductImport, $file);
     
@@ -70,13 +90,31 @@ class ProdukController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
 
-       
         try {
             $file = $request->file('file');
+          
+            $reader = Excel::toArray([], $file);
+            $headingRow = $reader[0][0];
+
+            $expectedHeaders = [
+                'Kode Produk',
+                'Nama Produk',
+                'Harga Beli',
+                'Harga Jual',
+                'Kode Supplier',
+            ];
     
+            if ($headingRow !== $expectedHeaders) {
+                throw new Exception("Template tidak sesuai.");
+            }
             // Lakukan impor
             Excel::import(new ProductImport, $file);
-    
+            $data = Excel::toCollection(new ProductImport, $file);
+
+            if ($data->isEmpty() || $data->first()->isEmpty()) {
+                throw new Exception("Tidak ada data dalam file");
+
+            }
             // Jika impor berhasil, tampilkan pesan sukses
             $request->session()->flash('success', "Data produk berhasil ditambahkan.");
         } catch (Exception $e) {
@@ -96,7 +134,6 @@ class ProdukController extends Controller
     }
 
     public function superadmincreate(){
-
         $supplier = Supplier::all();
         return view('superadmin.produk.create',[
             'supplier' => $supplier,
@@ -124,7 +161,8 @@ class ProdukController extends Controller
 
         $kodeproduk = $request->kode_produk;
 
-      
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $existingcode = Produk::where('kode_produk',$kodeproduk)->first();
        
         if($existingcode !== null && $existingcode) {
@@ -151,6 +189,7 @@ class ProdukController extends Controller
           'kode_supplier' => $kodesupplier,
           'nama_supplier' => $namasupplier,
           'supplier_id' => $request->supplier_id,
+          'created_by' => $loggedInUsername,
         ]);
 
         $request->session()->flash('success', "Data produk berhasil ditambahkan.");
@@ -161,7 +200,8 @@ class ProdukController extends Controller
     public function superadminstore(Request $request){
 
         $kodeproduk = $request->kode_produk;
-
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $existingcode = Produk::where('kode_produk',$kodeproduk)->first();
        
         if($existingcode !== null && $existingcode) {
@@ -188,6 +228,7 @@ class ProdukController extends Controller
           'kode_supplier' => $kodesupplier,
           'nama_supplier' => $namasupplier,
           'supplier_id' => $supplierid,
+          'created_by' => $loggedInUsername,
         ]);
 
 
@@ -223,7 +264,8 @@ class ProdukController extends Controller
         $data = Produk::find($id);
        
         $kodeproduk = $request->kode_produk;
-
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
 
         $existingcode = Produk::where('kode_produk',$kodeproduk)
         ->where('id', '!=', $id)
@@ -244,6 +286,7 @@ class ProdukController extends Controller
         $data -> supplier_id = $supplierid;
         $data -> nama_supplier = $datasupplier -> nama_supplier;
         $data -> kode_supplier = $datasupplier -> kode_supplier;
+        $data -> updated_by = $loggedInUsername;
         
         $data->save();
 
@@ -268,7 +311,8 @@ class ProdukController extends Controller
         }
     }
     public function superadminupdate(Request $request, $id){
-        
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $data = Produk::find($id);
         $supplierid = $request ->supplier_id;
         $datasupplier = Supplier::find($supplierid);
@@ -289,6 +333,7 @@ class ProdukController extends Controller
         $data-> nama_produk = $request-> nama_produk;
         $data->harga_beli = $request-> harga_beli;
         $data-> harga_jual = $request-> harga_jual;
+        $data->updated_by = $loggedInUsername;
 
         $data->kode_supplier =  $kodesupplier;
         $data->nama_supplier = $namasupplier ;

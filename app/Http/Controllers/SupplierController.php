@@ -31,7 +31,8 @@ class SupplierController extends Controller
 
     public function adminprodukstore(Request $request)
     {
-  
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
 
         $kode = $request->kode_supplier;
         $nama = $request -> nama_supplier;
@@ -57,6 +58,7 @@ class SupplierController extends Controller
             'kode_supplier' => $kode,
             'nama_supplier' => $nama,
             'alamat_supplier' => $alamat,
+            'created_by' => $loggedInUsername,
         ]);
 
         $request->session()->flash('success', 'Supplier berhasil ditambahkan');
@@ -86,7 +88,8 @@ class SupplierController extends Controller
     public function superadminstore(Request $request)
     {
   
-
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $kode = $request->kode_supplier;
         $nama = $request -> nama_supplier;
 
@@ -111,6 +114,7 @@ class SupplierController extends Controller
             'kode_supplier' => $kode,
             'nama_supplier' => $nama,
             'alamat_supplier' => $alamat,
+            'created_by' => $loggedInUsername,
         ]);
 
         $request->session()->flash('success', 'Supplier berhasil ditambahkan');
@@ -159,6 +163,9 @@ class SupplierController extends Controller
      */
     public function adminprodukupdate(Request $request, string $id)
     {
+
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $data = Supplier::find($id);
 
         $kode = $request->kode_supplier;
@@ -186,6 +193,8 @@ class SupplierController extends Controller
         $data->kode_supplier = $request->kode_supplier;
         $data->nama_supplier = $request->nama_supplier;
         $data->alamat_supplier = $request -> alamat_supplier;
+        $data->updated_by = $loggedInUsername;
+
 
         $data->save();
 
@@ -197,7 +206,8 @@ class SupplierController extends Controller
     public function superadminupdate(Request $request, string $id)
     {
         $data = Supplier::find($id);
-
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $kode = $request->kode_supplier;
         $nama = $request -> nama_supplier;
 
@@ -222,6 +232,7 @@ class SupplierController extends Controller
         $data->kode_supplier = $request->kode_supplier;
         $data->nama_supplier = $request->nama_supplier;
         $data->alamat_supplier = $request -> alamat_supplier;
+        $data->updated_by = $loggedInUsername;
 
         $data->save();
 

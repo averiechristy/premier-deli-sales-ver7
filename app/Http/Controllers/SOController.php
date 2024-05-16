@@ -242,7 +242,8 @@ public function admininvoicecreate($id)
         $kodeSuppliers = $request->input('kode_supplier');
         $jenisdiskon = $request -> inlineRadioOptions;
 
-
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
 
 
         if ($jenisdiskon == "persen"){
@@ -331,7 +332,7 @@ public function admininvoicecreate($id)
             $so -> is_persen = $request -> inlineRadioOptions;
             $so -> status_so = "PO Belum Dikerjakan";
             $so -> kode_supplier = $kodeSuppliers[$kodeSupplier][0];
-    
+            $so->created_by = $loggedInUsername;
             
     
             $so -> save();
@@ -391,7 +392,8 @@ public function admininvoicecreate($id)
     {
         $kodeSuppliers = $request->input('kode_supplier');
         $jenisdiskon = $request -> inlineRadioOptions;
-
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
 
         if ($jenisdiskon == "persen"){
             $nilaidiskon = $request->discount;
@@ -479,6 +481,7 @@ public function admininvoicecreate($id)
             $so -> is_persen = $request -> inlineRadioOptions;
             $so -> status_so = "PO Belum Dikerjakan";
             $so -> kode_supplier = $kodeSuppliers[$kodeSupplier][0];
+            $so->created_by = $loggedInUsername;
     
             
     
@@ -526,11 +529,6 @@ public function admininvoicecreate($id)
         }
 
       
-    
-        
-        
-
-
 
         $request->session()->flash('success', "Sales Order berhasil dibuat");
 

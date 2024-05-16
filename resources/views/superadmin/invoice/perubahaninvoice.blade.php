@@ -1,11 +1,6 @@
 @extends('layouts.superadmin.app')
-
 @section('content')
-
-
 <div class="container">
-     
-        
             <!-- Tempatkan form input di sini -->
             <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
@@ -15,25 +10,19 @@
                                     <form name="saveform" action="{{route('superadminupdateinvoice',$data->id)}}" method="post" onsubmit="return validateForm()">
                                         @csrf                       
 
-
-
     <input hidden name="invoice_id" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->id}}" />
 
-
-
+    
                                         <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">No Invoice</label>
     <input name="invoice_no" type="text" class="form-control" style="border-color: #01004C; width:50%;" value="{{ $data->invoice_no }}" readonly />
 </div>
 
 
-
-
                                         <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Tanggal Invoice</label>
     <input name="invoice_date" id="invoice_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="{{$data->invoice_date}}" />
 </div>
-
 
 
 
@@ -74,7 +63,32 @@
 </div>
 
 
+<div class="form-group mb-4 mt-4">
+                           <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discpersen" value="persen" {{ $data->is_persen == 'persen' ? 'checked' : '' }} >
+                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio1">Discount dalam %</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discrp" value="amount"{{ $data->is_persen == 'amount' ? 'checked' : '' }}>
+                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio2">Discount dalam Rp</label>
+                            </div>
+</div>
+<script>
+   // Menonaktifkan elemen-elemen radio button
+   var radios = document.querySelectorAll('input[type=radio]');
+   for(var i = 0; i < radios.length; i++) {
+       radios[i].disabled = true;
+   }
+</script>
+<div class="form-group mb-4 mt-3">
+        <label for="" class="form-label" style="color:black;">Discount</label>
+    <input name="discount" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->discount}}" readonly />
+</div>
 
+<div class="form-group mb-4 mt-3">
+        <label for="" class="form-label" style="color:black;">PPN (dalam %)</label>
+    <input name="ppn" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->ppn}}" readonly/>
+</div>
 
 <div id="product-fields">
     
@@ -208,6 +222,15 @@ $(document).on('change', '.product-select', function() {
 
         // Remove Product Field
         $(document).on("click", ".remove-product-field", function() {
+
+            var productFieldCount = $(".product-field").length;
+    
+    // Jika hanya ada satu elemen product-field, tampilkan pesan kesalahan
+    if (productFieldCount === 1) {
+        alert("Tidak bisa menghapus produk terakhir.");
+        return; // Hentikan eksekusi lebih lanjut
+    }
+    
             $(this).closest(".product-field").remove();
         });
 
@@ -219,7 +242,6 @@ $(document).on('change', '.product-select', function() {
 @foreach ($produk as $item)
     productInfo[{{$item->id}}] = {{$item->harga_jual}};
 @endforeach
-
 
     $('#productselect').change(function() {
         var productId = $(this).val();
@@ -233,35 +255,6 @@ $(document).on('change', '.product-select', function() {
     });
     });
 </script>
-
-<div class="form-group mb-4 mt-4">
-                           <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discpersen" value="persen" {{ $data->is_persen == 'persen' ? 'checked' : '' }} >
-                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio1">Discount dalam %</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discrp" value="amount"{{ $data->is_persen == 'amount' ? 'checked' : '' }}>
-                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio2">Discount dalam Rp</label>
-                            </div>
-</div>
-<script>
-   // Menonaktifkan elemen-elemen radio button
-   var radios = document.querySelectorAll('input[type=radio]');
-   for(var i = 0; i < radios.length; i++) {
-       radios[i].disabled = true;
-   }
-</script>
-<div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">Discount</label>
-    <input name="discount" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->discount}}" readonly />
-</div>
-
-<div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">PPN (dalam %)</label>
-    <input name="ppn" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->ppn}}" readonly/>
-</div>
-
-
 
 <div class="form-group mb-4 mt-3">
 <button type="button" class="btn btn-pd" onclick="confirmSubmit()" >Proses Perubahan Invoice</button>

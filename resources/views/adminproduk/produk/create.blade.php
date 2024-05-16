@@ -100,13 +100,13 @@ function validasiNumber(input) {
         alert("Harga beli tidak boleh kosong");
         return false;
     } else if (parseFloat(hargabeli) === 0) {
-        alert("Harga beli tidak boleh 0, isi angka lain");
+        alert("Harga beli tidak boleh 0");
         return false;
     } else if (hargajual == "") {
         alert("Harga jual tidak boleh kosong");
         return false;
     } else if (parseFloat(hargajual) === 0) {
-        alert("Harga jual tidak boleh 0, isi angka lain");
+        alert("Harga jual tidak boleh 0");
         return false;
     }
     
@@ -114,4 +114,31 @@ function validasiNumber(input) {
 
 </script>
 
+<script>
+window.onload = function () {
+    var inputFields = document.getElementsByTagName('input');
+    for (var i = 0; i < inputFields.length; i++) {
+        if (inputFields[i].type !== 'date' && inputFields[i].name !== '_token'  && inputFields[i].name !== 'harga_beli'  && inputFields[i].name !== 'harga_jual') {
+            inputFields[i].value = '';
+        }
+    }
+
+    var textareaFields = document.getElementsByTagName('textarea');
+    for (var j = 0; j < textareaFields.length; j++) {
+        textareaFields[j].value = '';
+    }
+
+    var selectFields = document.getElementsByTagName('select');
+    for (var k = 0; k < selectFields.length; k++) {
+        selectFields[k].selectedIndex = 0; // Mengatur indeks pilihan ke 0
+    }
+    
+    if (window.history && window.history.pushState) {
+        window.addEventListener('popstate', function () {
+            window.location.reload();
+        });
+    }
+};
+
+</script>
 @endsection

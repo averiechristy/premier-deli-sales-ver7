@@ -14,7 +14,7 @@
         <!-- Request Card -->
 
 
-        <div class="col-md-4 mt-2">
+        <div class="col-md-3 mt-2">
             <div class="card request-card p-4" style="height: 200px;">
             <a href="{{route('manager.rfo.index')}}">
                 <div class="card-body">
@@ -25,7 +25,7 @@
             </div>
         </div>
         <!-- Quotation Card -->
-        <div class="col-md-4 mt-2">
+        <div class="col-md-3 mt-2">
             <div class="card quotation-card p-4" style="height: 200px;">
             <a href="{{route('manager.quotation.index')}}">
                 <div class="card-body">
@@ -35,7 +35,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-md-4 mt-2">
+        <div class="col-md-3 mt-2">
             <div class="card quotation-card p-4" style="height: 200px;">
             <a href="{{route('manager.customer.index')}}">
                     <div class="card-body">
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 mt-2">
+        <div class="col-md-3 mt-2">
             <div class="card quotation-card p-4" style="height: 200px;">
             <a href="{{route('manager.channel.index')}}">
                 <div class="card-body">
@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 mt-2">
+        <div class="col-md-3 mt-2">
             <div class="card quotation-card p-4" style="height: 200px;">
             <a href="{{route('manager.kategori.index')}}">
                 <div class="card-body">
@@ -68,12 +68,24 @@
             </div>
         </div>
 
-        <div class="col-md-4 mt-2">
+        <div class="col-md-3 mt-2">
             <div class="card quotation-card p-4" style="height: 200px;">
             <a href="{{route('manager.sumber.index')}}">
                 <div class="card-body">
                 <i class="fa fa-newspaper-o" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
                 <h4 class="card-title mt-3" style="color: black;">Sumber Data Customer</h4>
+                </div>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="col-md-3 mt-2">
+            <div class="card quotation-card p-4" style="height: 200px;">
+            <a href="{{route('manager.catatan.index')}}">
+                <div class="card-body">
+                <i class="fa fa-clipboard"  style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
+                <h4 class="card-title mt-3" style="color: black;">Catatan Quotation</h4>
                 </div>
                 </a>
             </div>

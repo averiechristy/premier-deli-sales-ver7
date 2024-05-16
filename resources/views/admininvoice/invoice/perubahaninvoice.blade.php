@@ -76,6 +76,35 @@
 
 
 
+
+
+<div class="form-group mb-4 mt-4">
+                           <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discpersen" value="persen" {{ $data->is_persen == 'persen' ? 'checked' : '' }} >
+                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio1">Discount dalam %</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discrp" value="amount"{{ $data->is_persen == 'amount' ? 'checked' : '' }}>
+                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio2">Discount dalam Rp</label>
+                            </div>
+</div>
+<script>
+   // Menonaktifkan elemen-elemen radio button
+   var radios = document.querySelectorAll('input[type=radio]');
+   for(var i = 0; i < radios.length; i++) {
+       radios[i].disabled = true;
+   }
+</script>
+<div class="form-group mb-4 mt-3">
+        <label for="" class="form-label" style="color:black;">Discount</label>
+    <input name="discount" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->discount}}" readonly />
+</div>
+
+<div class="form-group mb-4 mt-3">
+        <label for="" class="form-label" style="color:black;">PPN (dalam %)</label>
+    <input name="ppn" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->ppn}}" readonly/>
+</div>
+
 <div id="product-fields">
     
 @foreach ($detail as $index => $detaildata)
@@ -201,13 +230,20 @@ $(document).on('change', '.product-select', function() {
     var $productField = $(this).closest('.product-field');
     $productField.find('input[name="price[]"]').val(hargaProduk);
 });
-
-
-            
+ 
         });
 
         // Remove Product Field
         $(document).on("click", ".remove-product-field", function() {
+
+            var productFieldCount = $(".product-field").length;
+    
+    // Jika hanya ada satu elemen product-field, tampilkan pesan kesalahan
+    if (productFieldCount === 1) {
+        alert("Tidak bisa menghapus produk terakhir.");
+        return; // Hentikan eksekusi lebih lanjut
+    }
+
             $(this).closest(".product-field").remove();
         });
 
@@ -233,35 +269,6 @@ $(document).on('change', '.product-select', function() {
     });
     });
 </script>
-
-<div class="form-group mb-4 mt-4">
-                           <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discpersen" value="persen" {{ $data->is_persen == 'persen' ? 'checked' : '' }} >
-                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio1">Discount dalam %</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discrp" value="amount"{{ $data->is_persen == 'amount' ? 'checked' : '' }}>
-                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio2">Discount dalam Rp</label>
-                            </div>
-</div>
-<script>
-   // Menonaktifkan elemen-elemen radio button
-   var radios = document.querySelectorAll('input[type=radio]');
-   for(var i = 0; i < radios.length; i++) {
-       radios[i].disabled = true;
-   }
-</script>
-<div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">Discount</label>
-    <input name="discount" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->discount}}" readonly />
-</div>
-
-<div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">PPN (dalam %)</label>
-    <input name="ppn" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->ppn}}" readonly/>
-</div>
-
-
 
 <div class="form-group mb-4 mt-3">
 <button type="button" class="btn btn-pd" onclick="confirmSubmit()" >Proses Perubahan Invoice</button>

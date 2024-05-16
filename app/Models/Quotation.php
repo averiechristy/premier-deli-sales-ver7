@@ -26,6 +26,8 @@ class Quotation extends Model
         'discount',
         'ppn',
         'kode_channel',
+        'catatan_id',
+        'catatan',
         'kode_supplier',
     ];
 

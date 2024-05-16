@@ -10,7 +10,9 @@ class Sumber extends Model
     use HasFactory;
 
     protected $fillable = [
-        'sumber'
+        'sumber',
+        'created_by',
+        'updated_by',
       ];
 
       public function customer()

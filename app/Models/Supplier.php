@@ -14,6 +14,8 @@ class Supplier extends Model
         'kode_supplier',
         'nama_supplier',
         'alamat_supplier',
+        'created_by',
+        'updated_by',
         
 
     ];

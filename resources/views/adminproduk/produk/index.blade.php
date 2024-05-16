@@ -61,6 +61,10 @@ entries
                                             <th>Harga Jual</th>
                                             <th>Kode Supplier</th>
                                             <th>Nama Supplier</th>
+                                            <th>Created At</th>
+<th>Created By</th>
+<th>Updated At</th>
+<th>Updated By</th>
                                             <th>Action</th>
 
                                         </tr>
@@ -76,6 +80,10 @@ entries
                                     <td>{{$data -> harga_jual}}</td>
                                     <td>{{$data -> kode_supplier}}</td>
                                     <td>{{$data -> nama_supplier}}</td>
+                                    <td>{{$data -> created_at}}</td>
+    <td>{{$data -> created_by}}</td>
+    <td>{{$data -> updated_at}}</td>
+    <td>{{$data -> updated_by}}</td>
                                     <td> 
                                            
                                                                <a href="{{route('tampilproduk', $data->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 

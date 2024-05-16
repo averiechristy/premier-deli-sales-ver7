@@ -42,7 +42,7 @@ entries
                     <tr>                           
                     <th>No Quotation</th>            
                         <th>Nama Customer</th>
-                        <th>Nama Penerima</th>
+                        <th>Nama PIC</th>
                         <th>Produk</th>
                         <th>Status</th>
                         <th>Status Update</th>

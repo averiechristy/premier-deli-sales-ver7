@@ -104,6 +104,8 @@ entries
                       <th>Action</th>
                       <th></th>
                       <th>Status</th>
+                      <th>Created By</th>
+                      <th>Created At</th>
                       <th></th>
                     </tr>
                 </thead>
@@ -134,7 +136,6 @@ entries
 </td>
 
 
-
 <td>
     @if($item->is_download == "Yes")
     <span>Sudah didownload </span><i class="fas fa-check-circle" style="color:green;"></i>    
@@ -145,6 +146,8 @@ entries
 
 
 <td>{{$item->status_po}}</td>
+<td>{{$item->created_by}}</td>
+<td>{{$item -> created_at}}</td>
 <td>
 
 

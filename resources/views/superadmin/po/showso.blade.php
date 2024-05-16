@@ -11,7 +11,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
 
-                        <form name="saveform"  action="{{route('superadmin.po.create')}}" method="post" onsubmit="return validateForm()">
+                        <form name="saveform"  action="{{route('superadmin.po.create')}}" method="get" onsubmit="return validateForm()">
                     @csrf
     <button type="submit" style="float: right; margin-right:6px;" class="btn btn-pd  btn-sm mb-2">Buat Purchase Order</button>
                         </div>

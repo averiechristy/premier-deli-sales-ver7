@@ -12,6 +12,8 @@ use Maatwebsite\Excel\Concerns\WithStartRow;
 
 class ProductImport implements ToModel, WithStartRow, WithHeadingRow
 {
+
+    
     private $lastId;
     private $allowedSupplier = [];
 
@@ -28,6 +30,7 @@ class ProductImport implements ToModel, WithStartRow, WithHeadingRow
 
     public function model(array $row)
     {             
+      
         $expectedHeaders = [
             'kode_produk',
             'nama_produk',
@@ -41,6 +44,9 @@ class ProductImport implements ToModel, WithStartRow, WithHeadingRow
         if (!empty($diff)) {
             throw new Exception("Template tidak sesuai");
         }
+
+      
+    
 
         $sup =  $row['kode_supplier'];
        
@@ -78,6 +84,9 @@ class ProductImport implements ToModel, WithStartRow, WithHeadingRow
         
         $this->lastId++;
 
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama;
+
         return new Produk([
             'id' => $this->lastId,
             'kode_produk' => $row['kode_produk'],
@@ -87,6 +96,7 @@ class ProductImport implements ToModel, WithStartRow, WithHeadingRow
             'kode_supplier' => $row['kode_supplier'],
             'nama_supplier' => $supplier->nama_supplier,
             'supplier_id' =>  $supplierid,
+            'created_by' => $loggedInUsername,
         ]);
 
     }

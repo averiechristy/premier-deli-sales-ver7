@@ -33,6 +33,9 @@ class KategoriController extends Controller
         
         $kategori = $request -> kategori;
         $existingname = Kategori::where('kategori',$kategori)->first();
+
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama;  
        
         if($existingname !== null && $existingname) {
             $request->session()->flash('error', "Data gagal disimpan, kategori sudah ada");
@@ -41,6 +44,7 @@ class KategoriController extends Controller
 
         Kategori::create([
             'kategori' => $kategori,
+            'created_by' => $loggedInUsername,
            
           ]);
 
@@ -68,6 +72,9 @@ class KategoriController extends Controller
         ->where('id', '!=', $id)
         ->first();
 
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
+
         if($existingname !== null && $existingname) {
             $request->session()->flash('error', "Data gagal disimpan, kategori sudah ada");
             return redirect()->route('manager.kategori.index');
@@ -75,6 +82,7 @@ class KategoriController extends Controller
 
         $data = Kategori::find($id);
         $data -> kategori = $kategori;
+        $data->updated_by = $loggedInUsername;
         $data -> save();
 
         $request->session()->flash('success', "Data kategori berhasil diubah.");
@@ -119,7 +127,8 @@ class KategoriController extends Controller
 
     public function leaderstore(Request $request)
     {
-       
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
        $kategori = $request -> kategori;
        $existingname = Kategori::where('kategori',$kategori)->first();
       
@@ -130,6 +139,7 @@ class KategoriController extends Controller
 
        Kategori::create([
            'kategori' => $kategori,
+           'created_by' => $loggedInUsername,
           
          ]);
 
@@ -152,6 +162,8 @@ class KategoriController extends Controller
     public function leaderupdate(Request $request, $id)
     {
        $kategori = $request -> kategori;
+       $loggedInUser = auth()->user();
+       $loggedInUsername = $loggedInUser->nama; 
 
        $existingname = Kategori::where('kategori',$kategori)
        ->where('id', '!=', $id)
@@ -164,6 +176,7 @@ class KategoriController extends Controller
 
        $data = Kategori::find($id);
        $data -> kategori = $kategori;
+       $data -> updated_by = $loggedInUsername;
        $data -> save();
 
        $request->session()->flash('success', "Data kategori berhasil diubah.");
@@ -209,7 +222,9 @@ public function superadmincreate()
 
 public function superadminstore(Request $request)
 {
-   
+ 
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
    $kategori = $request -> kategori;
    $existingname = Kategori::where('kategori',$kategori)->first();
   
@@ -220,6 +235,7 @@ public function superadminstore(Request $request)
 
    Kategori::create([
        'kategori' => $kategori,
+       'created_by' => $loggedInUsername,
       
      ]);
 
@@ -241,6 +257,8 @@ public function superadminshow($id){
 
 public function superadminupdate(Request $request, $id)
 {
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
    $kategori = $request -> kategori;
 
    $existingname = Kategori::where('kategori',$kategori)
@@ -254,6 +272,7 @@ public function superadminupdate(Request $request, $id)
 
    $data = Kategori::find($id);
    $data -> kategori = $kategori;
+   $data -> updated_by = $loggedInUsername;
    $data -> save();
 
    $request->session()->flash('success', "Data kategori berhasil diubah.");

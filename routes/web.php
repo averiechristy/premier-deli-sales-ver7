@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CancelController;
+use App\Http\Controllers\CatatanController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
@@ -120,7 +121,7 @@ Route::get('/superadmintampilpesananpo/{id}',[POController::class,'superadmintam
 Route::get('/superadmintampilsoquote/{id}',[POController::class,'superadmintampilsoquote'])->name('superadmintampilsoquote');
 
 Route::get('/superadmintampilpo/{id}',[POController::class,'superadmintampilpo'])->name('superadmintampilpo');
-Route::post('superadmin/po/create',[POController::class,'superadmincreate'])->name('superadmin.po.create');
+Route::get('superadmin/po/create',[POController::class,'superadmincreate'])->name('superadmin.po.create');
 Route::post('superadmin/po/simpan',[POController::class,'superadminsimpan'])->name('superadmin.po.simpan');
 Route::get('/superadmintampilpesananinvoice/{id}',[InvoiceController::class,'superadmintampilpesananinvoice'])->name('superadmintampilpesananinvoice');
 Route::get('/superadmintampilinvoice/{id}',[InvoiceController::class, 'superadmintampilinvoice'])->name('superadmintampilinvoice');
@@ -185,6 +186,12 @@ Route::delete('/superadmindelesumber/{id}',[SumberController::class,'superadmind
 Route::post('/superadminupdatesumber/{id}',[SumberController::class,'superadminupdate'])->name('superadminupdatesumber');
 
 
+Route::get('superadmin/catatan/index',[CatatanController::class,'superadminindex'])->name('superadmin.catatan.index');
+Route::get('superadmin/catatan/create',[CatatanController::class,'superadmincreate'])->name('superadmin.catatan.create');
+Route::post('superadmin/catatan/simpan',[CatatanController::class,'superadminstore'])->name('superadmin.catatan.simpan');
+Route::get('/superadmintampilcatatan/{id}',[CatatanController::class,'superadminshow'])->name('superadmintampilcatatan');
+Route::delete('/superadmindelecatatan/{id}',[CatatanController::class,'superadmindestroy'])->name('superadmindeletecatatan');
+Route::post('/superadminupdatecatatan/{id}',[CatatanController::class,'superadminupdate'])->name('superadminupdatecatatan');
 
 });
 
@@ -215,7 +222,6 @@ Route::get('/tampilsupplier/{id}',[SupplierController::class,'adminprodukshow'])
 Route::post('/updatesupplier/{id}',[SupplierController::class,'adminprodukupdate'])->name('updatesupplier');
 Route::delete('/deletesupplier/{id}',[SupplierController::class,'adminprodukdestroy'])->name('deletesupplier');
 
-
 });
 
 
@@ -243,7 +249,7 @@ Route::post('admininvoice/invoice/simpan',[InvoiceController::class,'admininvoic
 Route::get('admininvoice/invoice/index',[InvoiceController::class,'admininvoiceindex'])->name('admininvoice.invoice.index');
 Route::get('/tampilinvoice/{id}',[InvoiceController::class, 'tampilinvoice'])->name('tampilinvoice');
 Route::get('admininvoice/po/index',[POController::class,'admininvoiceindex'])-> name('admininvoice.po.index');
-Route::post('admininvoice/po/create',[POController::class,'admininvoicecreate'])->name('admininvoice.po.create');
+Route::get('admininvoice/po/create',[POController::class,'admininvoicecreate'])->name('admininvoice.po.create');
 Route::post('admininvoice/po/simpan',[POController::class,'admininvoicesimpan'])->name('admininvoice.po.simpan');
 Route::get('/tampilpo/{id}',[POController::class,'tampilpo'])->name('tampilpo');
 Route::get('/tampildo/{id}',[DOController::class,'tampildo'])->name('tampildo');
@@ -295,6 +301,16 @@ Route::post('admininvoice/po/simpanpochannel',[POController::class,'simpanpochan
 
 Route::get('/get-products-by-supplier', [ProdukController::class,'getProductsBySupplier']);
 Route::get('/get-product-price',  [ProdukController::class,'getProductPrice'])->name('get-product-price');
+
+
+Route::get('admininvoice/catatan/index',[CatatanController::class,'admininvoiceindex'])->name('admininvoice.catatan.index');
+Route::get('admininvoice/catatan/create',[CatatanController::class,'admininvoicecreate'])->name('admininvoice.catatan.create');
+Route::post('admininvoice/catatan/simpan',[CatatanController::class,'admininvoicestore'])->name('admininvoice.catatan.simpan');
+Route::get('/admininvoicetampilcatatan/{id}',[CatatanController::class,'admininvoiceshow'])->name('admininvoicetampilcatatan');
+Route::delete('/admininvoicedelecatatan/{id}',[CatatanController::class,'admininvoicedestroy'])->name('admininvoicedeletecatatan');
+Route::post('/admininvoiceupdatecatatan/{id}',[CatatanController::class,'admininvoiceupdate'])->name('admininvoiceupdatecatatan');
+
+
 
 });
 
@@ -494,5 +510,14 @@ Route::post('manager/sumber/simpan',[SumberController::class,'managerstore'])->n
 Route::get('/managertampilsumber/{id}',[SumberController::class,'managershow'])->name('managertampilsumber');
 Route::delete('/managerdelesumber/{id}',[SumberController::class,'managerdestroy'])->name('managerdeletesumber');
 Route::post('/managerupdatesumber/{id}',[SumberController::class,'managerupdate'])->name('managerupdatesumber');
+
+
+
+Route::get('manager/catatan/index',[CatatanController::class,'managerindex'])->name('manager.catatan.index');
+Route::get('manager/catatan/create',[CatatanController::class,'managercreate'])->name('manager.catatan.create');
+Route::post('manager/catatan/simpan',[CatatanController::class,'managerstore'])->name('manager.catatan.simpan');
+Route::get('/managertampilcatatan/{id}',[CatatanController::class,'managershow'])->name('managertampilcatatan');
+Route::delete('/managerdelecatatan/{id}',[CatatanController::class,'managerdestroy'])->name('managerdeletecatatan');
+Route::post('/managerupdatecatatan/{id}',[CatatanController::class,'managerupdate'])->name('managerupdatecatatan');
 
 });

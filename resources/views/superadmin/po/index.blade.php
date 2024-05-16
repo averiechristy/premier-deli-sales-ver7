@@ -100,6 +100,8 @@ entries
                        <th>Produk</th>
                       <th>Action</th>
                       <th></th>
+                      <th>Created By</th>
+                      <th>Created At</th>
                       <th></th>
                     
                     </tr>
@@ -132,6 +134,8 @@ entries
 
 
 <td>{{$item->status_po}}</td>
+<td>{{$item -> created_by}}</td>
+<td>{{$item -> created_at}}</td>
 <td>
 
 @if($item->status_po =="Cancelled")

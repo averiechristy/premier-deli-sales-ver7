@@ -1,20 +1,13 @@
 @extends('layouts.superadmin.app')
-
 @section('content')
-
 <div class="container">
-
-                                <div class="card mt-3">
-                                    <div class="card-header" style="color:black;">
-
-                                    </div>
+    <div class="card mt-3">
+    <div class="card-header" style="color:black;">                                
+    </div>
                                     <div class="card-body">
                                        <form name="saveform" action="{{route('superadmin.po.simpanpochannel')}}" method="post" onsubmit="return validateForm()">
                                         @csrf                       
-
-                     
-                       
-                                        <div class="form-group mb-4">
+<div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Pilih Supplier</label>
     <select name="supplier_id" id="supplier_id" class="form-control" style="border-color: #01004C;" aria-label=".form-select-lg example" >
         <option value="" selected disabled>-- Pilih Supplier --</option>
@@ -23,8 +16,6 @@
       @endforeach
     </select>
 </div>         
-
-
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Pilih Channel</label>
@@ -36,13 +27,11 @@
     </select>
 </div>         
 
-                        
-
+                    
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Tanggal PO</label>
     <input name="po_date" id="po_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
-
 
 
 <script>
@@ -60,8 +49,6 @@
 </script>
 
 
-
-
 <div id="product-fields">
 
 
@@ -72,12 +59,9 @@
                 <!-- Berikan id yang unik untuk setiap elemen select -->
                 <select name="product[]" class="form-control product-select" id="productselect" style="border-color: #01004C;max-width: 100%;" aria-label=".form-select-lg example" >
                     <option value="" selected disabled>-- Pilih Produk --</option>
-                  
                 </select>
             </div>
         </div>
-
-
         <div class="col-md-3">
             <div class="form-group mb-4">
                 <label for="" class="form-label" style="color:black;">Harga</label>
@@ -92,6 +76,7 @@
                 <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" />
             </div>
         </div>
+
         <div class="col-md-1">
         <div class="form-group mb-4">
             <label for="" class="form-label" style="color:black;">Action</label>
@@ -100,7 +85,6 @@
         </div>
     </div>
     
-
 <script>
     $(document).ready(function() {
         // Panggil fungsi select2() untuk setiap elemen product-select di dalam perulangan
@@ -111,7 +95,6 @@
         });
     });
 </script>
-
 
 
 </div>
@@ -271,6 +254,7 @@ $(document).on('change', '.product-select', function() {
         // Menutup modal ketika tombol "Tidak" ditekan
         $('#confirmModal').modal('hide');
     });
+
 </script>
 
                                         </form>
@@ -385,10 +369,37 @@ function fetchProductsBySupplier(supplierId, productField) {
     
     });
 }
-
-
-
     });
+</script>
+
+<script>
+
+window.onload = function () {
+    var inputFields = document.getElementsByTagName('input');
+    for (var i = 0; i < inputFields.length; i++) {
+        if (inputFields[i].name !== 'po_date' && inputFields[i].name !== '_token' && inputFields[i].name !== 'valid_date') 
+        {
+            inputFields[i].value = '';
+        }
+    }
+
+    var textareaFields = document.getElementsByTagName('textarea');
+    for (var j = 0; j < textareaFields.length; j++) {
+        textareaFields[j].value = '';
+    }
+
+    var selectFields = document.getElementsByTagName('select');
+    for (var k = 0; k < selectFields.length; k++) {
+        selectFields[k].selectedIndex = 0; // Mengatur indeks pilihan ke 0
+    }
+    
+    if (window.history && window.history.pushState) {
+        window.addEventListener('popstate', function () {
+            window.location.reload();
+        });
+    }
+};
+
 </script>
 
 @endsection

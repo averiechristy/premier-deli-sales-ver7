@@ -20,7 +20,6 @@
     <input name="order_date" id="order_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
-
 <script>
     // Mendapatkan elemen input tanggal
     var orderDateInput = document.getElementById('order_date');
@@ -80,7 +79,6 @@
     });
 });
 
-
 </script>
 
 <div class="form-group mb-4">
@@ -88,13 +86,10 @@
     <input name="shipping_date"  id="shipping_date"  type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
-
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Tanggal Pembayaran</label>
     <input name="payment_date" id="payment_date"  type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
-
-
 
 <!-- Product and Quantity Fields -->
 <div id="product-fields">
@@ -148,8 +143,8 @@ function validasiNumber(input) {
                             <select name="product[]" class="form-control product-select" style="border-color: #01004C;max-width: 100%;" aria-label=".form-select-lg example">
                                 <option value="" selected disabled>-- Pilih Produk --</option>
                                 @foreach ($produk as $item)
-            <option value="{{$item->id}}">{{$item->kode_produk}} - {{$item->nama_produk}}</option>
-        @endforeach
+                                     <option value="{{$item->id}}">{{$item->kode_produk}} - {{$item->nama_produk}}</option>
+                                 @endforeach
                             </select>
                         </div>
                     </div>
@@ -296,7 +291,7 @@ function validasiNumber(input) {
         }
 
         if(shippingDate < paymentDate) {
-            alert("Tanggal pengiriman tidak boleh lebih dulu dari tanggal pembayaran");
+            alert("Tanggal pengiriman tidak boleh kurang dari tanggal pembayaran");
             closeModal();
             return false;
         }
@@ -349,5 +344,32 @@ function validasiNumber(input) {
     
 </script>
 
+<script>
+window.onload = function () {
+    
+    var inputFields = document.getElementsByTagName('input');
+    for (var i = 0; i < inputFields.length; i++) {
+        if (inputFields[i].type !== 'date' && inputFields[i].name !== '_token'  && inputFields[i].name !== 'no_rfo') {
+            inputFields[i].value = '';
+        }
+    }
+
+    var textareaFields = document.getElementsByTagName('textarea');
+    for (var j = 0; j < textareaFields.length; j++) {
+        textareaFields[j].value = '';
+    }
+
+    var selectFields = document.getElementsByTagName('select');
+    for (var k = 0; k < selectFields.length; k++) {
+        selectFields[k].selectedIndex = 0; // Mengatur indeks pilihan ke 0
+    }
+    
+    if (window.history && window.history.pushState) {
+        window.addEventListener('popstate', function () {
+            window.location.reload();
+        });
+    }
+};
+</script>
 
 @endsection

@@ -1,5 +1,4 @@
 @extends('layouts.sales.app')
-
 @section('content')
 
 <div class="container-fluid">
@@ -12,6 +11,7 @@
     <a href="{{route('sales.createquote')}}" class="btn btn-pd btn-sm">Tambah Quotation</a>
 
     </div>
+
     <div class="card-body">
     <div class="dataTables_length mb-3" id="myDataTable_length">
 <label for="entries"> Show
@@ -30,16 +30,15 @@ entries
 <input id="search" placeholder>
 </label>
 </div>
-        
+
         <div class="table-responsive">
         @include('components.alert')
-
-            <table  class="table table-bordered "  width="100%" cellspacing="0" style="border-radius: 10px;">
+            <table  class="table table-bordered" width="100%" cellspacing="0" style="border-radius: 10px;">
                 <thead>
                     <tr>                           
                         <th>No Quotation</th>            
                         <th>Nama Customer</th>
-                        <th>Nama Penerima</th>
+                        <th>Nama PIC</th>
                         <th>Produk</th>
                         <th>Status</th>
                         <th>Status Update</th>
@@ -48,12 +47,11 @@ entries
                         <th>Action</th>
                         <th></th>
                         <th></th>
-                        
                     </tr>
                 </thead>
                 
                 <tbody>
-             @foreach ($quotation as $data)
+@foreach ($quotation as $data)
             <tr>
                   <td>{{$data->no_quote}}</td>
                   <td>{{$data->nama_customer}}</td>
@@ -189,7 +187,9 @@ Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <
 <style>
 
 .dataTables_paginate{float:right;text-align:right;padding-top:.25em}
-.paginate_button {box-sizing:border-box;
+
+.paginate_button {
+box-sizing:border-box;
 display:inline-block;
 min-width:1.5em;
 padding:.5em 1em;
@@ -199,7 +199,8 @@ text-decoration:none !important;
 cursor:pointer;color:inherit !important;
 border:1px solid transparent;
 border-radius:2px;
-background:transparent}
+background:transparent
+}
 
 .dataTables_length{float:left}.dataTables_wrapper .dataTables_length select{border:1px solid #aaa;border-radius:3px;padding:5px;background-color:transparent;color:inherit;padding:4px}
 .dataTables_info{clear:both;float:left;padding-top:.755em}    
@@ -397,13 +398,11 @@ updatePagination();
 
 updatePagination();
 
-
-
 // Menangani perubahan pada input pencarian
 document.getElementById('search').addEventListener('input', applySearchFilter);
 // Panggil updatePagination untuk inisialisasi
 
-
 </script>
+
 
 @endsection

@@ -65,6 +65,8 @@ entries
                         <th>Status</th>
                         
                         <th>Status Update</th>
+                        <th>Created By</th>
+                        <th>Created At</th>
                         <th>Action</th>
                         <th></th>
                         <!-- <th></th> -->
@@ -86,6 +88,8 @@ entries
 {{$data->status_so}}
 </td>
 <td>{{$data -> updated_at}}</td>
+<td>{{$data -> created_by}}</td>
+<td>{{$data -> created_at}}</td>
 <td>
     <a id="cetakSalesOrder{{$data->id}}" href="{{route('superadmintampilso',$data->id)}}">
         Cetak Sales Order

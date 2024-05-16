@@ -36,6 +36,8 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\RefreshBackButton::class,
+            
         ],
 
         'api' => [
@@ -69,5 +71,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // ...
         'ensureUserRole' => \App\Http\Middleware\EnsureUserRole::class,
+       
+
     ];
 }

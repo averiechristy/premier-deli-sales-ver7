@@ -27,7 +27,12 @@
         <i class="fas fa-fw fa-building"></i>
             <span>Customer</span></a>
     </li> -->
-
+    <li class="nav-item {{ Request::is('admininvoice/catatan/index') ||  Request::is('admininvoice/catatan/create')? 'active' : '' }}">
+        <a class="nav-link"   href="{{route('admininvoice.catatan.index')}}">
+      
+        <i class="fa fa-clipboard" aria-hidden="true"></i>
+            <span>Catatan Quotation</span></a>
+    </li>
     
     <li class="nav-item {{ Request::is('admininvoice/rfo/index')  ? 'active' : '' }}">
         <a class="nav-link"  href="{{route('admininvoice.rfo.index')}}">

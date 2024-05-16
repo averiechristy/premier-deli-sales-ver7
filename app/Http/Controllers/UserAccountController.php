@@ -301,7 +301,8 @@ class UserAccountController extends Controller
     }
     public function superadminstore(Request $request){
 
-
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $roleid = $request->role_id;
         $namauser = $request->nama_user;
         $username = $request->username;
@@ -317,6 +318,8 @@ class UserAccountController extends Controller
     
         }
 
+       
+
         User::create([
             'role_id' => $roleid,
             'nama' => $namauser,
@@ -325,6 +328,7 @@ class UserAccountController extends Controller
             'password' => Hash::make('12345678'),
             'no_hp' => $request->no_hp,
             'report_to' => $reportto,
+            'created_by' => $loggedInUsername,
         ]);
 
         $request->session()->flash('success', 'Akun User berhasil ditambahkan');
@@ -351,7 +355,8 @@ class UserAccountController extends Controller
 
     public function superadminupdate(Request $request, $id){
 
-     dd($request->all());
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
 
         if($request->role_id =='5'){
             $data = User::find($id);
@@ -362,7 +367,7 @@ class UserAccountController extends Controller
             $data->email = $request->email;
             $data->no_hp = $request->no_hp;
             $data -> report_to = $request -> selected_user;
-            
+            $data->updated_by = $loggedInUsername;
     
             $data->save();
         }
@@ -375,7 +380,7 @@ class UserAccountController extends Controller
             $data->email = $request->email;
             $data->no_hp = $request->no_hp;
             $data -> report_to = $request -> selected_user;
-    
+            $data->updated_by = $loggedInUsername;
             $data->save();
         }
 
@@ -388,7 +393,7 @@ class UserAccountController extends Controller
             $data->email = $request->email;
             $data->no_hp = $request->no_hp;
             $data -> report_to = $request -> selected_user;
-    
+            $data->updated_by = $loggedInUsername;
             $data->save();
         }
         else {
@@ -401,11 +406,11 @@ class UserAccountController extends Controller
         $data->username = $request->username;
         $data->email = $request->email;
         $data->no_hp = $request->no_hp;
-
+        $data->updated_by = $loggedInUsername;
         $data->save();
     }
 
-        $request->session()->flash('success', "Akun User berhasil diupdate");
+        $request->session()->flash('success', "Akun User berhasil diubah");
     
         return redirect(route('superadmin.useraccount.index'));
 

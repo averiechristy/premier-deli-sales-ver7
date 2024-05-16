@@ -265,7 +265,7 @@ if ($currentYearMonth != $lastYearMonth) {
             DetailRFO::insert($rfoDetails); 
         }
         
-        $request->session()->flash('success', "Pesanan berhasil dikirim");
+        $request->session()->flash('success', "RFO berhasil dibuat");
 
         return redirect()->route('sales.rfo.index');
         
@@ -303,8 +303,6 @@ if ($currentYearMonth != $lastYearMonth) {
 
         $rfoDetails = [];
 
-        
-       
 
         if ($request->has('product') && $request->has('quantity')) {
             foreach ($request->product as $index => $productId) {
@@ -324,7 +322,7 @@ if ($currentYearMonth != $lastYearMonth) {
             DetailRFO::insert($rfoDetails); 
         }
         
-        $request->session()->flash('success', "Pesanan berhasil dikirim");
+        $request->session()->flash('success', "RFO berhasil dibuat");
 
         return redirect()->route('superadmin.rfo.index');
         
@@ -361,9 +359,6 @@ if ($currentYearMonth != $lastYearMonth) {
 
         $rfoDetails = [];
 
-        
-       
-
         if ($request->has('product') && $request->has('quantity')) {
             foreach ($request->product as $index => $productId) {
                 $product = Produk::find($productId); // Mendapatkan data produk dari basis data
@@ -382,7 +377,7 @@ if ($currentYearMonth != $lastYearMonth) {
             DetailRFO::insert($rfoDetails); 
         }
         
-        $request->session()->flash('success', "Pesanan berhasil dikirim");
+        $request->session()->flash('success', "RFO berhasil dibuat");
 
         return redirect()->route('leader.rfo.index');
         
@@ -403,6 +398,7 @@ if ($currentYearMonth != $lastYearMonth) {
             $request->session()->flash('error', "Data gagal disimpan, RFO sudah ada");
             return redirect()->route('manager.rfo.index');
         }
+
         $rfo -> nama_penerima = $request->nama_penerima;
         $rfo -> no_rfo = $request->no_rfo;
         $rfo -> tanggal_order = $request->order_date;
@@ -420,8 +416,6 @@ if ($currentYearMonth != $lastYearMonth) {
         $rfoDetails = [];
 
         
-       
-
         if ($request->has('product') && $request->has('quantity')) {
             foreach ($request->product as $index => $productId) {
                 $product = Produk::find($productId); // Mendapatkan data produk dari basis data
@@ -440,7 +434,7 @@ if ($currentYearMonth != $lastYearMonth) {
             DetailRFO::insert($rfoDetails); 
         }
         
-        $request->session()->flash('success', "Pesanan berhasil dikirim");
+        $request->session()->flash('success', "RFO berhasil dibuat");
 
         return redirect()->route('manager.rfo.index');
         
@@ -536,7 +530,7 @@ if ($currentYearMonth != $lastYearMonth) {
         
         
 
-        $request->session()->flash('success', "Cancel RFO berhasil");
+        $request->session()->flash('success', "RFO berhasil dibatalkan");
         return redirect(route('superadmin.rfo.index',[
             'rfo' => $rfo,
         ]));

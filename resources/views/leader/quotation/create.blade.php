@@ -226,6 +226,32 @@
     <input name="ppn" type="number"  class="form-control " style="border-color: #01004C;" value="" oninput="validasiNumber(this)" />
 </div>
 
+<div class="form-group mb-4">
+    <label for="" class="form-label" style="color:black;">Catatan</label>
+    <select name="catatan_id" id="catatan_id" class="form-control" style="border-color: #01004C;" aria-label=".form-select-lg example" >
+        <option value="" selected disabled>-- Pilih Catatan --</option>
+        @foreach ($catatan as $data)
+            <option value="{{$data->id}}" data-isi_catatan="{{$data->isi_catatan}}"> {{$data->judul_catatan}}</option>
+        @endforeach
+    </select>
+</div>       
+
+<div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label">Isi Catatan</label>
+  <textarea class="form-control" name="isi_catatan" id="isi_catatan" rows="5" disabled></textarea>
+</div>
+
+
+<script>
+$(document).ready(function() {
+    $('#catatan_id').change(function() {
+        var selectedOption = $(this).find('option:selected');
+        var isi = selectedOption.data('isi_catatan');
+        $('textarea[name="isi_catatan"]').val(isi);
+        $('textarea[name="isi_catatan"]').prop('disabled', false);
+    });
+});
+</script>
 
 <div class="form-group mb-4 mt-3">
 <button type="button" class="btn btn-pd" onclick="confirmSubmit()" >Proses Quotation</button>
@@ -357,7 +383,7 @@ var paymentDate = document.forms["saveform"]["payment_date"].value;
             return false;
         }
         if(shippingDate < paymentDate) {
-            alert("Tanggal pengiriman tidak boleh lebih dulu dari tanggal pembayaran");
+            alert("Tanggal pengiriman tidak boleh kurang dari tanggal pembayaran");
             closeModal();
             return false;
         }
@@ -413,6 +439,16 @@ var paymentDate = document.forms["saveform"]["payment_date"].value;
             return false;
         }
 
+        var catatan = document.forms["saveform"]["catatan_id"].value;
+
+// Validasi Customer ID
+if (catatan == "") {
+    alert("Catatan harus dipilih");
+    closeModal();
+    return false;
+}
+        
+
         // Validasi jumlah produk minimal satu
      
 
@@ -429,5 +465,35 @@ var paymentDate = document.forms["saveform"]["payment_date"].value;
     }
 </script>
 
+
+<script>
+window.onload = function () {
+    var inputFields = document.getElementsByTagName('input');
+    for (var i = 0; i < inputFields.length; i++) {
+        if (inputFields[i].type !== 'date' && inputFields[i].name !== '_token' && inputFields[i].type !== 'radio') {
+            inputFields[i].value = '';
+        }
+    }
+
+    var textareaFields = document.getElementsByTagName('textarea');
+    for (var j = 0; j < textareaFields.length; j++) {
+        textareaFields[j].value = '';
+    }
+
+    var selectFields = document.getElementsByTagName('select');
+    for (var k = 0; k < selectFields.length; k++) {
+        selectFields[k].selectedIndex = 0; // Mengatur indeks pilihan ke 0
+    }
+    
+
+    
+    if (window.history && window.history.pushState) {
+        window.addEventListener('popstate', function () {
+            window.location.reload();
+        });
+    }
+};
+
+</script>
 
 @endsection

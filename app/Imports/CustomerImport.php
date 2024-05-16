@@ -87,6 +87,10 @@ class CustomerImport implements ToModel, WithStartRow, WithHeadingRow
         
         $this->lastId++;
 
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
+
+
         return new Customer([
             'id' => $this->lastId,
             'nama_customer' => $row['nama_customer'],
@@ -100,6 +104,7 @@ class CustomerImport implements ToModel, WithStartRow, WithHeadingRow
             'produk_sebelumnya' => $row['produk_yang_digunakan_sebelumnya'],
             'kategori_id' => $kategoriid,
             'sumber_id' => $sumberid,
+            'created_by' => $loggedInUsername,
         ]);
     }
 }

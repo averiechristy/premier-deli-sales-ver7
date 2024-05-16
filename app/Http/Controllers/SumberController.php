@@ -29,6 +29,8 @@ class SumberController extends Controller
      public function managerstore(Request $request)
      {
         
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $sumber = $request -> sumber;
         $existingname = Sumber::where('sumber',$sumber)->first();
        
@@ -39,6 +41,7 @@ class SumberController extends Controller
 
         Sumber::create([
             'sumber' => $sumber,
+            'created_by' => $loggedInUsername
            
           ]);
 
@@ -64,7 +67,8 @@ class SumberController extends Controller
         $sumber = $request ->sumber;
 
 
-
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $existingname = Sumber::where('sumber',$sumber)
         ->where('id', '!=', $id)
         ->first();
@@ -76,6 +80,7 @@ class SumberController extends Controller
 
         $data = Sumber::find($id);
         $data -> sumber = $sumber;
+        $data->updated_by = $loggedInUsername;
         $data -> save();
 
 
@@ -119,7 +124,8 @@ class SumberController extends Controller
 
     public function leaderstore(Request $request)
     {
-       
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
        $sumber = $request -> sumber;
        $existingname = Sumber::where('sumber',$sumber)->first();
       
@@ -130,6 +136,7 @@ class SumberController extends Controller
 
        Sumber::create([
            'sumber' => $sumber,
+           'created_by' => $loggedInUsername,
           
          ]);
 
@@ -155,7 +162,8 @@ class SumberController extends Controller
        $sumber = $request ->sumber;
 
 
-
+       $loggedInUser = auth()->user();
+       $loggedInUsername = $loggedInUser->nama; 
        $existingname = Sumber::where('sumber',$sumber)
        ->where('id', '!=', $id)
        ->first();
@@ -167,6 +175,7 @@ class SumberController extends Controller
 
        $data = Sumber::find($id);
        $data -> sumber = $sumber;
+       $data -> updated_by = $loggedInUsername;
        $data -> save();
 
 
@@ -210,7 +219,8 @@ public function superadmincreate()
 
 public function superadminstore(Request $request)
 {
-   
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
    $sumber = $request -> sumber;
    $existingname = Sumber::where('sumber',$sumber)->first();
   
@@ -221,6 +231,7 @@ public function superadminstore(Request $request)
 
    Sumber::create([
        'sumber' => $sumber,
+       'created_by' => $loggedInUsername,
       
      ]);
 
@@ -245,7 +256,8 @@ public function superadminupdate(Request $request, $id)
  
    $sumber = $request ->sumber;
 
-
+   $loggedInUser = auth()->user();
+   $loggedInUsername = $loggedInUser->nama; 
 
    $existingname = Sumber::where('sumber',$sumber)
    ->where('id', '!=', $id)
@@ -258,6 +270,7 @@ public function superadminupdate(Request $request, $id)
 
    $data = Sumber::find($id);
    $data -> sumber = $sumber;
+   $data->updated_by = $loggedInUsername;
    $data -> save();
 
 

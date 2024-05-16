@@ -232,7 +232,13 @@ $(document).on('change', '.product-select', function() {
         // Menghitung jumlah field produk
         var productFields = document.querySelectorAll('.product-field');
         var numProducts = productFields.length;
-
+        var nopo = document.forms["saveform"]["po_number"].value;
+        if (nopo == "") {
+            alert("No Purchase Order harus diisi");
+            closeModal();
+            return false;
+            
+        }
         // Jika hanya ada satu produk
         if (numProducts === 1) {
             var productSelect = document.querySelector('select[name="product[]"]');
@@ -271,6 +277,36 @@ $(document).on('change', '.product-select', function() {
         $('#confirmModal').modal('hide');
     }
 </script>
+<script>
+window.addEventListener('load', function () {
+    if (performance.navigation.type === 2) { // Detects if page is loaded from back/forward cache
+        resetFields();
+    }
+});
 
+window.addEventListener('popstate', function () {
+    resetFields();
+    window.location.reload(); // Ensure the page is refreshed
+});
+
+function resetFields() {
+    var inputFields = document.getElementsByTagName('input');
+    for (var i = 0; i < inputFields.length; i++) {
+        if (inputFields[i].name !== '_token' && inputFields[i].name !== 'valid_date') {
+            inputFields[i].value = '';
+        }
+    }
+
+    var textareaFields = document.getElementsByTagName('textarea');
+    for (var j = 0; j < textareaFields.length; j++) {
+        textareaFields[j].value = '';
+    }
+
+    var selectFields = document.getElementsByTagName('select');
+    for (var k = 0; k < selectFields.length; k++) {
+        selectFields[k].selectedIndex = 0; // Mengatur indeks pilihan ke 0
+    }
+}
+</script>
 
 @endsection

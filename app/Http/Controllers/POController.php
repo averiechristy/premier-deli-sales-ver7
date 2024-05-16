@@ -127,6 +127,8 @@ public function createPO(Request $request){
 public function simpanpochannel(Request $request){
 
 
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
    
     $channelid = $request->channel_id;
     $supplierid = $request->supplier_id;
@@ -217,6 +219,7 @@ public function simpanpochannel(Request $request){
     $po -> month = $month;
     $po->kode_channel = $kodechannel;
     $po->kode_supplier = $kodesupplier;
+    $po->created_by = $loggedInUsername;
    
     $po->save();
 
@@ -323,7 +326,8 @@ public function superadmincreatePO(){
 }
 
 public function superadminsimpanpochannel(Request $request){
-
+    $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
 
     $channelid = $request->channel_id;
     $supplierid = $request->supplier_id;
@@ -410,7 +414,7 @@ public function superadminsimpanpochannel(Request $request){
     $po -> month = $month;
     $po->kode_channel = $kodechannel;
     $po->kode_supplier = $kodesupplier;
-   
+   $po->created_by = $loggedInUsername;
     $po->save();
 
 $poDetails = [];
@@ -983,7 +987,8 @@ if ($selectedQuotes) {
      }
      public function admininvoicesimpan (Request $request){
         $data = $request->all();
-
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
        
         $poNumbers = $request->input('po_number');
         // Iterasi melalui setiap nomor PO
@@ -1036,6 +1041,7 @@ $month =$tanggalHariIni->month;
         $po -> kode_supplier = $kodeSupplier;
         $po -> kode_channel = "BPM";
         $po -> month = $month;
+        $po -> created_by = $loggedInUsername;
                 
      $po -> save();
        $poId = $po->id;
@@ -1147,7 +1153,8 @@ foreach ($mergedIds as $id) {
      public function superadminsimpan (Request $request){
         $data = $request->all();
 
-       
+        $loggedInUser = auth()->user();
+    $loggedInUsername = $loggedInUser->nama; 
         $poNumbers = $request->input('po_number');
         // Iterasi melalui setiap nomor PO
         $kodeSuppliers = $request->input('kode_supplier');  
@@ -1198,7 +1205,7 @@ $month =$tanggalHariIni->month;
         $po -> kode_supplier = $kodeSupplier;
         $po -> kode_channel = "BPM";
         $po -> month = $month;
-                
+                $po -> created_by = $loggedInUsername;
      $po -> save();
        $poId = $po->id;
        $datapo = PurchaseOrder::find($poId);

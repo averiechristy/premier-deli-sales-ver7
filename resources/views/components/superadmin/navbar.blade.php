@@ -72,7 +72,13 @@
             <span>RFO</span></a>
     </li>
 
-        
+    <li class="nav-item {{ Request::is('superadmin/catatan/index') ||  Request::is('superadmin/catatan/create')? 'active' : '' }}">
+        <a class="nav-link"   href="{{route('superadmin.catatan.index')}}">
+      
+        <i class="fa fa-clipboard" aria-hidden="true"></i>
+            <span>Catatan Quotation</span></a>
+    </li>
+
     <li class="nav-item {{ Request::is('superadmin/quotation/index') ||  Request::is('superadmin/quotation/create')? 'active' : '' }}">
         <a class="nav-link"   href="{{route('superadmin.quotation.index')}}">
       

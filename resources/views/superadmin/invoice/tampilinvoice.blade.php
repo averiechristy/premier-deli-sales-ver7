@@ -2,25 +2,6 @@
 
 @section('content')
 
-<style>
-    .container-fluid {
-        position: relative; /* Add position relative to contain absolutely positioned watermark */
-    }
-
-    .watermark {
-        position: absolute;
-        top: 50%; 
-        left: 60%; 
-        transform: translate(-50%, -50%) rotate(-45deg); /* Rotate the watermark */
-        width: 60%;
-        height: 60%;
-        background-image: url('{{ asset("img/lunas.png") }}'); /* Path to your watermark image */
-        background-repeat: no-repeat; /* Change background-repeat to no-repeat */
-        background-size: contain; /* Optionally adjust background-size */
-        opacity: 0.1; /* Adjust opacity as needed */
-    }
-</style>
-
 <div class="buttons">
 <!-- Di bagian bawah tampilan -->
 <button id="exportPdfButton" style="float: right;" class=" d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-3" ><i
@@ -34,7 +15,6 @@
 
 <!-- Begin Page Content -->
 <div class="container-fluid" id="container-fluid">
-<div class="watermark"></div>
     <div class="row invoice-container">
         <!-- Logo -->
        
@@ -51,7 +31,6 @@
     </div>
 
     
-
     <h2 style="color:black; font-family: Arial, sans-serif; font-weight:bold;text-align:center;font-size:22px;margin-top:-45px;">Invoice</h2>
     <hr style=" border: 1px solid black;">
 
@@ -116,14 +95,10 @@
                 <td style="color:black; font-family: Arial, sans-serif; font-size: 10px;width:10px;">{{$detail -> kode_produk}}</td>
  
                 <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 350px;">
-    <?php
-    $nama_produk = $detail->nama_produk;
-    if (strlen($nama_produk) > 100) {
-        $nama_produk = wordwrap($nama_produk, 100, "<br>", true);
-    }
-    echo $nama_produk;
-    ?>
-</td>                                      <td style="color:black; font-family: Arial, sans-serif; font-size: 10px;width:10px;">{{$detail->qty}}</td>
+   {{$detail->nama_produk}}
+</td>                                                  
+
+<td style="color:black; font-family: Arial, sans-serif; font-size: 10px;width:10px;">{{$detail->qty}}</td>
 <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
     <span style="float: left;">Rp</span>
     {{ number_format($detail->invoice_price, 0, ',', '.') }}
@@ -226,21 +201,28 @@
     });
 });
 
-    document.getElementById('printButton').addEventListener('click', function() {
-        // Select the chart container element
-        var chartContainer = document.getElementById('container-fluid').cloneNode(true); // Clone the container
-        
-        // Remove any buttons from the cloned container (optional)
-        var buttons = chartContainer.querySelectorAll('button');
-        buttons.forEach(function(button) {
-            button.remove();
-        });
-
-        // Print the cloned chart container
-        var originalContents = document.body.innerHTML;
-        document.body.innerHTML = chartContainer.innerHTML;
-        window.print();
-        document.body.innerHTML = originalContents;
+document.getElementById('printButton').addEventListener('click', function() {
+    // Select the chart container element
+    var chartContainer = document.getElementById('container-fluid').cloneNode(true); // Clone the container
+    
+    // Remove any buttons from the cloned container (optional)
+    var buttons = chartContainer.querySelectorAll('button');
+    buttons.forEach(function(button) {
+        button.remove();
     });
+
+    // Set up the original contents
+    var originalContents = document.body.innerHTML;
+    
+    // Event listener to refresh the page after printing or canceling
+    window.onafterprint = function() {
+        document.body.innerHTML = originalContents;
+        window.location.reload();
+    };
+
+    // Print the cloned chart container
+    document.body.innerHTML = chartContainer.innerHTML;
+    window.print();
+});
 </script>
 @endsection

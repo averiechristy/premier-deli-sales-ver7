@@ -167,7 +167,16 @@ Kembangan Utara, Kembangan
  
     <tr> <!-- Baris baru untuk menambahkan tulisan -->
     <td colspan="6" style="text-align: center; color:black; font-family: Arial, sans-serif; font-weight: bold; font-size: 13px;">
-     </td>
+    <div class="catatan">{{$quote->catatan}}</div>
+</td>
+
+<style>
+    .catatan {
+        white-space: pre-line;
+        text-align: left;
+        font-size: 12px;
+    }
+</style>
     </tr>
   
 </tfoot>
@@ -223,21 +232,28 @@ Kembangan Utara, Kembangan
 
     
 
-    document.getElementById('printButton').addEventListener('click', function() {
-        // Select the chart container element
-        var chartContainer = document.getElementById('container-fluid').cloneNode(true); // Clone the container
-        
-        // Remove any buttons from the cloned container (optional)
-        var buttons = chartContainer.querySelectorAll('button');
-        buttons.forEach(function(button) {
-            button.remove();
-        });
-
-        // Print the cloned chart container
-        var originalContents = document.body.innerHTML;
-        document.body.innerHTML = chartContainer.innerHTML;
-        window.print();
-        document.body.innerHTML = originalContents;
+document.getElementById('printButton').addEventListener('click', function() {
+    // Select the chart container element
+    var chartContainer = document.getElementById('container-fluid').cloneNode(true); // Clone the container
+    
+    // Remove any buttons from the cloned container (optional)
+    var buttons = chartContainer.querySelectorAll('button');
+    buttons.forEach(function(button) {
+        button.remove();
     });
+
+    // Set up the original contents
+    var originalContents = document.body.innerHTML;
+    
+    // Event listener to refresh the page after printing or canceling
+    window.onafterprint = function() {
+        document.body.innerHTML = originalContents;
+        window.location.reload();
+    };
+
+    // Print the cloned chart container
+    document.body.innerHTML = chartContainer.innerHTML;
+    window.print();
+});
 </script>
 @endsection

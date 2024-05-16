@@ -61,6 +61,10 @@ entries
                     <th>Tanggal Invoice</th>
                     <th>Produk</th>
                     <th>Status</th>
+                    <th>Created By</th>
+                    <th>Created At</th>
+                    <th>Updated By</th>
+                    <th>Updated At</th>
                       <th>Action</th>
                       <th></th>
                       <th></th>
@@ -81,6 +85,11 @@ entries
 </button></a>
 </td>
 <td> {{$data->status_invoice}}</td>
+<td>{{$data -> created_by}}</td>
+<td>{{$data -> created_at}}</td>
+
+<td>{{$data -> updated_by}}</td>
+<td>{{$data -> updated_at}}</td>
 <td>  
 
 <a href="{{route('superadmintampilinvoice',$data->id)}}">

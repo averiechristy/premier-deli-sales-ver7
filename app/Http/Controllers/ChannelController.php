@@ -31,6 +31,8 @@ class ChannelController extends Controller
     public function superadminstore(Request $request)
     {
         
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
 
         $kodechannel = $request -> kode_channel;
         $namachannel = $request -> nama_channel;
@@ -52,6 +54,7 @@ class ChannelController extends Controller
         Channel::create([
            'kode_channel' => $kodechannel,
            'nama_channel' => $namachannel,
+           'created_by' => $loggedInUsername,
         ]);
 
         $request->session()->flash('success', 'Channel berhasil ditambahkan');
@@ -73,6 +76,9 @@ class ChannelController extends Controller
     
         $kodechannel = $request->kode_channel;
         $namachannel = $request->nama_channel;
+
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
     
         $existingcode = Channel::where('kode_channel', $kodechannel)
                                ->where('id', '!=', $id) // Mengecualikan entitas yang sedang diedit
@@ -94,6 +100,7 @@ class ChannelController extends Controller
     
         $data->kode_channel = $request->kode_channel;
         $data->nama_channel = $request->nama_channel;
+        $data->updated_by = $loggedInUsername;
         $data->save();
         $request->session()->flash('success', 'Channel berhasil diubah');
     
@@ -135,7 +142,8 @@ class ChannelController extends Controller
     public function leaderstore(Request $request)
     {
         
-
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $kodechannel = $request -> kode_channel;
         $namachannel = $request -> nama_channel;
 
@@ -156,6 +164,7 @@ class ChannelController extends Controller
         Channel::create([
            'kode_channel' => $kodechannel,
            'nama_channel' => $namachannel,
+           'created_by' => $loggedInUsername,
         ]);
 
         $request->session()->flash('success', 'Channel berhasil ditambahkan');
@@ -174,6 +183,8 @@ class ChannelController extends Controller
     public function leaderupdate(Request $request, $id){
 
         $data = Channel::find($id);
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
     
         $kodechannel = $request->kode_channel;
         $namachannel = $request->nama_channel;
@@ -197,6 +208,7 @@ class ChannelController extends Controller
         }
         $data->kode_channel = $request->kode_channel;
         $data -> nama_channel = $request -> nama_channel;
+        $data -> updated_by = $loggedInUsername;
         $data->save();
         $request->session()->flash('success', 'Channel berhasil diubah');
 
@@ -236,7 +248,8 @@ class ChannelController extends Controller
 
     public function managerstore(Request $request)
     {
-        
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
 
         $kodechannel = $request -> kode_channel;
         $namachannel = $request -> nama_channel;
@@ -258,6 +271,7 @@ class ChannelController extends Controller
         Channel::create([
            'kode_channel' => $kodechannel,
            'nama_channel' => $namachannel,
+           'created_by' => $loggedInUsername,
         ]);
 
         $request->session()->flash('success', 'Channel berhasil ditambahkan');
@@ -276,7 +290,8 @@ class ChannelController extends Controller
     public function managerupdate(Request $request, $id){
 
         $data = Channel::find($id);
-    
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $kodechannel = $request->kode_channel;
         $namachannel = $request->nama_channel;
     
@@ -299,6 +314,7 @@ class ChannelController extends Controller
         }
         $data->kode_channel = $request->kode_channel;
         $data -> nama_channel = $request -> nama_channel;
+        $data -> updated_by = $loggedInUsername;
         $data->save();
         $request->session()->flash('success', 'Channel berhasil diubah');
 

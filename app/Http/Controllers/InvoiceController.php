@@ -25,6 +25,8 @@ class InvoiceController extends Controller
 
      public function updateinvoice($id, Request $request){
         
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
      
         $invid = $request->invoice_id;
 
@@ -36,6 +38,7 @@ class InvoiceController extends Controller
         $quoteid = $datainvoice -> quote_id;
 
         $datainvoice -> invoice_date = $request -> invoice_date;
+        $datainvoice -> updated_by = $loggedInUsername;
         $datainvoice -> save();
 
         if($quoteid){
@@ -81,11 +84,9 @@ class InvoiceController extends Controller
       
         if($soid){
        
-
         $dataso = SalesOrder::find($soid);
 
-       
-
+    
         $rfoid = $dataso -> rfo_id;
 
         $detailso = DetailSO::where('so_id', $soid)->get();
@@ -93,7 +94,6 @@ class InvoiceController extends Controller
         $detailrfo = DetailRFO::where('rfo_id', $rfoid)->get();
 
        
-
         $produk = $request->product;
 
         $produkIdsInDetailInv = $detailinv->pluck('product_id')->toArray();
@@ -108,7 +108,6 @@ $differentProdukIds = array_diff($produkIdsInDetailInv, $produk);
 $differentProduk = Produk::whereIn('id', $differentProdukIds)->get();
 
 // Sekarang Anda dapat melakukan apa pun yang Anda inginkan dengan $differentProduk
-
 
 if (!empty($differentProdukIds)) {
     foreach ($detailinv as $detail) {
@@ -136,15 +135,15 @@ if (!empty($differentProdukIds)) {
 }
 
 
-$request->session()->flash('success', "Invoice berhasil diupdate");
+$request->session()->flash('success', "Invoice berhasil diubah.");
 
 return redirect()->route('admininvoice.invoice.index');
      }
 
      public function superadminupdateinvoice($id, Request $request){
-
-    
      
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $invid = $request->invoice_id;
 
         $detailinv = DetailInvoice::where('invoice_id', $invid)->get();
@@ -154,7 +153,9 @@ return redirect()->route('admininvoice.invoice.index');
         $soid = $datainvoice->so_id;
         $quoteid = $datainvoice -> quote_id;
 
- 
+        $datainvoice -> invoice_date = $request -> invoice_date;
+        $datainvoice -> updated_by = $loggedInUsername;
+        $datainvoice -> save();
 
         if($quoteid){
 
@@ -252,7 +253,7 @@ if (!empty($differentProdukIds)) {
 }
 
 
-$request->session()->flash('success', "Invoice berhasil diupdate");
+$request->session()->flash('success', "Invoice berhasil diubah.");
 
 return redirect()->route('superadmin.invoice.index');
      }
@@ -521,7 +522,7 @@ return redirect()->route('superadmin.invoice.index');
     
 
     $sisatagihan = $total - $pembayaran;
- 
+
   
         
         return view('admininvoice.invoice.create',[
@@ -705,7 +706,6 @@ return redirect()->route('superadmin.invoice.index');
     $sisatagihan = $total - $pembayaran;
  
   
-        
         return view('admininvoice.invoice.createquote',[
             'invoicenumber' => $invoicenumber,
             'data' => $data,
@@ -881,6 +881,7 @@ public function superadmintampilinvoice($id){
     $sisatagihan = $total - $pembayaran;
  
 
+
     return view('superadmin.invoice.tampilinvoice',[
         'invoice' => $invoice,
         'detailinvoice' => $detailinvoice,
@@ -895,7 +896,8 @@ public function superadmintampilinvoice($id){
 
      public function admininvoicestore(Request $request)
      {
-    
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
      
         $custid = $request -> cust_id;
 
@@ -929,7 +931,9 @@ public function superadmintampilinvoice($id){
 
         $noinvoice = $request -> invoice_no;
 
+       
         $existingdata = Inovice::where('invoice_no', $noinvoice)->first();
+     
 
         if($existingdata !== null && $existingdata) {
             $request->session()->flash('error', "Data gagal disimpan, Invoice sudah ada");
@@ -948,6 +952,7 @@ public function superadmintampilinvoice($id){
         $invoice -> discount = $request -> discount;
         $invoice -> ppn = $request -> ppn;
         $invoice -> total = $request->total;
+        $invoice -> created_by = $loggedInUsername;
 
        
         $invoice -> save();
@@ -987,7 +992,8 @@ public function superadmintampilinvoice($id){
      public function superadminstore(Request $request)
      {
     
-     
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $custid = $request -> cust_id;
 
         $customer = Customer::find($custid);
@@ -1037,6 +1043,7 @@ public function superadmintampilinvoice($id){
         $invoice -> discount = $request -> discount;
         $invoice -> ppn = $request -> ppn;
         $invoice -> total = $request->total;
+        $invoice -> created_by = $loggedInUsername;
 
        
         $invoice -> save();
@@ -1076,7 +1083,8 @@ public function superadmintampilinvoice($id){
      public function admininvoicestorequote(Request $request)
      {
     
-     
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
         $custid = $request -> cust_id;
 
         $customer = Customer::find($custid);
@@ -1112,7 +1120,7 @@ public function superadmintampilinvoice($id){
         $invoice -> discount = $request -> discount;
         $invoice -> ppn = $request -> ppn;
         $invoice -> total = $request->total;
-
+$invoice -> created_by = $loggedInUsername;
        
         $invoice -> save();
 
@@ -1150,7 +1158,8 @@ public function superadmintampilinvoice($id){
 
      public function superadminstorequote(Request $request)
      {
-    
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
      
         $custid = $request -> cust_id;
 
@@ -1177,6 +1186,7 @@ public function superadmintampilinvoice($id){
         $invoice -> discount = $request -> discount;
         $invoice -> ppn = $request -> ppn;
         $invoice -> total = $request->total;
+        $invoice -> created_by = $loggedInUsername;
 
         $quoteid = $quote->id;
         $detailsopo = DetailSoPo::where('quote_id', $quoteid)->get();

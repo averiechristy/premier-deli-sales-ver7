@@ -1,11 +1,9 @@
 @extends('layouts.manager.app')
-
 @section('content')
 
 <div class="container-fluid">
 
 <!-- Page Heading -->
-
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -41,7 +39,7 @@ entries
                     <tr>                           
                         <th>No RFO</th>            
                         <th>Nama Customer</th>
-                        <th>Nama Penerima</th>
+                        <th>Nama PIC</th>
                         <th>Produk</th>
                         <th>Status</th>
                         <th>Status Update</th>

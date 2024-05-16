@@ -214,4 +214,173 @@
                                     </div>
         
     </div>
+
+    <script>
+    function validateForm() {
+        var validdate = document.forms["saveform"]["invoice_date"].value;
+
+        if (validdate == "") {
+            alert("Tanggal Invoice harus dipilih");
+            closeModal();
+            return false;
+        }
+
+        var customerId = document.forms["saveform"]["cust_id"].value;
+
+        // Validasi Customer ID
+        if (customerId == "") {
+            alert("Customer harus dipilih");
+            closeModal();
+            return false;
+        }
+
+        var alamat = document.forms["saveform"]["alamat"].value;
+        if (alamat == "") {
+            alert("Alamat harus diisi");
+            closeModal();
+            return false;
+        }
+
+        var namapenerima = document.forms["saveform"]["nama_penerima"].value;
+
+        if (namapenerima == "") {
+            alert("Nama PIC harus diisi");
+            closeModal();
+            return false;
+        }
+        // Mendapatkan nilai dari input Tanggal Order
+   // Mendapatkan nilai dari input Tanggal Order
+var orderDate = document.forms["saveform"]["quote_date"].value;
+
+// Mendapatkan nilai dari input Tanggal Pengiriman
+var shippingDate = document.forms["saveform"]["shipping_date"].value;
+
+// Mendapatkan nilai dari input Tanggal Pembayaran
+var paymentDate = document.forms["saveform"]["payment_date"].value;
+
+        // Validasi Tanggal Order
+        if (orderDate == "") {
+            alert("Tanggal Order harus diisi");
+            closeModal();
+            return false;
+        }
+
+        // Validasi Tanggal Pengiriman
+        if (shippingDate == "") {
+            alert("Tanggal Pengiriman harus diisi");
+            closeModal();
+            return false;
+        }
+
+        // Validasi Tanggal Pembayaran
+        if (paymentDate == "") {
+            alert("Tanggal Pembayaran harus diisi");
+            closeModal();
+            return false;
+        }
+
+        if(shippingDate < paymentDate) {
+            alert("Tanggal pengiriman tidak boleh kurang dari tanggal pembayaran");
+            closeModal();
+            return false;
+        }
+
+        var products = document.getElementsByName('product[]');
+        var quantities = document.getElementsByName('quantity[]');
+        var isValidProduct = false;
+        var selectedProducts = [];
+        for (var i = 0; i < products.length; i++) {
+            if (products[i].value != "") {
+                isValidProduct = true;
+                // Validasi jumlah produk
+                if (quantities[i].value == "") {
+                    alert("Harap isi jumlah untuk setiap produk yang dipilih");
+                    closeModal();
+                    return false;
+                }
+
+                if (selectedProducts.includes(products[i].value)) {
+                alert("Produk yang sama tidak boleh dipilih lebih dari satu kali.");
+                closeModal();
+                return false;
+            } else {
+                selectedProducts.push(products[i].value);
+            }
+            }
+        }
+        if (!isValidProduct) {
+            alert("Minimal satu produk harus dipilih");
+            closeModal();
+            return false;
+        }
+        // Validasi radiobutton
+        var radioValue = document.querySelector('input[name="inlineRadioOptions"]:checked');
+        if (!radioValue) {
+            alert("Harap pilih salah satu opsi diskon");
+            closeModal();
+            return false;
+        }
+
+        // Validasi discount
+        var discount = document.forms["saveform"]["discount"].value;
+        if (discount == "") {
+            alert("Discount harus diisi");
+            closeModal();
+            return false;
+        }
+
+        // Validasi PPN
+        var ppn = document.forms["saveform"]["ppn"].value;
+        if (ppn == "") {
+            alert("PPN harus diisi");
+            closeModal();
+            return false;
+        }
+
+        // Validasi jumlah produk minimal satu
+     
+
+        // Tutup modal secara langsung
+        // closeModal();
+
+        // Jika semua validasi berhasil, return true
+        return true;
+    }
+
+    function closeModal() {
+        // Tutup modal secara manual
+        $('#confirmModal').modal('hide');
+    }
+</script>
+    <script>
+window.addEventListener('load', function () {
+    if (performance.navigation.type === 2) { // Detects if page is loaded from back/forward cache
+        resetFields();
+    }
+});
+
+window.addEventListener('popstate', function () {
+    resetFields();
+    window.location.reload(); // Ensure the page is refreshed
+});
+
+function resetFields() {
+    var inputFields = document.getElementsByTagName('input');
+    for (var i = 0; i < inputFields.length; i++) {
+        if (inputFields[i].name !== '_token' && inputFields[i].name !== 'valid_date') {
+            inputFields[i].value = '';
+        }
+    }
+
+    var textareaFields = document.getElementsByTagName('textarea');
+    for (var j = 0; j < textareaFields.length; j++) {
+        textareaFields[j].value = '';
+    }
+
+    var selectFields = document.getElementsByTagName('select');
+    for (var k = 0; k < selectFields.length; k++) {
+        selectFields[k].selectedIndex = 0; // Mengatur indeks pilihan ke 0
+    }
+}
+</script>
 @endsection

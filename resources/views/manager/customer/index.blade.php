@@ -65,6 +65,10 @@ entries
                <th>Email</th>
                <th>Alamat</th>
                <th>Produk yang digunakan sebelumnya</th>
+               <th>Created At</th>
+<th>Created By</th>
+<th>Updated At</th>
+<th>Updated By</th>
                <th>Action</th>
 
                     </tr>
@@ -82,6 +86,10 @@ entries
 <td>{{$item->email}}</td>
 <td>{{$item->lokasi}}</td>
 <td>{{$item->produk_sebelumnya}}</td>
+<td>{{$item -> created_at}}</td>
+    <td>{{$item -> created_by}}</td>
+    <td>{{$item -> updated_at}}</td>
+    <td>{{$item -> updated_by}}</td>
 <td> 
                        
                                            <a href="{{route('managertampilcustomer', $item->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 

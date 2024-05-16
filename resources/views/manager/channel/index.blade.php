@@ -40,6 +40,10 @@ entries
                                         <tr>                 
                                           <th>Kode Channel</th>                    
                                           <th>Nama Channel</th>
+                                          <th>Created At</th>
+<th>Created By</th>
+<th>Updated At</th>
+<th>Updated By</th>
                                           <th>Action</th>
                                         </tr>
                                     </thead>                                    
@@ -50,6 +54,10 @@ entries
                                     <tr>
                                         <td>{{$data -> kode_channel}}</td>
                                         <td>{{$data -> nama_channel}}</td>
+                                        <td>{{$data -> created_at}}</td>
+    <td>{{$data -> created_by}}</td>
+    <td>{{$data -> updated_at}}</td>
+    <td>{{$data -> updated_by}}</td>
                                         <td> 
                                            
                                            <a href="{{route('managertampilchannel', $data->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 

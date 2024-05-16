@@ -12,5 +12,7 @@ class Channel extends Model
     protected $fillable = [
         'kode_channel',
         'nama_channel',
+        'created_by',
+        'updated_by',
     ];
 }

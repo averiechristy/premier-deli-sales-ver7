@@ -39,12 +39,14 @@ entries
                     <tr>                           
                         <th>No Quotation</th>            
                         <th>Nama Customer</th>
-                        <th>Nama Penerima</th>
+                        <th>Nama PIC</th>
                         <th>Produk</th>
                         <th>Status</th>
                         <th>Status Update</th>
                         <th>Tanggal Kirim</th>
                         <th>Tanggal Bayar</th>
+                        <th>Created By</th>
+                        <th>Created At</th>
                         <th>Action</th>
                        
                         <th></th>
@@ -69,6 +71,8 @@ entries
 <td>{{$data -> updated_at}}</td>
 <td>{{ \Carbon\Carbon::parse($data->shipping_date)->format('d-m-Y') }}</td>
 <td>{{ \Carbon\Carbon::parse($data->payment_date)->format('d-m-Y') }}</td>
+<td>{{$data->nama_pembuat}}</td>
+<td>{{$data -> created_at}}</td>
 <td>    
                     <a id="cetakSalesOrder{{$data->id}}" href="{{route('superadmintampilquote',$data->id)}}">
     Cetak Quotation

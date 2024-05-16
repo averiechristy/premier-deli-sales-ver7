@@ -10,7 +10,9 @@ class Kategori extends Model
     use HasFactory;
 
     protected $fillable = [
-      'kategori'
+      'kategori',
+      'created_by',
+        'updated_by',
     ];
 
     public function customer()

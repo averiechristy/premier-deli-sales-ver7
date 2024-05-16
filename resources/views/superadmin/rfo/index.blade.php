@@ -41,12 +41,14 @@ entries
                     <tr>                
                         <th>No RFO</th>                       
                         <th>Nama Customer</th>
-                        <th>Nama Penerima</th>
+                        <th>Nama PIC</th>
                         <th>Produk</th>
                         <th>Tanggal Kirim</th>
                         <th>Tanggal Bayar</th>
                         <th>Status</th>
                         <th>Status Update</th>
+                        <th>Created By</th>
+                        <th>Created At</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -86,6 +88,8 @@ entries
     @endif
 </td>
 <td>{{$data->updated_at}}</td>
+<td>{{$data->nama_pembuat}}</td>
+<td>{{$data->created_at}}</td>
 
 <td>
 @if($data->status_rfo =="Proses PO")
