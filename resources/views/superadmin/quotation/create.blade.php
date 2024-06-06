@@ -3,7 +3,7 @@
 <div class="container">                    
                                 <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
-                                       Quotation
+                                      Buat Quotation
                                     </div>
                                     <div class="card-body">
                                        <form name="saveform" action="{{route('superadmin.simpanquotation')}}" method="post" onsubmit="return validateForm()">
@@ -14,11 +14,29 @@
     <input name="quote_date" id="quote_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('quote_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
+
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Tanggal Valid</label>
     <input name="valid_date" id="valid_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('valid_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
 <script>
     // Mendapatkan elemen input tanggal
     var validDateInput = document.getElementById('valid_date');
@@ -123,8 +141,24 @@
     <label for="" class="form-label" style="color:black;">Tanggal Pembayaran</label>
     <input name="payment_date" id="payment_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('shipping_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
 
-<!-- Product and Quantity Fields -->
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('payment_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
+<!-- Product and Jumlah Produk Fields -->
 <div id="product-fields">
     <div class="row product-field">
         <div class="col-md-6">
@@ -140,17 +174,17 @@
         </div>
         <div class="col-md-5">
             <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
+                <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                 <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value=""  oninput="validasiNumber(this)"/>
             </div>
         </div>
         <div class="col-md-1">
         <label for="" class="form-label" style="color:black;">Action</label>
-            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Remove</button>
+            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Hapus</button>
         </div>
     </div>
 </div>
-<button type="button" class="btn btn-success mt-3" id="add-product-field">Add Product</button>
+<button type="button" class="btn btn-success mt-3" id="add-product-field">Tambah Produk</button>
 
 <!-- JavaScript for Dynamically Adding/Removing Product Fields -->
 <script>
@@ -172,13 +206,13 @@
                     </div>
                     <div class="col-md-5">
                         <div class="form-group mb-4">
-                            <label for="" class="form-label" style="color:black;">Quantity</label>
+                            <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                             <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value=""  oninput="validasiNumber(this)"/>
                         </div>
                     </div>
                     <div class="col-md-1">
                     <label for="" class="form-label" style="color:black;">Action</label>
-                        <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Remove</button>
+                        <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Hapus</button>
                     </div>
                 </div>`;
             $("#product-fields").append(productField);
@@ -195,24 +229,27 @@
     });
 </script>
 
-
+<div class="form-group mb-4 mt-3">
+        <label for="" class="form-label" style="color:black;">Biaya Pengiriman</label>
+    <input name="biaya_pengiriman" type="number"  class="form-control " style="border-color: #01004C;" value="0" oninput="validasiNumber(this)" />
+</div>
 
 <div class="form-group mb-4 mt-4">
-<label for="" class="form-label" style="color:black;">Opsi Discount</label>
+<label for="" class="form-label" style="color:black;">Opsi Diskon</label>
 <br>
                            <div class="form-check form-check-inline">
                               <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discpersen" value="persen">
-                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio1">Discount dalam %</label>
+                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio1">Diskon dalam %</label>
                             </div>
                             <div class="form-check form-check-inline">
                               <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discrp" value="amount">
-                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio2">Discount dalam Rp</label>
+                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio2">Diskon dalam Rp</label>
                             </div>
 </div>
 
 <div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">Discount</label>
-    <input name="discount" type="number"  class="form-control " style="border-color: #01004C;" value=""  oninput="validasiNumber(this)"/>
+        <label for="" class="form-label" style="color:black;">Diskon</label>
+    <input name="discount" type="number"  class="form-control " style="border-color: #01004C;" value="0"  oninput="validasiNumber(this)"/>
 </div>
 
 <div class="form-group mb-4 mt-3">
@@ -283,6 +320,7 @@ function validasiNumber(input) {
 
 <script>
     function confirmSubmit() {
+       
         // Panggil fungsi untuk melakukan validasi form
         if (validateForm()) {
             // Jika validasi berhasil, tampilkan modal
@@ -319,7 +357,7 @@ function validasiNumber(input) {
         var validdate = document.forms["saveform"]["valid_date"].value;
 
         if (validdate == "") {
-            alert("Tanggal valid harus dipilih");
+            alert("Tanggal valid harus diisi.");
             closeModal();
             return false;
         }
@@ -328,14 +366,14 @@ function validasiNumber(input) {
 
         // Validasi Customer ID
         if (customerId == "") {
-            alert("Customer harus dipilih");
+            alert("Customer harus diisi.");
             closeModal();
             return false;
         }
 
         var alamat = document.forms["saveform"]["alamat"].value;
         if (alamat == "") {
-            alert("Alamat harus diisi");
+            alert("Alamat harus diisi.");
             closeModal();
             return false;
         }
@@ -343,7 +381,7 @@ function validasiNumber(input) {
         var namapenerima = document.forms["saveform"]["nama_penerima"].value;
 
         if (namapenerima == "") {
-            alert("Nama PIC harus diisi");
+            alert("Nama PIC harus diisi.");
             closeModal();
             return false;
         }
@@ -359,27 +397,27 @@ var paymentDate = document.forms["saveform"]["payment_date"].value;
 
         // Validasi Tanggal Order
         if (orderDate == "") {
-            alert("Tanggal Order harus diisi");
+            alert("Tanggal order harus diisi.");
             closeModal();
             return false;
         }
 
         // Validasi Tanggal Pengiriman
         if (shippingDate == "") {
-            alert("Tanggal Pengiriman harus diisi");
+            alert("Tanggal pengiriman harus diisi.");
             closeModal();
             return false;
         }
 
         // Validasi Tanggal Pembayaran
         if (paymentDate == "") {
-            alert("Tanggal Pembayaran harus diisi");
+            alert("Tanggal pembayaran harus diisi.");
             closeModal();
             return false;
         }
 
         if(shippingDate < paymentDate) {
-            alert("Tanggal pengiriman tidak boleh kurang dari tanggal pembayaran");
+            alert("Tanggal pengiriman tidak boleh kurang dari tanggal pembayaran.");
             closeModal();
             return false;
         }
@@ -393,7 +431,7 @@ var paymentDate = document.forms["saveform"]["payment_date"].value;
                 isValidProduct = true;
                 // Validasi jumlah produk
                 if (quantities[i].value == "") {
-                    alert("Harap isi jumlah untuk setiap produk yang dipilih");
+                    alert("Jumlah produk harus diisi.");
                     closeModal();
                     return false;
                 }
@@ -408,42 +446,61 @@ var paymentDate = document.forms["saveform"]["payment_date"].value;
             }
         }
         if (!isValidProduct) {
-            alert("Minimal satu produk harus dipilih");
+            alert("Produk harus diisi.");
+            closeModal();
+            return false;
+        }
+
+        var biayakirim = document.forms["saveform"]["biaya_pengiriman"].value;
+        if (biayakirim == "") {
+            alert("Biaya pengiriman harus diisi.");
             closeModal();
             return false;
         }
         // Validasi radiobutton
         var radioValue = document.querySelector('input[name="inlineRadioOptions"]:checked');
         if (!radioValue) {
-            alert("Harap pilih salah satu opsi diskon");
+            alert("Opsi diskon harus diisi.");
             closeModal();
             return false;
         }
+        var opsi = document.forms["saveform"]["inlineRadioOptions"].value;
+     
+        if(opsi === "persen") {
+          
+            var discountpersen = document.forms["saveform"]["discount"].value;
 
+            if (discountpersen > 15 ) {
+            alert("Diskon maksimal 15%.");
+            closeModal();
+            return false;
+              } else if (discountpersen =="" ) {
+                alert("Diskon harus diisi.");
+            closeModal();
+            return false;
+              } 
+        }
+        else if(opsi === "amount"){
+         
         // Validasi discount
         var discount = document.forms["saveform"]["discount"].value;
         if (discount == "") {
-            alert("Discount harus diisi");
+            alert("Diskon harus diisi.");
             closeModal();
             return false;
         }
-
+    }
         // Validasi PPN
         var ppn = document.forms["saveform"]["ppn"].value;
         if (ppn == "") {
-            alert("PPN harus diisi");
+            alert("PPN harus diisi.");
             closeModal();
             return false;
         }
 
-        var catatan = document.forms["saveform"]["catatan_id"].value;
-
+     
         // Validasi Customer ID
-        if (catatan == "") {
-            alert("Catatan harus dipilih");
-            closeModal();
-            return false;
-        }
+      
         // Validasi jumlah produk minimal satu
      
 
@@ -461,8 +518,20 @@ var paymentDate = document.forms["saveform"]["payment_date"].value;
 </script>
 
 
+
 <script>
-window.onload = function () {
+window.addEventListener('load', function () {
+    if (performance.navigation.type === 2) { // Detects if page is loaded from back/forward cache
+        resetFields();
+    }
+});
+
+window.addEventListener('popstate', function () {
+    resetFields();
+    window.location.reload(); // Ensure the page is refreshed
+});
+
+function resetFields() {
     var inputFields = document.getElementsByTagName('input');
     for (var i = 0; i < inputFields.length; i++) {
         if (inputFields[i].type !== 'date' && inputFields[i].name !== '_token' && inputFields[i].type !== 'radio') {
@@ -479,14 +548,8 @@ window.onload = function () {
     for (var k = 0; k < selectFields.length; k++) {
         selectFields[k].selectedIndex = 0; // Mengatur indeks pilihan ke 0
     }
-    
-    if (window.history && window.history.pushState) {
-        window.addEventListener('popstate', function () {
-            window.location.reload();
-        });
-    }
-};
-
+}
 </script>
+
 
 @endsection

@@ -20,6 +20,7 @@ class Inovice extends Model
         'updated_by',
         'status_invoice',
         'is_closing',
+        'biaya_pengiriman',
     ];
 
     public function customer()

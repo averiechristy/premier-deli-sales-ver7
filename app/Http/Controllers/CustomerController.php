@@ -105,20 +105,20 @@ class CustomerController extends Controller
             ];
     
             if ($headingRow !== $expectedHeaders) {
-                throw new Exception("Template tidak sesuai.");
+                throw new Exception("File tidak sesuai.");
             }
             
             $data = Excel::toCollection(new CustomerImport, $file);
 
             if ($data->isEmpty() || $data->first()->isEmpty()) {
-                throw new Exception("Tidak ada data dalam file");
+                throw new Exception("File harus diisi.");
 
             }
             // Lakukan impor
             Excel::import(new CustomerImport, $file);
     
             // Jika impor berhasil, tampilkan pesan sukses
-            $request->session()->flash('success', "Data customer berhasil ditambahkan.");
+            $request->session()->flash('success', "Customer berhasil ditambahkan.");
         } catch (Exception $e) {
             // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
             $request->session()->flash('error',  $e->getMessage());
@@ -152,19 +152,19 @@ class CustomerController extends Controller
             ];
     
             if ($headingRow !== $expectedHeaders) {
-                throw new Exception("Template tidak sesuai.");
+                throw new Exception("File tidak sesuai.");
             }
             $data = Excel::toCollection(new CustomerImport, $file);
 
             if ($data->isEmpty() || $data->first()->isEmpty()) {
-                throw new Exception("Tidak ada data dalam file");
+                throw new Exception("File harus diisi.");
 
             }
             // Lakukan impor
             Excel::import(new CustomerImport, $file);
     
             // Jika impor berhasil, tampilkan pesan sukses
-            $request->session()->flash('success', "Data customer berhasil ditambahkan.");
+            $request->session()->flash('success', "Customer berhasil ditambahkan.");
         } catch (Exception $e) {
             // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
             $request->session()->flash('error',  $e->getMessage());
@@ -199,18 +199,18 @@ class CustomerController extends Controller
             ];
     
             if ($headingRow !== $expectedHeaders) {
-                throw new Exception("Template tidak sesuai.");
+                throw new Exception("File tidak sesuai.");
             }
             $data = Excel::toCollection(new CustomerImport, $file);
 
             if ($data->isEmpty() || $data->first()->isEmpty()) {
-                throw new Exception("Tidak ada data dalam file");
+                throw new Exception("File harus diisi.");
 
             }
             Excel::import(new CustomerImport, $file);
     
             // Jika impor berhasil, tampilkan pesan sukses
-            $request->session()->flash('success', "Data customer berhasil ditambahkan.");
+            $request->session()->flash('success', "Customer berhasil ditambahkan.");
         } catch (Exception $e) {
             // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
             $request->session()->flash('error',  $e->getMessage());
@@ -245,19 +245,19 @@ class CustomerController extends Controller
             ];
     
             if ($headingRow !== $expectedHeaders) {
-                throw new Exception("Template tidak sesuai.");
+                throw new Exception("File tidak sesuai.");
             }
             $data = Excel::toCollection(new CustomerImport, $file);
 
             if ($data->isEmpty() || $data->first()->isEmpty()) {
-                throw new Exception("Tidak ada data dalam file");
+                throw new Exception("File harus diisi.");
             }
             
             // Lakukan impor
             Excel::import(new CustomerImport, $file);
     
             // Jika impor berhasil, tampilkan pesan sukses
-            $request->session()->flash('success', "Data customer berhasil ditambahkan.");
+            $request->session()->flash('success', "Customer berhasil ditambahkan.");
         } catch (Exception $e) {
             // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
             $request->session()->flash('error',  $e->getMessage());
@@ -305,7 +305,7 @@ public function admininvoicedestroy(Request $request, $id){
 
  
     $datacust->delete();
-    $request->session()->flash('success', "Data customer berhasil dihapus.");
+    $request->session()->flash('success', "Customer berhasil dihapus.");
 
     return redirect()->route('admininvoice.customer.index');
 }
@@ -329,7 +329,7 @@ public function superadmindestroy(Request $request, $id){
         return redirect()->route('superadmin.customer.index');
     }
     $datacust->delete();
-    $request->session()->flash('success', "Data customer berhasil dihapus.");
+    $request->session()->flash('success', "Customer berhasil dihapus.");
 
     return redirect()->route('superadmin.customer.index');
 }
@@ -354,7 +354,7 @@ public function leaderdestroy(Request $request, $id){
 
     }
     $datacust->delete();
-    $request->session()->flash('success', "Data customer berhasil dihapus.");
+    $request->session()->flash('success', "Customer berhasil dihapus.");
 
     return redirect()->route('leader.customer.index');
 }
@@ -379,7 +379,7 @@ public function managerdestroy(Request $request, $id){
 
     }
     $datacust->delete();
-    $request->session()->flash('success', "Data customer berhasil dihapus.");
+    $request->session()->flash('success', "Customer berhasil dihapus.");
 
     return redirect()->route('manager.customer.index');
 }
@@ -410,7 +410,7 @@ public function superadminstore(Request $request){
     $sumber = $datasumber -> sumber;
 
     if($existingdata){
-        $request->session()->flash('error', "Gagal menyimpan data, nama customer sudah ada.");
+        $request->session()->flash('error', "Nama customer sudah terdaftar.");
 
         return redirect()->route('superadmin.customer.index');
     }
@@ -431,7 +431,7 @@ public function superadminstore(Request $request){
       ]);
     
 
-      $request->session()->flash('success', "Data customer berhasil ditambahkan.");
+      $request->session()->flash('success', "Customer berhasil ditambahkan.");
 
       return redirect()->route('superadmin.customer.index');
 }
@@ -460,7 +460,7 @@ public function leaderstore(Request $request){
     $sumber = $datasumber -> sumber;
 
     if($existingdata){
-        $request->session()->flash('error', "Gagal menyimpan data, nama customer sudah ada.");
+        $request->session()->flash('error', "Nama customer sudah terdaftar.");
 
         return redirect()->route('superadmin.customer.index');
     }
@@ -480,7 +480,7 @@ public function leaderstore(Request $request){
       ]);
     
 
-      $request->session()->flash('success', "Data customer berhasil ditambahkan.");
+      $request->session()->flash('success', "Customer berhasil ditambahkan.");
 
       return redirect()->route('leader.customer.index');
 }
@@ -512,7 +512,7 @@ public function managerstore(Request $request){
 
 
     if($existingdata){
-        $request->session()->flash('error', "Gagal menyimpan data, nama customer sudah ada.");
+        $request->session()->flash('error', "Nama customer sudah terdaftar.");
 
         return redirect()->route('superadmin.customer.index');
     }
@@ -532,7 +532,7 @@ public function managerstore(Request $request){
       ]);
     
 
-      $request->session()->flash('success', "Data customer berhasil ditambahkan.");
+      $request->session()->flash('success', "Customer berhasil ditambahkan.");
 
       return redirect()->route('manager.customer.index');
 }
@@ -553,7 +553,7 @@ public function admininvoicestore(Request $request){
     $existingdata = Customer::where('nama_customer', $namacustomer)->get();
 
     if($existingdata){
-        $request->session()->flash('error', "Gagal menyimpan data, nama customer sudah ada.");
+        $request->session()->flash('error', "Nama customer sudah terdaftar.");
 
         return redirect()->route('admininvoice.customer.index');
     }
@@ -572,7 +572,7 @@ public function admininvoicestore(Request $request){
       ]);
     
 
-      $request->session()->flash('success', "Data customer berhasil ditambahkan.");
+      $request->session()->flash('success', "Customer berhasil ditambahkan.");
 
       return redirect()->route('admininvoice.customer.index');
 }
@@ -647,7 +647,7 @@ public function admininvoiceupdate(Request $request, $id)
 $data -> updated_by = $loggedInUsername;
 
     $data->save();
-    $request->session()->flash('success', "Data customer berhasil diubah.");
+    $request->session()->flash('success', "Customer berhasil diubah.");
 
     return redirect()->route('admininvoice.customer.index');
 }
@@ -683,7 +683,7 @@ public function superadminupdatecustomer(Request $request, $id)
     $data -> kategori_id = $kategoriid;
     $data -> sumber_id = $sumberid;
     $data->save();
-    $request->session()->flash('success', "Data customer berhasil diubah.");
+    $request->session()->flash('success', "Customer berhasil diubah.");
 
      return redirect()->route('superadmin.customer.index');
 }
@@ -720,7 +720,7 @@ public function leaderupdatecustomer(Request $request, $id)
     $data-> updated_by = $loggedInUsername;
 
     $data->save();
-    $request->session()->flash('success', "Data customer berhasil diubah.");
+    $request->session()->flash('success', "Customer berhasil diubah.");
 
     return redirect()->route('leader.customer.index');
 }
@@ -757,7 +757,7 @@ public function managerupdatecustomer(Request $request, $id)
     $data -> updated_by = $loggedInUsername;
 
     $data->save();
-    $request->session()->flash('success', "Data customer berhasil diubah.");
+    $request->session()->flash('success', "Customer berhasil diubah.");
 
     return redirect()->route('manager.customer.index');
 }

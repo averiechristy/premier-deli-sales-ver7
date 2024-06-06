@@ -41,7 +41,7 @@ entries
                        
                        <th>Kode Produk</th>
                        <th>Nama Produk</th>
-                       <th>Quantity</th>
+                       <th>Jumlah Produk</th>
                     </tr>
                 </thead>
                 

@@ -28,17 +28,21 @@ class UserAccountController extends Controller
                 'required',
                 function ($attribute, $value, $fail) {
                     if (!Hash::check($value, auth()->user()->password)) {
-                        return $fail(__('Current Password Salah.'));
+                        return $fail(__('Password lama salah.'));
                     }
                 },
             ],         
-            'new_password' => 'required|min:8|different:current_password|confirmed',
+            'new_password' => 'required|min:8|different:current_password',
+            'new_password_confirmation' => 'required|same:new_password'
         ], [
-            'current_password.required' => 'Masukan current password terlebih dahulu.', 
-            'new_password.required' => 'Masukan password baru terlebih dahulu.', 
-            'new_password.min' => 'Password minimal terdiri dari 8 karakter', 
-            'new_password.different' => 'Password baru harus berbeda dengan current password.',
-            'new_password.confirmed' => 'Konfirmasi password baru tidak sesuai.',
+            'current_password.required' => 'Password lama harus diisi.', 
+            'new_password.required' => 'Password baru harus diisi.', 
+            'new_password.min' => 'Password baru minimal 8 karakter', 
+            'new_password.different' => 'Password baru tidak boleh sama dengan password lama.',
+            
+            'new_password_confirmation.required' => 'Konfirmasi password baru harus diisi.',
+                   'new_password_confirmation.same' => 'Konfirmasi password baru tidak sesuai.',
+
         ]);
     
 
@@ -71,17 +75,21 @@ class UserAccountController extends Controller
                 'required',
                 function ($attribute, $value, $fail) {
                     if (!Hash::check($value, auth()->user()->password)) {
-                        return $fail(__('Current Password Salah.'));
+                        return $fail(__('Password lama salah.'));
                     }
                 },
             ],         
-            'new_password' => 'required|min:8|different:current_password|confirmed',
+            'new_password' => 'required|min:8|different:current_password',
+             'new_password_confirmation' => 'required|same:new_password'
         ], [
-            'current_password.required' => 'Masukan current password terlebih dahulu.', 
-            'new_password.required' => 'Masukan password baru terlebih dahulu.', 
-            'new_password.min' => 'Password minimal terdiri dari 8 karakter', 
-            'new_password.different' => 'Password baru harus berbeda dengan current password.',
-            'new_password.confirmed' => 'Konfirmasi password baru tidak sesuai.',
+           'current_password.required' => 'Password lama harus diisi.', 
+            'new_password.required' => 'Password baru harus diisi.', 
+            'new_password.min' => 'Password baru minimal 8 karakter', 
+            'new_password.different' => 'Password baru tidak boleh sama dengan password lama.',
+       
+            'new_password_confirmation.required' => 'Konfirmasi password baru harus diisi.',
+                   'new_password_confirmation.same' => 'Konfirmasi password baru tidak sesuai.',
+
         ]);
     
 
@@ -106,25 +114,28 @@ class UserAccountController extends Controller
 
     public function superadminchangepassword(Request $request)
     {
-     
-        $password = auth()->user()->password;
+      
        
         $request->validate([
             'current_password' => [
                 'required',
                 function ($attribute, $value, $fail) {
                     if (!Hash::check($value, auth()->user()->password)) {
-                        return $fail(__('Current Password Salah.'));
+                        return $fail(__('Password lama salah.'));
                     }
                 },
             ],         
-            'new_password' => 'required|min:8|different:current_password|confirmed',
+            'new_password' => 'required|min:8|different:current_password',
+            'new_password_confirmation' => 'required|same:new_password'
         ], [
-            'current_password.required' => 'Masukan current password terlebih dahulu.', 
-            'new_password.required' => 'Masukan password baru terlebih dahulu.', 
-            'new_password.min' => 'Password minimal terdiri dari 8 karakter', 
-            'new_password.different' => 'Password baru harus berbeda dengan current password.',
-            'new_password.confirmed' => 'Konfirmasi password baru tidak sesuai.',
+            'current_password.required' => 'Password lama harus diisi.', 
+            'new_password.required' => 'Password baru harus diisi.', 
+            'new_password.min' => 'Password baru minimal 8 karakter', 
+            'new_password.different' => 'Password baru tidak boleh sama dengan password lama.',
+       
+            'new_password_confirmation.required' => 'Konfirmasi password baru harus diisi.',
+            'new_password_confirmation.same' => 'Konfirmasi password baru tidak sesuai.',
+
         ]);
     
 
@@ -157,17 +168,21 @@ class UserAccountController extends Controller
                 'required',
                 function ($attribute, $value, $fail) {
                     if (!Hash::check($value, auth()->user()->password)) {
-                        return $fail(__('Current Password Salah.'));
+                        return $fail(__('Password lama salah.'));
                     }
                 },
             ],         
-            'new_password' => 'required|min:8|different:current_password|confirmed',
+            'new_password' => 'required|min:8|different:current_password',
+             'new_password_confirmation' => 'required|same:new_password'
         ], [
-            'current_password.required' => 'Masukan current password terlebih dahulu.', 
-            'new_password.required' => 'Masukan password baru terlebih dahulu.', 
-            'new_password.min' => 'Password minimal terdiri dari 8 karakter', 
-            'new_password.different' => 'Password baru harus berbeda dengan current password.',
-            'new_password.confirmed' => 'Konfirmasi password baru tidak sesuai.',
+            'current_password.required' => 'Password lama harus diisi.', 
+            'new_password.required' => 'Password baru harus diisi.', 
+            'new_password.min' => 'Password baru minimal 8 karakter', 
+            'new_password.different' => 'Password baru tidak boleh sama dengan password lama.',
+           
+            'new_password_confirmation.required' => 'Konfirmasi password baru harus diisi.',
+                   'new_password_confirmation.same' => 'Konfirmasi password baru tidak sesuai.',
+
         ]);
     
 
@@ -200,17 +215,21 @@ class UserAccountController extends Controller
                 'required',
                 function ($attribute, $value, $fail) {
                     if (!Hash::check($value, auth()->user()->password)) {
-                        return $fail(__('Current Password Salah.'));
+                        return $fail(__('Password lama salah.'));
                     }
                 },
             ],         
-            'new_password' => 'required|min:8|different:current_password|confirmed',
+            'new_password' => 'required|min:8|different:current_password',
+             'new_password_confirmation' => 'required|same:new_password'
         ], [
-            'current_password.required' => 'Masukan current password terlebih dahulu.', 
-            'new_password.required' => 'Masukan password baru terlebih dahulu.', 
-            'new_password.min' => 'Password minimal terdiri dari 8 karakter', 
-            'new_password.different' => 'Password baru harus berbeda dengan current password.',
-            'new_password.confirmed' => 'Konfirmasi password baru tidak sesuai.',
+            'current_password.required' => 'Password lama harus diisi.', 
+            'new_password.required' => 'Password baru harus diisi.', 
+            'new_password.min' => 'Password baru minimal 8 karakter', 
+            'new_password.different' => 'Password baru tidak boleh sama dengan password lama.',
+            
+            'new_password_confirmation.required' => 'Konfirmasi password baru harus diisi.',
+                   'new_password_confirmation.same' => 'Konfirmasi password baru tidak sesuai.',
+
         ]);
     
 
@@ -242,17 +261,21 @@ class UserAccountController extends Controller
                 'required',
                 function ($attribute, $value, $fail) {
                     if (!Hash::check($value, auth()->user()->password)) {
-                        return $fail(__('Current Password Salah.'));
+                        return $fail(__('Password lama salah.'));
                     }
                 },
             ],         
-            'new_password' => 'required|min:8|different:current_password|confirmed',
+            'new_password' => 'required|min:8|different:current_password',
+             'new_password_confirmation' => 'required|same:new_password'
         ], [
-            'current_password.required' => 'Masukan current password terlebih dahulu.', 
-            'new_password.required' => 'Masukan password baru terlebih dahulu.', 
-            'new_password.min' => 'Password minimal terdiri dari 8 karakter', 
-            'new_password.different' => 'Password baru harus berbeda dengan current password.',
-            'new_password.confirmed' => 'Konfirmasi password baru tidak sesuai.',
+            'current_password.required' => 'Password lama harus diisi.', 
+            'new_password.required' => 'Password baru harus diisi.', 
+            'new_password.min' => 'Password baru minimal 8 karakter', 
+            'new_password.different' => 'Password baru tidak boleh sama dengan password lama.',
+          
+            'new_password_confirmation.required' => 'Konfirmasi password baru harus diisi.',
+                   'new_password_confirmation.same' => 'Konfirmasi password baru tidak sesuai.',
+
         ]);
     
 
@@ -295,7 +318,7 @@ class UserAccountController extends Controller
             'password' => Hash::make('12345678'), // Ganti 'password_awal' dengan password yang Anda inginkan
         ]);
     
-        $request->session()->flash('success', 'Password berhasil direset');
+        $request->session()->flash('success', 'Password berhasil direset.');
     
         return redirect()->route('superadmin.useraccount.index');
     }
@@ -312,7 +335,7 @@ class UserAccountController extends Controller
    
         $existingdata = User::where('email', $email)->first();
         if($existingdata){
-            $request->session()->flash('error', 'Data gagal disimpan, email sudah terdaftar');
+            $request->session()->flash('error', 'Email sudah terdaftar.');
 
             return redirect(route('superadmin.useraccount.index'));
     
@@ -331,7 +354,7 @@ class UserAccountController extends Controller
             'created_by' => $loggedInUsername,
         ]);
 
-        $request->session()->flash('success', 'Akun User berhasil ditambahkan');
+        $request->session()->flash('success', 'Akun user berhasil ditambahkan.');
 
         return redirect(route('superadmin.useraccount.index'));
 
@@ -410,7 +433,7 @@ class UserAccountController extends Controller
         $data->save();
     }
 
-        $request->session()->flash('success', "Akun User berhasil diubah");
+        $request->session()->flash('success', "Akun user berhasil diubah.");
     
         return redirect(route('superadmin.useraccount.index'));
 
@@ -440,7 +463,7 @@ class UserAccountController extends Controller
 
         $useraccount->delete();
 
-        $request->session()->flash('success', "Akun User berhasil dihapus");
+        $request->session()->flash('success', "Akun user berhasil dihapus.");
 
         return redirect()->route('superadmin.useraccount.index');
     }

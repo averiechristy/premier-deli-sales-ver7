@@ -26,6 +26,7 @@ class SalesOrder extends Model
         'is_download',
         'kode_channel',
         'kode_supplier',
+        'biaya_pengiriman',
     ];
 
     public function customer()

@@ -37,7 +37,7 @@
       
   
 
-<script>
+            <script>
 
 
 function validateForm() {
@@ -47,27 +47,29 @@ function validateForm() {
 
 
     if(kodechannel == "") {
-    alert("Kode Channel harus diisi");
+    alert("Kode channel harus diisi.");
 return false;
 }
 
 else if (kodechannel.length != 2) {
-            alert("Kode produk harus terdiri dari 2 karakter");
+            alert("Kode channel harus 2 karakter.");
             return false;
         }
 
 else if(namachannel == ""){
-    alert("Nama Channel harus diisi");
+    alert("Nama channel harus diisi.");
+return false;
+} else if (kodechannel === namachannel){
+    alert("Kode dan nama channel harus berbeda.");
 return false;
 }
-else if (kodechannel === namachannel){
-    alert("Kode channel dan nama channel harus berbeda");
-return false;
-}
+
 
 }
 
 </script>
+
+
 <script>
 window.onload = function () {
     var inputFields = document.getElementsByTagName('input');

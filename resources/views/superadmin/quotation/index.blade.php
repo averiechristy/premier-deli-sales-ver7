@@ -9,7 +9,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
     <h1 class="h3 mb-2 text-gray-800">Quotation</h1>
-    <a href="{{route('superadmin.createquote')}}" class="btn btn-pd btn-sm">Tambah Quotation</a>
+    <a href="{{route('superadmin.createquote')}}" class="btn btn-pd btn-sm">Buat Quotation</a>
 
     </div>
     <div class="card-body">
@@ -48,8 +48,6 @@ entries
                         <th>Created By</th>
                         <th>Created At</th>
                         <th>Action</th>
-                       
-                        <th></th>
                         
                     </tr>
                 </thead>
@@ -59,10 +57,10 @@ entries
             <tr>
                   <td>{{$data->no_quote}}</td>
                   <td>{{$data->nama_customer}}</td>
-                  <td>{{$data->nama_penerima}}</td>
+                  <td>{{$data->nama_pic}}</td>
                   <td>    
     <a href="{{route('superadmintampilpesananquote',$data->id)}}"><button type="button" class="btn btn-link">
-    Lihat Detail Pesanan
+    Lihat Detail Produk
 </button>
 </a>
 </td>
@@ -74,47 +72,22 @@ entries
 <td>{{$data->nama_pembuat}}</td>
 <td>{{$data -> created_at}}</td>
 <td>    
-                    <a id="cetakSalesOrder{{$data->id}}" href="{{route('superadmintampilquote',$data->id)}}">
-    Cetak Quotation
-</a>
-
+    <a id="cetakSalesOrder{{$data->id}}" href="{{route('superadmintampilquote',$data->id)}}" data-toggle="tooltip" class="btn" title='Cetak Quotation' style="display: flex; justify-content: center; align-items: center;">
+        <i class="fa fa-print" style="color:blue;" aria-hidden="true"></i>
+    </a>
+    @if($data->status_quote == "Proses PO" || $data->status_quote == "Terbit Invoice" || $data->status_quote == "Cancelled" || $data->status_quote == "Menunggu Persetujuan Cancel")
+        <a href="#" class="btn" style="cursor: not-allowed; display: flex; justify-content: center; align-items: center;" disabled>
+            <i class="fa fa-times"></i>
+        </a>
+    @elseif($data->status_quote == "Quotation Dibuat")
+        <a href="#" class="btn" data-toggle="modal" data-target="#exampleModal{{$data->id}}" data-toggle="tooltip" title='Batalkan Quotation' style="display: flex; justify-content: center; align-items: center;">
+            <i class="fa fa-times" style="color:red"></i>
+        </a>
+    @endif
 </td>
 
 
 
-<td>
-@if($data->status_quote =="Proses PO")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan Quotation
-</button>
-
-
-@elseif($data->status_quote =="Terbit Invoice")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan Quotation
-</button>
-
-@elseif($data->status_quote =="Cancelled")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan Quotation
-</button>
-
-
-@elseif($data->status_quote =="Menunggu Persetujuan Cancel")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan Quotation
-</button>
-
-@elseif($data->status_quote =="Quotation Dibuat")
-
-<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Batalkan Quotation
-</button>
-
-
-
-@endif
-</td>
 
 
 </tr>      
@@ -129,12 +102,12 @@ entries
       <form action="{{route('superadmincancelquotation')}}" method="post">
         @csrf
       <input type="hidden"  name="quote_id" value="{{$data->id}}">
-                   
+      Yakin untuk melakukan pembatalan?     
                 
       </div>
       <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <button type="submit" class="btn btn-primary">Ya</button>
             </div>
             </form>
     </div>

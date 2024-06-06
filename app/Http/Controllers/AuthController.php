@@ -55,7 +55,7 @@ class AuthController extends Controller
 
         }
         // Authentication failed, redirect back with errors
-        return redirect()->route('login')->with('error', 'Email atau Password salah, silakan coba lagi');
+        return redirect()->route('login')->with('error', 'Email atau password salah, silakan coba lagi.');
     }
 
     public function logout()

@@ -332,7 +332,7 @@ class QuotationController extends Controller
         $cancelreq -> report_role = $roleid;
         $cancelreq -> save();
 
-        $request->session()->flash('success', "Request Cancel terkirim");
+        $request->session()->flash('success', "Cancel quotation terkirim.");
         return redirect(route('sales.quotation.index',[
             'quotation' => $quotation,
         ]));
@@ -359,7 +359,7 @@ class QuotationController extends Controller
         
         
 
-        $request->session()->flash('success', "Request Cancel terkirim");
+        $request->session()->flash('success', "Quotation berhasil dibatalkan.");
         return redirect(route('superadmin.quotation.index',[
             'quotation' => $quotation,
         ]));
@@ -393,7 +393,7 @@ class QuotationController extends Controller
         $cancelreq -> report_role = $roleid;
         $cancelreq -> save();
 
-        $request->session()->flash('success', "Request Cancel terkirim");
+        $request->session()->flash('success', "Cancel quotation terkirim.");
         return redirect(route('leader.quotation.index',[
             'quotation' => $quotation,
         ]));
@@ -414,14 +414,14 @@ class QuotationController extends Controller
         $jenisdiskon = $request -> inlineRadioOptions;
         if ($jenisdiskon == "persen"){
             $nilaidiskon = $request->discount;
-            if($nilaidiskon >= 15){
-                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+            if($nilaidiskon > 15){
+                $request->session()->flash('error', "Diskon maksimal 15%.");
                 return redirect()->route('sales.quotation.index');
             }
         }
         elseif ($jenisdiskon == "amount") {
             $subtotal = 0;
-            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+            if ($request->has('product') && $request->has('quantity')) {
                 foreach ($request->product as $index => $productId) {
                     $product = Produk::find($productId); // Mendapatkan data produk dari basis data
     
@@ -437,7 +437,7 @@ class QuotationController extends Controller
             $maxAllowedDiscount = 0.15 * $subtotal;
     
             if ($diskonAmount > $maxAllowedDiscount) {
-                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                $request->session()->flash('error', "Diskon maksimal 15% dari total harga.");
                 return redirect()->route('sales.quotation.index');
             }
         }
@@ -516,6 +516,7 @@ class QuotationController extends Controller
             $quote -> kode_supplier = $kodeSupplier;
             $quote -> catatan_id = $request -> catatan_id;
             $quote -> catatan = $request -> isi_catatan;
+            $quote -> biaya_pengiriman = $request -> biaya_pengiriman;
             $quote -> save();
 
             $quotationDetails = [];
@@ -553,7 +554,7 @@ class QuotationController extends Controller
             
         }
 
-       $request->session()->flash('success', "Quotation berhasil dibuat");
+       $request->session()->flash('success', "Quotation berhasil dibuat.");
 
        return redirect()->route('sales.quotation.index');
 
@@ -575,15 +576,15 @@ class QuotationController extends Controller
         
         if ($jenisdiskon == "persen"){
             $nilaidiskon = $request->discount;
-            if($nilaidiskon >= 15){
-                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+            if($nilaidiskon > 15){
+                $request->session()->flash('error', "Diskon maksimal 15%.");
                 return redirect()->route('superadmin.quotation.index');
             }
         }
 
         elseif ($jenisdiskon == "amount") {
             $subtotal = 0;
-            if ($request->has('product') && $request->has('quantity') && $request->has('price')) 
+            if ($request->has('product') && $request->has('quantity')) 
             {
                 foreach ($request->product as $index => $productId) {
                     $product = Produk::find($productId); // Mendapatkan data produk dari basis data
@@ -595,12 +596,14 @@ class QuotationController extends Controller
                     $subtotal += $totalprice;
                 }
             }
-    
+          
             $diskonAmount = $request->discount;
             $maxAllowedDiscount = 0.15 * $subtotal;
     
+           
+
             if ($diskonAmount > $maxAllowedDiscount) {
-                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                $request->session()->flash('error', "Diskon maksimal 15% dari total harga.");
                 return redirect()->route('superadmin.quotation.index');
             }
         }
@@ -674,7 +677,7 @@ class QuotationController extends Controller
             $quote -> kode_supplier = $kodeSupplier;
             $quote -> catatan_id = $request -> catatan_id;
             $quote -> catatan = $request -> isi_catatan;
-    
+            $quote -> biaya_pengiriman = $request -> biaya_pengiriman;
             $quote -> save();
 
             $quotationDetails = [];
@@ -692,6 +695,7 @@ class QuotationController extends Controller
                     
                     if ($product) {
                      $supplierKey = $product->kode_supplier;
+                   
                  
                         $quotationDetails[] = [
                             'quote_id' => $quote->id,
@@ -717,7 +721,7 @@ class QuotationController extends Controller
        
    
 
-       $request->session()->flash('success', "Quotation berhasil dibuat");
+       $request->session()->flash('success', "Quotation berhasil dibuat.");
 
        return redirect()->route('superadmin.quotation.index');
 
@@ -739,14 +743,14 @@ class QuotationController extends Controller
         $jenisdiskon = $request -> inlineRadioOptions;
         if ($jenisdiskon == "persen"){
             $nilaidiskon = $request->discount;
-            if($nilaidiskon >= 15){
-                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+            if($nilaidiskon > 15){
+                $request->session()->flash('error', "Diskon maksimal 15%.");
                 return redirect()->route('leader.quotation.index');
             }
         }
         elseif ($jenisdiskon == "amount") {
             $subtotal = 0;
-            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+            if ($request->has('product') && $request->has('quantity')) {
                 foreach ($request->product as $index => $productId) {
                     $product = Produk::find($productId); // Mendapatkan data produk dari basis data
     
@@ -762,7 +766,7 @@ class QuotationController extends Controller
             $maxAllowedDiscount = 0.15 * $subtotal;
     
             if ($diskonAmount > $maxAllowedDiscount) {
-                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                $request->session()->flash('error', "Diskon maksimal 15% dari total harga.");
                 return redirect()->route('leader.quotation.index');
             }
         }
@@ -842,7 +846,7 @@ class QuotationController extends Controller
             $quote -> kode_supplier = $kodeSupplier;
             $quote -> catatan_id = $request -> catatan_id;
             $quote -> catatan = $request -> isi_catatan;
-    
+            $quote -> biaya_pengiriman = $request -> biaya_pengiriman;
           $quote -> save();
 
             $quotationDetails = [];
@@ -886,7 +890,7 @@ class QuotationController extends Controller
        
    
 
-       $request->session()->flash('success', "Quotation berhasil dibuat");
+       $request->session()->flash('success', "Quotation berhasil dibuat.");
 
        return redirect()->route('leader.quotation.index');
 
@@ -907,14 +911,14 @@ class QuotationController extends Controller
         $jenisdiskon = $request -> inlineRadioOptions;
         if ($jenisdiskon == "persen"){
             $nilaidiskon = $request->discount;
-            if($nilaidiskon >= 15){
-                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+            if($nilaidiskon > 15){
+                $request->session()->flash('error', "Diskon maksimal 15%.");
                 return redirect()->route('manager.quotation.index');
             }
         }
         elseif ($jenisdiskon == "amount") {
             $subtotal = 0;
-            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+            if ($request->has('product') && $request->has('quantity')) {
                 foreach ($request->product as $index => $productId) {
                     $product = Produk::find($productId); // Mendapatkan data produk dari basis data
     
@@ -930,7 +934,7 @@ class QuotationController extends Controller
             $maxAllowedDiscount = 0.15 * $subtotal;
     
             if ($diskonAmount > $maxAllowedDiscount) {
-                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                $request->session()->flash('error', "Diskon maksimal 15% dari total harga.");
                 return redirect()->route('manager.quotation.index');
             }
         }
@@ -1010,7 +1014,7 @@ class QuotationController extends Controller
             $quote -> kode_supplier = $kodeSupplier;
             $quote -> catatan_id = $request -> catatan_id;
             $quote -> catatan = $request -> isi_catatan;
-    
+            $quote -> biaya_pengiriman = $request -> biaya_pengiriman;
           $quote -> save();
 
             $quotationDetails = [];
@@ -1054,7 +1058,7 @@ class QuotationController extends Controller
        
    
 
-       $request->session()->flash('success', "Quotation berhasil dibuat");
+       $request->session()->flash('success', "Quotation berhasil dibuat.");
 
        return redirect()->route('manager.quotation.index');
 
@@ -1120,6 +1124,7 @@ class QuotationController extends Controller
         $detailquote = DetailQuotation::with('quotation')->orWhereNull('keterangan') ->where('quote_id', $id)->get();
 
 
+
         $discountasli = $quote->discount;
         $tipe = $quote->is_persen;
 
@@ -1140,8 +1145,9 @@ class QuotationController extends Controller
       
       $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
     
+      $biayakirim = $quote -> biaya_pengiriman;
     
-        $total = $subtotalafterdiscount + $ppn;
+        $total = $subtotalafterdiscount + $ppn + $biayakirim;
 
         return view('sales.quotation.tampilquote',[
             'subtotal' => $subtotal,
@@ -1155,6 +1161,7 @@ class QuotationController extends Controller
             'tipe' => $tipe,
             'discountasli' => $discountasli,
             'ppnpersen' => $ppnpersen,
+            'biayakirim' => $biayakirim,
         ]);
 
     }
@@ -1185,8 +1192,9 @@ class QuotationController extends Controller
       
       $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
     
+      $biayakirim = $quote -> biaya_pengiriman;
     
-        $total = $subtotalafterdiscount + $ppn;
+      $total = $subtotalafterdiscount + $ppn + $biayakirim;
 
         return view('superadmin.quotation.tampilquote',[
             'subtotal' => $subtotal,
@@ -1200,6 +1208,7 @@ class QuotationController extends Controller
             'tipe' => $tipe,
             'discountasli' => $discountasli,
             'ppnpersen' => $ppnpersen,
+            'biayakirim' => $biayakirim,
         ]);
 
     }
@@ -1229,7 +1238,9 @@ class QuotationController extends Controller
       $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
     
     
-        $total = $subtotalafterdiscount + $ppn;
+      $biayakirim = $quote -> biaya_pengiriman;
+    
+      $total = $subtotalafterdiscount + $ppn + $biayakirim;
 
         return view('leader.quotation.tampilquote',[
             'subtotal' => $subtotal,
@@ -1243,6 +1254,7 @@ class QuotationController extends Controller
             'tipe' => $tipe,
             'discountasli' => $discountasli,
             'ppnpersen' => $ppnpersen,
+            'biayakirim' => $biayakirim,
         ]);
 
     }
@@ -1271,8 +1283,9 @@ class QuotationController extends Controller
       
       $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
     
+      $biayakirim = $quote -> biaya_pengiriman;
     
-        $total = $subtotalafterdiscount + $ppn;
+      $total = $subtotalafterdiscount + $ppn + $biayakirim;
 
         return view('manager.quotation.tampilquote',[
             'subtotal' => $subtotal,
@@ -1286,9 +1299,339 @@ class QuotationController extends Controller
             'tipe' => $tipe,
             'discountasli' => $discountasli,
             'ppnpersen' => $ppnpersen,
+            'biayakirim' => $biayakirim,
         ]);
 
-    }    public function index()
+    }   
+    
+    
+    
+    public function salesshow($id){
+
+        $quotation = Quotation::find($id);
+
+        $detailquote = DetailQuotation::with('quotation')->where('quote_id', $id)->get();
+        $catatan = Catatan::all();
+        
+        $customer = Customer::orderBy('nama_customer', 'asc')->get();
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
+
+        return view ('sales.quotation.edit',[
+            'quotation' => $quotation,
+            'detailquote' => $detailquote,
+            'produk' => $produk,
+            'customer' => $customer,
+            'catatan' =>$catatan,
+        ]);
+    }
+
+
+    public function leadershow($id){
+
+        $quotation = Quotation::find($id);
+
+        $detailquote = DetailQuotation::with('quotation')->where('quote_id', $id)->get();
+        $catatan = Catatan::all();
+        
+        
+        $customer = Customer::orderBy('nama_customer', 'asc')->get();
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
+
+        return view ('leader.quotation.edit',[
+            'quotation' => $quotation,
+            'detailquote' => $detailquote,
+            'produk' => $produk,
+            'customer' => $customer,
+            'catatan' =>$catatan,
+        ]);
+    }
+
+    public function managershow($id){
+
+        $quotation = Quotation::find($id);
+        $catatan = Catatan::all();
+        
+
+        $detailquote = DetailQuotation::with('quotation')->where('quote_id', $id)->get();
+
+        
+        $customer = Customer::orderBy('nama_customer', 'asc')->get();
+        $produk = Produk::orderBy('nama_produk', 'asc')->get();
+
+        return view ('manager.quotation.edit',[
+            'quotation' => $quotation,
+            'detailquote' => $detailquote,
+            'produk' => $produk,
+            'customer' => $customer,
+            'catatan' =>$catatan,
+        ]);
+    }
+
+    public function salesupdate(Request $request, $id){
+ 
+       
+        $dataquote = Quotation::find($id);
+        $dataquote -> no_quote = $request -> no_quote;
+        $dataquote -> quote_date = $request -> quote_date;
+        $dataquote -> valid_date = $request -> valid_date;
+        $dataquote -> cust_id = $request->customer_id;
+        $dataquote -> nama_customer = $request -> nama_customer;
+        $dataquote -> alamat = $request -> alamat;
+        $dataquote -> nama_pic = $request -> nama_penerima;
+        $dataquote -> shipping_date = $request -> shipping_date;
+        $dataquote -> payment_date = $request -> payment_date;
+        $dataquote -> biaya_pengiriman = $request -> biaya_pengiriman;
+      
+        
+        $jenisdiskon = $request -> inlineRadioOptions;
+        if ($jenisdiskon == "persen"){
+            $nilaidiskon = $request->discount;
+            if($nilaidiskon > 15){
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('sales.quotation.index');
+            }
+        }
+        elseif ($jenisdiskon == "amount") {
+            $subtotal = 0;
+            if ($request->has('product') && $request->has('quantity') ) {
+                foreach ($request->product as $index => $productId) {
+                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+    
+                    $qty = $request->quantity[$index];
+                    $harga = $product->harga_jual;
+                    $totalprice = $qty * $harga;
+    
+                    $subtotal += $totalprice;
+                }
+            }
+    
+            $diskonAmount = $request->discount;
+            $maxAllowedDiscount = 0.15 * $subtotal;
+    
+            if ($diskonAmount > $maxAllowedDiscount) {
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('sales.quotation.index');
+            }
+        }
+        
+        $dataquote -> is_persen = $jenisdiskon;
+        $dataquote -> discount = $request -> discount;
+        $dataquote -> ppn = $request -> ppn;
+        $dataquote ->catatan_id = $request->catatan_id;
+        $dataquote -> catatan = $request -> isi_catatan;
+
+        $dataquote -> save();
+
+        $dataid = $dataquote->id;
+        DetailQuotation::where('quote_id', $dataid)->delete();
+  
+        $quotationDetails = [];
+           
+        if ($request->has('product') && $request->has('quantity')) {
+            foreach ($request->product as $index => $productId) {
+                $product = Produk::find($productId);
+                $qty = $request->quantity[$index];
+                $harga = $product -> harga_jual;
+                $totalprice = $qty * $harga;
+                
+                if ($product) {
+                    $quotationDetails[] = [
+                        'quote_id' => $dataquote->id,
+                        'product_id' => $productId,
+                        'qty' => $request->quantity[$index],
+                        'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                        'quote_price' => $product -> harga_jual,
+                        'total_price' => $totalprice,
+                    ];
+                }
+            }
+            DetailQuotation::insert($quotationDetails); 
+        }
+        
+
+        $request->session()->flash('success', "Quotation berhasil diubah");
+
+        return redirect()->route('sales.quotation.index');
+    }
+
+
+
+    public function leaderupdate(Request $request, $id){
+
+
+       
+        
+        $dataquote = Quotation::find($id);
+        $dataquote -> no_quote = $request -> no_quote;
+        $dataquote -> quote_date = $request -> quote_date;
+        $dataquote -> valid_date = $request -> valid_date;
+        $dataquote -> cust_id = $request->customer_id;
+        $dataquote -> nama_customer = $request -> nama_customer;
+        $dataquote -> alamat = $request -> alamat;
+        $dataquote -> nama_pic = $request -> nama_penerima;
+        $dataquote -> shipping_date = $request -> shipping_date;
+        $dataquote -> payment_date = $request -> payment_date;
+        $dataquote -> biaya_pengiriman = $request -> biaya_pengiriman;
+        
+        $jenisdiskon = $request -> inlineRadioOptions;
+        if ($jenisdiskon == "persen"){
+            $nilaidiskon = $request->discount;
+            if($nilaidiskon > 15){
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('leader.quotation.index');
+            }
+        }
+        elseif ($jenisdiskon == "amount") {
+            $subtotal = 0;
+            if ($request->has('product') && $request->has('quantity') ) {
+                foreach ($request->product as $index => $productId) {
+                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+    
+                    $qty = $request->quantity[$index];
+                    $harga = $product->harga_jual;
+                    $totalprice = $qty * $harga;
+    
+                    $subtotal += $totalprice;
+                }
+            }
+    
+            $diskonAmount = $request->discount;
+            $maxAllowedDiscount = 0.15 * $subtotal;
+    
+            if ($diskonAmount > $maxAllowedDiscount) {
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('leader.quotation.index');
+            }
+        }
+        $dataquote -> is_persen = $jenisdiskon;
+        $dataquote -> discount = $request -> discount;
+        $dataquote -> ppn = $request -> ppn;
+        $dataquote -> catatan = $request -> isi_catatan;
+        $dataquote ->catatan_id = $request->catatan_id;
+        $dataquote -> save();
+
+        $dataid = $dataquote->id;
+        DetailQuotation::where('quote_id', $dataid)->delete();
+  
+        $quotationDetails = [];
+           
+        if ($request->has('product') && $request->has('quantity')) {
+            foreach ($request->product as $index => $productId) {
+                $product = Produk::find($productId);
+                $qty = $request->quantity[$index];
+                $harga = $product -> harga_jual;
+                $totalprice = $qty * $harga;
+                
+                if ($product) {
+                    $quotationDetails[] = [
+                        'quote_id' => $dataquote->id,
+                        'product_id' => $productId,
+                        'qty' => $request->quantity[$index],
+                        'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                        'quote_price' => $product -> harga_jual,
+                        'total_price' => $totalprice,
+                    ];
+                }
+            }
+            DetailQuotation::insert($quotationDetails); 
+        }
+        
+
+        $request->session()->flash('success', "Quotation berhasil diubah");
+
+        return redirect()->route('leader.quotation.index');
+    }
+    
+
+    public function managerupdate(Request $request, $id){
+
+        $dataquote = Quotation::find($id);
+        $dataquote -> no_quote = $request -> no_quote;
+        $dataquote -> quote_date = $request -> quote_date;
+        $dataquote -> valid_date = $request -> valid_date;
+        $dataquote -> cust_id = $request->customer_id;
+        $dataquote -> nama_customer = $request -> nama_customer;
+        $dataquote -> alamat = $request -> alamat;
+        $dataquote -> nama_pic = $request -> nama_penerima;
+        $dataquote -> shipping_date = $request -> shipping_date;
+        $dataquote -> payment_date = $request -> payment_date;
+        $dataquote -> biaya_pengiriman = $request -> biaya_pengiriman;
+        
+        $jenisdiskon = $request -> inlineRadioOptions;
+        if ($jenisdiskon == "persen"){
+            $nilaidiskon = $request->discount;
+            if($nilaidiskon > 15){
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('manager.quotation.index');
+            }
+        }
+        elseif ($jenisdiskon == "amount") {
+            $subtotal = 0;
+            if ($request->has('product') && $request->has('quantity') ) {
+                foreach ($request->product as $index => $productId) {
+                    $product = Produk::find($productId); // Mendapatkan data produk dari basis data
+    
+                    $qty = $request->quantity[$index];
+                    $harga = $product->harga_jual;
+                    $totalprice = $qty * $harga;
+    
+                    $subtotal += $totalprice;
+                }
+            }
+    
+            $diskonAmount = $request->discount;
+            $maxAllowedDiscount = 0.15 * $subtotal;
+    
+            if ($diskonAmount > $maxAllowedDiscount) {
+                $request->session()->flash('error', "Quotation gagal dibuat, diskon melebihi 15%");
+                return redirect()->route('manager.quotation.index');
+            }
+        }
+        
+        $dataquote -> is_persen = $jenisdiskon;
+        $dataquote -> discount = $request -> discount;
+        $dataquote -> ppn = $request -> ppn;
+        $dataquote -> catatan = $request -> isi_catatan;
+        $dataquote ->catatan_id = $request->catatan_id;
+        $dataquote -> save();
+
+        $dataid = $dataquote->id;
+        DetailQuotation::where('quote_id', $dataid)->delete();
+  
+        $quotationDetails = [];
+           
+        if ($request->has('product') && $request->has('quantity')) {
+            foreach ($request->product as $index => $productId) {
+                $product = Produk::find($productId);
+                $qty = $request->quantity[$index];
+                $harga = $product -> harga_jual;
+                $totalprice = $qty * $harga;
+                
+                if ($product) {
+                    $quotationDetails[] = [
+                        'quote_id' => $dataquote->id,
+                        'product_id' => $productId,
+                        'qty' => $request->quantity[$index],
+                        'nama_produk' => $product->nama_produk, // Menyimpan nama_produk
+                        'kode_produk' => $product->kode_produk, // Menyimpan kode_produk
+                        'quote_price' => $product -> harga_jual,
+                        'total_price' => $totalprice,
+                    ];
+                }
+            }
+            DetailQuotation::insert($quotationDetails); 
+        }
+        
+
+        $request->session()->flash('success', "Quotation berhasil diubah");
+
+        return redirect()->route('manager.quotation.index');
+    }
+
+    
+    public function index()
     {
         //
     }

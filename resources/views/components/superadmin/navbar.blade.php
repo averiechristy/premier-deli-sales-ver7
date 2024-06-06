@@ -25,7 +25,7 @@
     <li class="nav-item {{ Request::is('superadmin/useraccount/index') ||  Request::is('superadmin/useraccount/create')? 'active' : '' }}">
         <a class="nav-link" href="{{route('superadmin.useraccount.index')}}">
             <i class="fas fa-fw fa-users"></i>
-            <span>User Account</span></a>
+            <span>Akun User</span></a>
     </li>
 
     <li class="nav-item {{ Request::is('superadmin/channel/index') ||  Request::is('superadmin/channel/create')? 'active' : '' }}">
@@ -62,16 +62,9 @@
     <li class="nav-item {{ Request::is('superadmin/produk/index') ||  Request::is('superadmin/produk/create')? 'active' : '' }}">
         <a class="nav-link"  href="{{route('superadmin.produk.index')}}">
             <i class="fa fa-cutlery"></i>
-            <span>Product</span></a>
+            <span>Produk</span></a>
     </li>
     
-    <li class="nav-item {{ Request::is('superadmin/rfo/index') ||  Request::is('superadmin/rfo/create')? 'active' : '' }}">
-        <a class="nav-link"   href="{{route('superadmin.rfo.index')}}">
-      
-        <i class="fas fa-list" aria-hidden="true"></i>
-            <span>RFO</span></a>
-    </li>
-
     <li class="nav-item {{ Request::is('superadmin/catatan/index') ||  Request::is('superadmin/catatan/create')? 'active' : '' }}">
         <a class="nav-link"   href="{{route('superadmin.catatan.index')}}">
       
@@ -85,6 +78,15 @@
         <i class="fa fa-list-alt" aria-hidden="true"></i>
             <span>Quotation</span></a>
     </li>
+    
+    <li class="nav-item {{ Request::is('superadmin/rfo/index') ||  Request::is('superadmin/rfo/create')? 'active' : '' }}">
+        <a class="nav-link"   href="{{route('superadmin.rfo.index')}}">
+      
+        <i class="fas fa-list" aria-hidden="true"></i>
+            <span>RFO</span></a>
+    </li>
+
+    
 
     <li class="nav-item {{ Request::is('superadmin/so/index') ||  Request::is('superadmin/so/showrfo')? 'active' : '' }}">
         <a class="nav-link"   href="{{route('superadmin.so.index')}}">
@@ -175,13 +177,13 @@
                         aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="{{route('superadminpassword')}}">
                             <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Change Password
+                            Ubah Password
                         </a>
                       
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                             <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Logout
+                            Keluar
                         </a>
                     </div>
                 </li>

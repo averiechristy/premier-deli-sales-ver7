@@ -20,11 +20,12 @@ class TemplateExport implements FromCollection, WithHeadings, WithEvents
     public function headings(): array
     {
         return [
+            'Kode Supplier',
             'Kode Produk',
             'Nama Produk',
             'Harga Beli',
             'Harga Jual',
-            'Kode Supplier',
+          
           
         ];
     }
@@ -67,7 +68,7 @@ class TemplateExport implements FromCollection, WithHeadings, WithEvents
 
                 $supplier = Supplier::pluck('kode_supplier')->toArray();
                    
-                $validation = $event->sheet->getDataValidation('E2:E100000'); // Sesuaikan dengan rentang sel yang sesuai
+                $validation = $event->sheet->getDataValidation('A2:A100000'); // Sesuaikan dengan rentang sel yang sesuai
                 $validation->setType(DataValidation::TYPE_LIST);
                 $validation->setErrorStyle(DataValidation::STYLE_STOP);
                 $validation->setAllowBlank(false);

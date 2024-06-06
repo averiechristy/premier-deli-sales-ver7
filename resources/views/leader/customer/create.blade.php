@@ -5,7 +5,7 @@
                     
                                 <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
-                                        Tambahkan Customer Baru
+                                        Tambahkan Customer
                                     </div>
                                     <div class="card-body">
                                     <form name="saveform" action="{{route('leader.customer.simpan')}}" method="post" onsubmit="return validateForm()">
@@ -96,41 +96,41 @@
         let lokasi = document.forms["saveform"]["lokasi"].value;
 
        if (namaCustomer == "") {
-            alert("Nama Customer harus diisi");
+            alert("Nama customer harus diisi.");
             return false;
         }
         if (kategori == "") {
-            alert("Kategori harus dipilih");
+            alert("Kategori harus diisi.");
             return false;
         }
 
         if (sumber == "") {
-            alert("Sumber harus diisi");
+            alert("Sumber harus diisi.");
             return false;
         }
 
         if (namaPIC == "") {
-            alert("Nama PIC harus diisi");
+            alert("Nama PIC harus diisi.");
             return false;
         }
 
         if (jabatanPIC == "") {
-            alert("Jabatan PIC harus diisi");
+            alert("Jabatan PIC harus diisi.");
             return false;
         }
 
         if (noHP == "") {
-            alert("Nomor Handphone harus diisi");
+            alert("No handphone harus diisi.");
             return false;
         }
 
         if (email == "") {
-            alert("Email harus diisi");
+            alert("Email harus diisi.");
             return false;
         }
 
         if (lokasi == "") {
-            alert("Alamat harus diisi");
+            alert("Alamat harus diisi.");
             return false;
         }
 

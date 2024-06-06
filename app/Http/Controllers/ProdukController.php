@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Exports\TemplateExport;
 use App\Imports\ProductImport;
+use App\Models\DetailQuotation;
 use App\Models\Produk;
 use App\Models\Supplier;
 use Exception;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+
 
 class ProdukController extends Controller
 {
@@ -56,27 +60,28 @@ class ProdukController extends Controller
             $headingRow = $reader[0][0];
 
             $expectedHeaders = [
+                'Kode Supplier',
                 'Kode Produk',
                 'Nama Produk',
                 'Harga Beli',
                 'Harga Jual',
-                'Kode Supplier',
+
             ];
     
             if ($headingRow !== $expectedHeaders) {
-                throw new Exception("Template tidak sesuai.");
+                throw new Exception("File tidak sesuai.");
             }
             $data = Excel::toCollection(new ProductImport, $file);
 
             if ($data->isEmpty() || $data->first()->isEmpty()) {
-                throw new Exception("Tidak ada data dalam file");
+                throw new Exception("File harus diisi.");
 
             }
             // Lakukan impor
             Excel::import(new ProductImport, $file);
     
             // Jika impor berhasil, tampilkan pesan sukses
-            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+            $request->session()->flash('success', "Produk berhasil ditambahkan.");
         } catch (Exception $e) {
             // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
             $request->session()->flash('error',   $e->getMessage());
@@ -97,26 +102,27 @@ class ProdukController extends Controller
             $headingRow = $reader[0][0];
 
             $expectedHeaders = [
+                'Kode Supplier',
                 'Kode Produk',
                 'Nama Produk',
                 'Harga Beli',
                 'Harga Jual',
-                'Kode Supplier',
+              
             ];
     
             if ($headingRow !== $expectedHeaders) {
-                throw new Exception("Template tidak sesuai.");
+                throw new Exception("File tidak sesuai.");
             }
             // Lakukan impor
             Excel::import(new ProductImport, $file);
             $data = Excel::toCollection(new ProductImport, $file);
 
             if ($data->isEmpty() || $data->first()->isEmpty()) {
-                throw new Exception("Tidak ada data dalam file");
+                throw new Exception("File harus diisi.");
 
             }
             // Jika impor berhasil, tampilkan pesan sukses
-            $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+            $request->session()->flash('success', "Produk berhasil ditambahkan.");
         } catch (Exception $e) {
             // Jika terjadi exception, tangkap dan tampilkan pesan kesalahan
             $request->session()->flash('error',  $e->getMessage());
@@ -159,53 +165,15 @@ class ProdukController extends Controller
     
     public function adminprodukstore(Request $request){
 
-        $kodeproduk = $request->kode_produk;
-
-        $loggedInUser = auth()->user();
-        $loggedInUsername = $loggedInUser->nama; 
-        $existingcode = Produk::where('kode_produk',$kodeproduk)->first();
-       
-        if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode produk yang Anda masukkan sudah ada dalam sistem kami. Harap pastikan untuk menggunakan kode produk yang unik");
-            return redirect()->route('adminproduk.produk.index');
-        }
         
 
-        $namaproduk = $request->nama_produk;
-        $hargabeli = $request->harga_beli;
-        $hargajual = $request->harga_jual;
-        $supplierid = $request ->supplier_id;
-        $datasupplier = Supplier::find($supplierid);
-
-        $kodesupplier = $datasupplier -> kode_supplier;
-        $namasupplier = $datasupplier -> nama_supplier;
-
-
-      Produk::create([
-          'kode_produk' => $kodeproduk,
-          'nama_produk' => $namaproduk,
-          'harga_beli' => $hargabeli,
-          'harga_jual' => $hargajual,
-          'kode_supplier' => $kodesupplier,
-          'nama_supplier' => $namasupplier,
-          'supplier_id' => $request->supplier_id,
-          'created_by' => $loggedInUsername,
-        ]);
-
-        $request->session()->flash('success', "Data produk berhasil ditambahkan.");
-
-        return redirect()->route('adminproduk.produk.index');
-
-    }
-    public function superadminstore(Request $request){
-
         $kodeproduk = $request->kode_produk;
         $loggedInUser = auth()->user();
         $loggedInUsername = $loggedInUser->nama; 
         $existingcode = Produk::where('kode_produk',$kodeproduk)->first();
        
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode produk yang Anda masukkan sudah ada dalam sistem kami. Harap pastikan untuk menggunakan kode produk yang unik");
+            $request->session()->flash('error', "Kode produk sudah terdaftar.");
             return redirect()->route('adminproduk.produk.index');
         }
         
@@ -213,12 +181,35 @@ class ProdukController extends Controller
         $hargabeli = $request->harga_beli;
         $hargajual = $request->harga_jual;
    
-
         $supplierid = $request ->supplier_id;
         $datasupplier = Supplier::find($supplierid);
 
         $kodesupplier = $datasupplier -> kode_supplier;
         $namasupplier = $datasupplier -> nama_supplier;
+
+        $fileName = null;
+        if ($request->has('resized_image') && $request->input('resized_image')) {
+        $resizedImage = $request->input('resized_image');
+    $image_parts = explode(";base64,", $resizedImage);
+    $image_type_aux = explode("image/", $image_parts[0]);
+    $image_type = $image_type_aux[1];
+    $image_base64 = base64_decode($image_parts[1]);
+
+    // Generate a unique file name
+    $fileName = uniqid() . '.' . $image_type;
+    $directoryPath = public_path('images/produk/');
+    $filePath = $directoryPath . $fileName;
+
+    // Ensure the directory exists
+    if (!file_exists($directoryPath)) {
+        mkdir($directoryPath, 0755, true);
+    }
+
+    // Save the image file
+    file_put_contents($filePath, $image_base64);
+        }
+
+      
 
       Produk::create([
           'kode_produk' => $kodeproduk,
@@ -229,14 +220,83 @@ class ProdukController extends Controller
           'nama_supplier' => $namasupplier,
           'supplier_id' => $supplierid,
           'created_by' => $loggedInUsername,
+          'gambar_produk' => $fileName,
         ]);
 
 
-        $request->session()->flash('success', "Data produk berhasil ditambahkan.");
+
+        $request->session()->flash('success', "Produk berhasil ditambahkan.");
+
+        return redirect()->route('adminproduk.produk.index');
+
+    }
+    public function superadminstore(Request $request){
+
+    
+
+        $kodeproduk = $request->kode_produk;
+        $loggedInUser = auth()->user();
+        $loggedInUsername = $loggedInUser->nama; 
+        $existingcode = Produk::where('kode_produk',$kodeproduk)->first();
+       
+        if($existingcode !== null && $existingcode) {
+            $request->session()->flash('error', "Kode produk sudah terdaftar.");
+            return redirect()->route('superadmin.produk.index');
+        }
+        
+        $namaproduk = $request->nama_produk;
+        $hargabeli = $request->harga_beli;
+        $hargajual = $request->harga_jual;
+   
+        $supplierid = $request ->supplier_id;
+        $datasupplier = Supplier::find($supplierid);
+
+        $kodesupplier = $datasupplier -> kode_supplier;
+        $namasupplier = $datasupplier -> nama_supplier;
+        $fileName = null;
+        if ($request->has('resized_image') && $request->input('resized_image')) {
+        $resizedImage = $request->input('resized_image');
+    $image_parts = explode(";base64,", $resizedImage);
+    $image_type_aux = explode("image/", $image_parts[0]);
+    $image_type = $image_type_aux[1];
+    $image_base64 = base64_decode($image_parts[1]);
+
+    // Generate a unique file name
+    $fileName = uniqid() . '.' . $image_type;
+    $directoryPath = public_path('images/produk/');
+    $filePath = $directoryPath . $fileName;
+
+    // Ensure the directory exists
+    if (!file_exists($directoryPath)) {
+        mkdir($directoryPath, 0755, true);
+    }
+
+    // Save the image file
+    file_put_contents($filePath, $image_base64);
+}
+
+      
+
+      Produk::create([
+          'kode_produk' => $kodeproduk,
+          'nama_produk' => $namaproduk,
+          'harga_beli' => $hargabeli,
+          'harga_jual' => $hargajual,
+          'kode_supplier' => $kodesupplier,
+          'nama_supplier' => $namasupplier,
+          'supplier_id' => $supplierid,
+          'created_by' => $loggedInUsername,
+          'gambar_produk' => $fileName,
+        ]);
+
+
+        $request->session()->flash('success', "Produk berhasil ditambahkan.");
 
         return redirect()->route('superadmin.produk.index');
 
     }
+
+
     public function adminprodukshow($id){
         $data = Produk::find($id);
         $supplier = Supplier::all();
@@ -261,36 +321,64 @@ class ProdukController extends Controller
 
 
     public function adminprodukupdate(Request $request, $id){
-        $data = Produk::find($id);
-       
-        $kodeproduk = $request->kode_produk;
+     
         $loggedInUser = auth()->user();
         $loggedInUsername = $loggedInUser->nama; 
+        $data = Produk::find($id);
+        $supplierid = $request ->supplier_id;
+        $datasupplier = Supplier::find($supplierid);
+
+        $kodeproduk = $request->kode_produk;
 
         $existingcode = Produk::where('kode_produk',$kodeproduk)
         ->where('id', '!=', $id)
         ->first();
        
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode produk yang Anda masukkan sudah ada dalam sistem kami. Harap pastikan untuk menggunakan kode produk yang unik");
+            $request->session()->flash('error', "Kode produk sudah terdaftar.");
             return redirect()->route('adminproduk.produk.index');
         }
-       
-        $supplierid = $request->supplier_id;
-        $datasupplier = Supplier::find($supplierid);
 
-        $data -> kode_produk = $request -> kode_produk;
-        $data -> nama_produk = $request -> nama_produk;
-        $data -> harga_beli = $request -> harga_beli;
-        $data -> harga_jual = $request -> harga_jual;
+        $fileName = $data->gambar_produk; // Use existing image as default
+
+        if ($request->has('resized_image') && $request->input('resized_image')) {
+            $resizedImage = $request->input('resized_image');
+            $image_parts = explode(";base64,", $resizedImage);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+    
+            // Generate a unique file name
+            $fileName = uniqid() . '.' . $image_type;
+            $directoryPath = public_path('images/produk/');
+            $filePath = $directoryPath . $fileName;
+    
+            // Ensure the directory exists
+            if (!file_exists($directoryPath)) {
+                mkdir($directoryPath, 0755, true);
+            }
+    
+            // Save the image file
+            file_put_contents($filePath, $image_base64);
+        }
+
+       
+        $kodesupplier = $datasupplier -> kode_supplier;
+        $namasupplier = $datasupplier -> nama_supplier;
+        $data-> kode_produk = $request-> kode_produk;
+        $data-> nama_produk = $request-> nama_produk;
+        $data->harga_beli = $request-> harga_beli;
+        $data-> harga_jual = $request-> harga_jual;
+        $data->updated_by = $loggedInUsername;
+
+        $data->kode_supplier =  $kodesupplier;
+        $data->nama_supplier = $namasupplier ;
+      $data -> gambar_produk = $fileName;
+
         $data -> supplier_id = $supplierid;
-        $data -> nama_supplier = $datasupplier -> nama_supplier;
-        $data -> kode_supplier = $datasupplier -> kode_supplier;
-        $data -> updated_by = $loggedInUsername;
-        
         $data->save();
 
-        $request->session()->flash('success', "Data produk berhasil diubah");
+        $request->session()->flash('success', "Produk berhasil diubah.");
 
         return redirect()->route('adminproduk.produk.index');
     }
@@ -324,9 +412,34 @@ class ProdukController extends Controller
         ->first();
        
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode produk yang Anda masukkan sudah ada dalam sistem kami. Harap pastikan untuk menggunakan kode produk yang unik");
+            $request->session()->flash('error', "Kode produk sudah terdaftar.");
             return redirect()->route('superadmin.produk.index');
         }
+
+        $fileName = $data->gambar_produk; // Use existing image as default
+
+        if ($request->has('resized_image') && $request->input('resized_image')) {
+            $resizedImage = $request->input('resized_image');
+            $image_parts = explode(";base64,", $resizedImage);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+    
+            // Generate a unique file name
+            $fileName = uniqid() . '.' . $image_type;
+            $directoryPath = public_path('images/produk/');
+            $filePath = $directoryPath . $fileName;
+    
+            // Ensure the directory exists
+            if (!file_exists($directoryPath)) {
+                mkdir($directoryPath, 0755, true);
+            }
+    
+            // Save the image file
+            file_put_contents($filePath, $image_base64);
+        }
+
+       
         $kodesupplier = $datasupplier -> kode_supplier;
         $namasupplier = $datasupplier -> nama_supplier;
         $data-> kode_produk = $request-> kode_produk;
@@ -337,28 +450,49 @@ class ProdukController extends Controller
 
         $data->kode_supplier =  $kodesupplier;
         $data->nama_supplier = $namasupplier ;
-      
+      $data -> gambar_produk = $fileName;
+
         $data -> supplier_id = $supplierid;
         $data->save();
+       
 
-        $request->session()->flash('success', "Data produk berhasil diubah");
+        $request->session()->flash('success', "Produk berhasil diubah.");
 
         return redirect()->route('superadmin.produk.index');
     }
     public function adminprodukdestroy (Request $request, $id){
+
+      
         $data = Produk::find($id);
+
+        if (DetailQuotation::where('product_id', $data->id)->exists()) {
+            $request->session()->flash('error', "Tidak dapat menghapus produk, karena masih ada data yang berhubungan");
+
+            return redirect()->route('adminproduk.produk.index');
+        
+        }
+
+
         $data->delete();
 
-        $request->session()->flash('success', "Data produk berhasil dihapus");
+        $request->session()->flash('success', "Produk berhasil dihapus.");
 
         return redirect()->route('adminproduk.produk.index');
     }
 
     public function superadmindestroy (Request $request, $id){
         $data = Produk::find($id);
+
+        
+        if (DetailQuotation::where('product_id', $data->id)->exists()) {
+            $request->session()->flash('error', "Tidak dapat menghapus produk, karena masih ada data yang berhubungan");
+
+            return redirect()->route('superadmin.produk.index');
+        
+        }
         $data->delete();
 
-        $request->session()->flash('success', "Data produk berhasil dihapus");
+        $request->session()->flash('success', "Produk berhasil dihapus.");
 
         return redirect()->route('superadmin.produk.index');
     }

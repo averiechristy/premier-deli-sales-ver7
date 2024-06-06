@@ -42,12 +42,12 @@ class SupplierController extends Controller
         $existingname = Supplier::where('nama_supplier', $nama)->first();
 
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode supplier sudah ada");
+            $request->session()->flash('error', "Kode supplier sudah terdaftar.");
             return redirect()->route('adminproduk.supplier.index');
         }
 
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, nama supplier sudah ada");
+            $request->session()->flash('error', "Nama supplier sudah terdaftar.");
             return redirect()->route('adminproduk.supplier.index');
         }
 
@@ -61,7 +61,7 @@ class SupplierController extends Controller
             'created_by' => $loggedInUsername,
         ]);
 
-        $request->session()->flash('success', 'Supplier berhasil ditambahkan');
+        $request->session()->flash('success', 'Supplier berhasil ditambahkan.');
 
         return redirect(route('adminproduk.supplier.index'));
     }
@@ -98,12 +98,12 @@ class SupplierController extends Controller
         $existingname = Supplier::where('nama_supplier', $nama)->first();
 
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode supplier sudah ada");
+            $request->session()->flash('error', "Kode supplier sudah terdaftar.");
             return redirect()->route('superadmin.supplier.index');
         }
 
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, nama supplier sudah ada");
+            $request->session()->flash('error', "Nama supplier sudah terdaftar.");
             return redirect()->route('superadmin.supplier.index');
         }
 
@@ -117,7 +117,7 @@ class SupplierController extends Controller
             'created_by' => $loggedInUsername,
         ]);
 
-        $request->session()->flash('success', 'Supplier berhasil ditambahkan');
+        $request->session()->flash('success', 'Supplier berhasil ditambahkan.');
 
         return redirect(route('superadmin.supplier.index'));
     }
@@ -180,12 +180,12 @@ class SupplierController extends Controller
         ->first();
 
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode supplier sudah ada");
+            $request->session()->flash('error', "Kode supplier sudah terdaftar.");
             return redirect()->route('adminproduk.supplier.index');
         }
 
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, nama supplier sudah ada");
+            $request->session()->flash('error', "Nama supplier sudah terdaftar.");
             return redirect()->route('adminproduk.supplier.index');
         }
 
@@ -198,7 +198,7 @@ class SupplierController extends Controller
 
         $data->save();
 
-        $request->session()->flash('success', 'Supplier berhasil diubah ');
+        $request->session()->flash('success', 'Supplier berhasil diubah. ');
 
         return redirect(route('adminproduk.supplier.index'));
     }
@@ -220,12 +220,12 @@ class SupplierController extends Controller
         ->first();
 
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode supplier sudah ada");
+            $request->session()->flash('error', "Kode supplier sudah terdaftar.");
             return redirect()->route('superadmin.supplier.index');
         }
 
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, nama supplier sudah ada");
+            $request->session()->flash('error', "Nama supplier sudah terdaftar.");
             return redirect()->route('superadmin.supplier.index');
         }
 
@@ -236,7 +236,7 @@ class SupplierController extends Controller
 
         $data->save();
 
-        $request->session()->flash('success', 'Supplier berhasil diubah ');
+        $request->session()->flash('success', 'Supplier berhasil diubah. ');
 
         return redirect(route('superadmin.supplier.index'));
     }
@@ -254,7 +254,7 @@ class SupplierController extends Controller
 
         $data->delete();
 
-        $request->session()->flash('success', 'Supplier berhasil dihapus ');
+        $request->session()->flash('success', 'Supplier berhasil dihapus. ');
 
         return redirect(route('adminproduk.supplier.index'));
     }
@@ -270,7 +270,7 @@ class SupplierController extends Controller
 
         $data->delete();
 
-        $request->session()->flash('success', 'Supplier berhasil dihapus ');
+        $request->session()->flash('success', 'Supplier berhasil dihapus. ');
 
         return redirect(route('superadmin.supplier.index'));
     }

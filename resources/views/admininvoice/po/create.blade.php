@@ -5,12 +5,17 @@
 <div class="container">
 
                                 <div class="card mt-3">
-                                    <div class="card-header" style="color:black;">
-
+                                <div class="card-header" style="color:black;">
+                                        Buat Purchase Order
                                     </div>
                                     <div class="card-body">
                                        <form name="saveform" action="{{route('admininvoice.po.simpan')}}" method="post" onsubmit="return validateForm()">
                                         @csrf                       
+
+                                        <div class="form-group mb-4">
+    <label for="" class="form-label" style="color:black;">Tanggal SO / Quotation</label>
+    <input name="oldest_date" id="oldest_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="{{$oldestdate}}" readonly/>
+</div>
 
 
                                         <input type="hidden" name="selected_so" value="{{ json_encode($selectedSOs) }}">
@@ -23,6 +28,14 @@
 </div>
 
 
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('po_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
 <script>
     // Mendapatkan elemen input tanggal
     var orderDateInput = document.getElementById('po_date');
@@ -67,8 +80,14 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group mb-4">
-                            <label for="" class="form-label" style="color:black;">Quantity</label>
+                            <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                             <input type="number" name="qty[{{$key}}][]" class="form-control" value="{{ $subValue['quantity'] }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-4">
+                            <label for="" class="form-label" style="color:black;">Diskon (dalam %)</label>
+                            <input type="number" name="discount[{{$key}}][]" class="form-control" value="0">
                         </div>
                     </div>
                 </div>
@@ -119,7 +138,7 @@
         </div>
         <div class="col-md-2">
             <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
+                <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                 <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" />
             </div>
         </div>
@@ -198,9 +217,15 @@ $(document).on('change', '.product-select', function() {
     </div>
 </div>
 
+
+
+
+
 <script>
     function confirmSubmit() {
-        $('#confirmModal').modal('show'); // Tampilkan modal
+        if (validateForm()) {
+        $('#confirmModal').modal('show');
+        } // Tampilkan modal
         return false; // Mengembalikan false untuk mencegah pengiriman form secara langsung
     }
 
@@ -229,45 +254,27 @@ $(document).on('change', '.product-select', function() {
   
             <script>
     function validateForm() {
-        // Menghitung jumlah field produk
-        var productFields = document.querySelectorAll('.product-field');
-        var numProducts = productFields.length;
-        var nopo = document.forms["saveform"]["po_number"].value;
+
+        var tanggalsoquote = document.forms["saveform"]["oldest_date"].value;
+        var tanggalpo = document.forms["saveform"]["po_date"].value;
+        
+        if ( tanggalpo < tanggalsoquote) {
+            alert("Tanggal PO tidak boleh kurang dari tanggal SO/Quotation.");
+            return false;
+        }
+
+        var poNumbers = document.querySelectorAll('input[name^="po_number["]');
+    
+    // Loop melalui setiap elemen input dan periksa nilainya
+    for (var i = 0; i < poNumbers.length; i++) {
+        var nopo = poNumbers[i].value;
         if (nopo == "") {
             alert("No Purchase Order harus diisi");
             closeModal();
             return false;
-            
         }
-        // Jika hanya ada satu produk
-        if (numProducts === 1) {
-            var productSelect = document.querySelector('select[name="product[]"]');
-            var priceInput = document.querySelector('input[name="price[]"]');
-            var quantityInput = document.querySelector('input[name="quantity[]"]');
-
-            // Validasi produk
-            if (productSelect.value === null || productSelect.value === '') {
-                alert('Produk harus dipilih');
-                closeModal()
-                return false;
-                
-            }
-
-            // Validasi harga
-            if (priceInput.value === '' || isNaN(priceInput.value) || priceInput.value <= 0) {
-                alert('Harga harus diisi ');
-                closeModal()
-                return false;
-            }
-
-            // Validasi quantity
-            if (quantityInput.value === '' || isNaN(quantityInput.value) || quantityInput.value <= 0) {
-                alert('Quantity harus diisi');
-                closeModal()
-                return false;
-            }
-        }
-
+    }
+        
         // Jika produk lebih dari satu atau tidak ada validasi lainnya yang dibutuhkan, kembalikan true
         return true;
     }

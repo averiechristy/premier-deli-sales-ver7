@@ -302,7 +302,6 @@ Route::post('admininvoice/po/simpanpochannel',[POController::class,'simpanpochan
 Route::get('/get-products-by-supplier', [ProdukController::class,'getProductsBySupplier']);
 Route::get('/get-product-price',  [ProdukController::class,'getProductPrice'])->name('get-product-price');
 
-
 Route::get('admininvoice/catatan/index',[CatatanController::class,'admininvoiceindex'])->name('admininvoice.catatan.index');
 Route::get('admininvoice/catatan/create',[CatatanController::class,'admininvoicecreate'])->name('admininvoice.catatan.create');
 Route::post('admininvoice/catatan/simpan',[CatatanController::class,'admininvoicestore'])->name('admininvoice.catatan.simpan');
@@ -316,6 +315,10 @@ Route::post('/admininvoiceupdatecatatan/{id}',[CatatanController::class,'adminin
 
 //Sales
 Route::middleware('auth')->middleware('ensureUserRole:SALES')->group(function () {
+
+    Route::get('/editquote/{id}',[QuotationController::class,'salesshow'])->name('editquote');
+    Route::post('/salesupdatequote/{id}',[QuotationController::class,'salesupdate'])->name('salesupdatequote');
+    
 Route::get('sales/dashboard',[DashboardController::class,'salesindex'])->name('sales.dashboard');
 
 Route::get('sales/rfo/index',[RFOController::class,'salesindex'])->name('sales.rfo.index');
@@ -354,6 +357,8 @@ Route::post('sales/changepassword', [UserAccountController::class,'saleschangePa
 //Leader
 
 Route::middleware('auth')->middleware('ensureUserRole:LEADER')->group(function () {
+    Route::get('/leadereditquote/{id}',[QuotationController::class,'leadershow'])->name('leadereditquote');
+    Route::post('/leaderupdatequote/{id}',[QuotationController::class,'leaderupdate'])->name('leaderupdatequote');
     Route::get('leader/dashboard',[DashboardController::class,'leaderindex'])->name('leader.dashboard');
     Route::get('leader/rfo/index',[RFOController::class,'leaderindex'])->name('leader.rfo.index');
 
@@ -433,6 +438,27 @@ Route::post('/leaderquotation/{id}/download', [QuotationController::class,'leade
 
     //MANAGER
     Route::middleware('auth')->middleware('ensureUserRole:MANAGER')->group(function () {
+
+        Route::get('manager/so/index',[SOController::class,'managerindex'])->name('manager.so.index');
+        Route::get('/managertampilpesananso/{id}',[SOController::class,'managertampilpesananso'])->name('managertampilpesananso');
+        Route::get('/managertampilso/{id}',[SOController::class,'managertampilso'])->name('managertampilso');
+
+
+        Route::get('/managertampilpo/{id}',[POController::class,'managertampilpo'])->name('managertampilpo');
+Route::get('manager/po/index',[POController::class,'managerindex'])-> name('manager.po.index');
+Route::get('/managertampilpesananpo/{id}',[POController::class,'managertampilpesananpo'])->name('managertampilpesananpo');
+Route::get('/managertampilsoquote/{id}',[POController::class,'managertampilsoquote'])->name('managertampilsoquote');
+
+
+
+Route::get('manager/invoice/index',[InvoiceController::class,'managerindex'])->name('manager.invoice.index');
+Route::get('/managertampilpesananinvoice/{id}',[InvoiceController::class,'managertampilpesananinvoice'])->name('managertampilpesananinvoice');
+Route::get('/managertampilinvoice/{id}',[InvoiceController::class, 'managertampilinvoice'])->name('managertampilinvoice');
+Route::get('/managertampildo/{id}',[DOController::class,'managertampildo'])->name('managertampildo');
+
+        Route::get('/managereditquote/{id}',[QuotationController::class,'managershow'])->name('managereditquote');
+        Route::post('/managerupdatequote/{id}',[QuotationController::class,'managerupdate'])->name('managerupdatequote');
+
 
         Route::post('/managerquotation/{id}/download', [QuotationController::class,'managerdownload'])->name('managerquotation.download');
 

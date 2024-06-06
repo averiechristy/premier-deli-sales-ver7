@@ -6,7 +6,7 @@
                     
                                 <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
-                                       Request Order
+                                       Buat Request Order
                                     </div>
                                     <div class="card-body">
                                        <form name="saveform" action="{{route('leader.simpanrfo')}}" method="post" onsubmit="return validateForm()">
@@ -21,6 +21,15 @@
     <label for="" class="form-label" style="color:black;">Tanggal Order</label>
     <input name="order_date" id="order_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('order_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
 
 <script>
     // Mendapatkan elemen input tanggal
@@ -93,7 +102,26 @@
     <input name="payment_date" id="payment_date"  type="date" class="form-control" style="border-color: #01004C; width:50%;" value="" />
 </div>
 
-<!-- Product and Quantity Fields -->
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('shipping_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
+
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('payment_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
+<!-- Product and Jumlah Produk Fields -->
 <div id="product-fields">
     <div class="row product-field">
         <div class="col-md-6">
@@ -109,7 +137,7 @@
         </div>
         <div class="col-md-5">
             <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
+                <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                 <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" oninput="validasiNumber(this)" />
             </div>
         </div>
@@ -125,11 +153,11 @@ function validasiNumber(input) {
 </script>
         <div class="col-md-1">
         <label for="" class="form-label" style="color:black;">Action</label>
-            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Remove</button>
+            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Hapus</button>
         </div>
     </div>
 </div>
-<button type="button" class="btn btn-success mt-3" id="add-product-field">Add Product</button>
+<button type="button" class="btn btn-success mt-3" id="add-product-field">Tambah Produk</button>
 
 <!-- JavaScript for Dynamically Adding/Removing Product Fields -->
 <script>
@@ -151,13 +179,13 @@ function validasiNumber(input) {
                     </div>
                     <div class="col-md-5">
                         <div class="form-group mb-4">
-                            <label for="" class="form-label" style="color:black;">Quantity</label>
+                            <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                             <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" oninput="validasiNumber(this)"/>
                         </div>
                     </div>
                     <div class="col-md-1">
                     <label for="" class="form-label" style="color:black;">Action</label>
-                        <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Remove</button>
+                        <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Hapus</button>
                     </div>
                 </div>`;
             $("#product-fields").append(productField);
@@ -175,7 +203,7 @@ function validasiNumber(input) {
 </script>
 
 <div class="form-group mb-4 mt-3">
-<button type="button" class="btn btn-pd" onclick="confirmSubmit()" >Request Order</button>
+<button type="button" class="btn btn-pd" onclick="confirmSubmit()" >Proses RFO</button>
 </div>
                                             </div>
 
@@ -231,14 +259,14 @@ function validasiNumber(input) {
             </div>
       
 
-<script>
+            <script>
     function validateForm() {
         // Mendapatkan nilai dari input Customer ID
         var customerId = document.forms["saveform"]["customer_id"].value;
 
         // Validasi Customer ID
         if (customerId == "") {
-            alert("Customer harus dipilih");
+            alert("Customer harus diisi.");
             closeModal();
             return false;
             
@@ -246,7 +274,7 @@ function validasiNumber(input) {
 
         var alamat = document.forms["saveform"]["alamat"].value;
         if (alamat == "") {
-            alert("Alamat harus diisi");
+            alert("Alamat harus diisi.");
             closeModal();
             return false;
             
@@ -255,7 +283,7 @@ function validasiNumber(input) {
         var namapenerima = document.forms["saveform"]["nama_penerima"].value;
 
         if (namapenerima == "") {
-            alert("Nama PIC harus diisi");
+            alert("Nama PIC harus diisi.");
             closeModal();
             return false;
             
@@ -271,40 +299,43 @@ function validasiNumber(input) {
 
         // Validasi Tanggal Order
         if (orderDate == "") {
-            alert("Tanggal Order harus diisi");
+            alert("Tanggal order harus diisi.");
             closeModal();
             return false;
         }
 
         // Validasi Tanggal Pengiriman
         if (shippingDate == "") {
-            alert("Tanggal Pengiriman harus diisi");
+            alert("Tanggal pengiriman harus diisi.");
             closeModal();
             return false;
         }
 
         // Validasi Tanggal Pembayaran
         if (paymentDate == "") {
-            alert("Tanggal Pembayaran harus diisi");
+            alert("Tanggal pembayaran harus diisi.");
             closeModal();
             return false;
         }
+
         if(shippingDate < paymentDate) {
-            alert("Tanggal pengiriman tidak boleh kurang dari tanggal pembayaran");
+            alert("Tanggal pengiriman tidak boleh kurang dari tanggal pembayaran.");
             closeModal();
             return false;
         }
+
         // Validasi jumlah produk minimal satu
         var products = document.getElementsByName('product[]');
         var quantities = document.getElementsByName('quantity[]');
         var isValidProduct = false;
+
         var selectedProducts = [];
         for (var i = 0; i < products.length; i++) {
             if (products[i].value != "") {
                 isValidProduct = true;
                 // Validasi jumlah produk
                 if (quantities[i].value == "") {
-                    alert("Harap isi jumlah untuk setiap produk yang dipilih");
+                    alert("Jumlah produk harus diisi.");
                     closeModal();
                     return false;
                 }
@@ -319,13 +350,16 @@ function validasiNumber(input) {
             }
         }
         if (!isValidProduct) {
-            alert("Minimal satu produk harus dipilih");
+            alert("Produk harus diisi.");
             closeModal();
             return false;
         }
 
+
+
         // Tutup modal secara langsung
       
+
         // Jika semua validasi berhasil, return true
         return true;
     }
@@ -335,6 +369,7 @@ function validasiNumber(input) {
         $('#confirmModal').modal('hide');
     }
 
+    
 </script>
 
 <script>

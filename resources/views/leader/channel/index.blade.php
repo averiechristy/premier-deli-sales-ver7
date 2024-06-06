@@ -12,7 +12,7 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <a href="{{route('leader.channel.create')}}" class="btn btn-pd btn-sm">Tambah Data</a>
+                            <a href="{{route('leader.channel.create')}}" class="btn btn-pd btn-sm">Tambah Channel</a>
                         </div>
                         <div class="card-body">
                         <div class="dataTables_length mb-3" id="myDataTable_length">

@@ -31,7 +31,18 @@
             </div>
       
   
+            <script>
 
+function validateForm() {
+    let kategori = document.forms["saveform"]["kategori"].value;
+    if (kategori == "") {
+            alert("Kategori harus diisi.");
+            return false;
+        }
+
+}
+
+</script>
 
 
 @endsection

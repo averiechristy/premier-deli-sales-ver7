@@ -82,7 +82,7 @@ entries
                 <td>{{ \Carbon\Carbon::parse($data->so_date)->format('d-m-Y') }}</td>                
             <td>    
     <a href="{{route('tampilpesananso', $data->id)}}"><button type="button" class="btn btn-link">
-         Lihat Detail Pesanan  
+         Lihat Detail Produk
     </a>
     </td>
 <td>

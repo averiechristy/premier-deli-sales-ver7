@@ -9,7 +9,7 @@
 
                 <p style="color:black;">Unggah file untuk menambahkan customer baru, atau tambahkan ke kumpulan data customer yang sudah ada. <br> Anda dapat mengunggah file Excel</p>
                 <div class="button mt-2 mb-4">
-                <a href="{{route('admininvoice.customer.create')}}" class="btn btn-pd btn-sm">Tambah Data</a>
+                <a href="{{route('admininvoice.customer.create')}}" class="btn btn-pd btn-sm">Tambah Customer</a>
                 <a href="{{ route('download.templatecustomer') }}" class="btn btn-info btn-sm" download>Download Template</a>
 </div>
 

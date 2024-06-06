@@ -22,7 +22,88 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function managerindex(){
 
+        $invoice = Inovice::orderBy('created_at', 'desc')->get();
+    
+        $so = SalesOrder::where('status_so','Terbit PO')->orderBy('created_at', 'desc')->count();
+
+        $quote = Quotation::where('status_quote','Proses PO')->orderBy('created_at', 'desc')->count();
+
+        $total = $so + $quote;
+        return view ('manager.invoice.index',[
+            'invoice' => $invoice,
+            'total' => $total,
+        ]);
+    }
+
+
+
+    public function managertampilpesananinvoice($id)
+    {
+    
+       $pesanan = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
+       $invoice = Inovice::find($id);
+       $noInvoice = $invoice->invoice_no;
+      
+       return view('manager.invoice.tampilpesanan',[
+           'pesanan' =>$pesanan,
+           'noInvoice' => $noInvoice,
+       ]);
+
+    }
+
+
+public function managertampilinvoice($id){
+    $invoice = Inovice::find($id);
+    $detailinvoice = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
+
+    $subtotal = 0;
+
+    // Iterasi melalui setiap detail invoice
+    $discountasli = $invoice->discount;
+        $tipe = $invoice->is_persen;
+
+      
+        
+    $subtotal = 0;
+    foreach ($detailinvoice as $detail) {
+        $subtotal += $detail->total_price;
+    }
+
+    if ($tipe == 'persen') {
+        $discount =  ($discountasli / 100) * $subtotal;
+    } elseif ($tipe == 'amount'){
+        $discount = $invoice->discount;
+    }
+
+    $subtotalafterdiscount = $subtotal - $discount;
+
+
+
+  $ppnpersen = $invoice -> ppn;
+  
+  $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
+
+
+    $pembayaran = $invoice->pembayaran;
+
+    $total = $subtotalafterdiscount + $ppn;
+    
+
+    $sisatagihan = $total - $pembayaran;
+ 
+
+    return view('manager.invoice.tampilinvoice',[
+        'invoice' => $invoice,
+        'detailinvoice' => $detailinvoice,
+        'subtotal' => $subtotal,
+        'total' => $total,
+        'ppn' => $ppn,
+        'discount' => $discount,
+        'sisatagihan' => $sisatagihan,
+    ]);
+}
      public function updateinvoice($id, Request $request){
         
         $loggedInUser = auth()->user();
@@ -351,9 +432,11 @@ return redirect()->route('superadmin.invoice.index');
         $cancelreq -> alasan = $request->alasan;
         $cancelreq -> report_to = $report;
     
+        $cancelreq ->diajukan_oleh = $loggedInUser->nama;
+
         $cancelreq -> save();
 
-        $request->session()->flash('success', "Request Cancel terkirim");
+        $request->session()->flash('success', "Cancel invoice terkirim.");
         return redirect(route('admininvoice.invoice.index',[
             'invoice' => $invoice,
         ]));
@@ -370,7 +453,7 @@ return redirect()->route('superadmin.invoice.index');
         $datainv -> is_closing = "Yes";
         $datainv -> status_invoice ="Closing";
         $datainv -> save();
-        $request->session()->flash('success', "Invoice berhasil closing");
+        $request->session()->flash('success', "Invoice berhasil closing.");
         return redirect(route('admininvoice.invoice.index',[
             'invoice' => $invoice,
         ]));
@@ -387,7 +470,7 @@ return redirect()->route('superadmin.invoice.index');
         $datainv -> is_closing = "Yes";
         $datainv -> status_invoice ="Closing";
         $datainv -> save();
-        $request->session()->flash('success', "Invoice berhasil closing");
+        $request->session()->flash('success', "Invoice berhasil closing.");
         return redirect(route('superadmin.invoice.index',[
             'invoice' => $invoice,
         ]));
@@ -426,7 +509,7 @@ return redirect()->route('superadmin.invoice.index');
             }
         }
 
-        $request->session()->flash('success', "Invoice berhasil dibatalkan");
+        $request->session()->flash('success', "Invoice berhasil dibatalkan.");
         return redirect(route('superadmin.invoice.index',[
             'invoice' => $invoice,
         ]));
@@ -466,6 +549,8 @@ return redirect()->route('superadmin.invoice.index');
      {
 
         $data = SalesOrder::find($id);
+
+        $sodate = $data -> so_date;
         $customer = Customer::orderBy('nama_customer', 'asc')->get();
         $so = DetailSO::with('salesorder')->where('so_id', $id)->get();
         $produk = Produk::orderBy('nama_produk', 'asc')->get();
@@ -518,7 +603,9 @@ return redirect()->route('superadmin.invoice.index');
 
     $pembayaran = $data->pembayaran;
 
-    $total = $subtotalafterdiscount + $ppn;
+    $biayakirim = $data->biaya_pengiriman;
+
+    $total = $subtotalafterdiscount + $ppn + $biayakirim;
     
 
     $sisatagihan = $total - $pembayaran;
@@ -539,6 +626,8 @@ return redirect()->route('superadmin.invoice.index');
             'pembayaran' => $pembayaran,
             'tipe' => $tipe,
             'discountasli' => $discountasli,
+            'biayakirim' => $biayakirim,
+            'sodate' => $sodate,
            
         ]);
      }
@@ -547,6 +636,7 @@ return redirect()->route('superadmin.invoice.index');
      {
 
         $data = SalesOrder::find($id);
+        $sodate = $data -> so_date;
         $customer = Customer::orderBy('nama_customer', 'asc')->get();
         $so = DetailSO::with('salesorder')->where('so_id', $id)->get();
         $produk = Produk::orderBy('nama_produk', 'asc')->get();
@@ -599,7 +689,9 @@ return redirect()->route('superadmin.invoice.index');
 
     $pembayaran = $data->pembayaran;
 
-    $total = $subtotalafterdiscount + $ppn;
+    $biayakirim = $data->biaya_pengiriman;
+
+    $total = $subtotalafterdiscount + $ppn + $biayakirim;
     
 
     $sisatagihan = $total - $pembayaran;
@@ -620,6 +712,8 @@ return redirect()->route('superadmin.invoice.index');
             'pembayaran' => $pembayaran,
             'tipe' => $tipe,
             'discountasli' => $discountasli,
+            'biayakirim' => $biayakirim,
+            'sodate' => $sodate,
            
         ]);
      }
@@ -661,6 +755,7 @@ return redirect()->route('superadmin.invoice.index');
      {
 
         $data = Quotation::find($id);
+        $quotedate = $data -> quote_date;
         $customer = Customer::orderBy('nama_customer', 'asc')->get();
         $so = DetailQuotation::with('quotation')->where('quote_id', $id)->get();
         $produk = Produk::orderBy('nama_produk', 'asc')->get();
@@ -700,7 +795,9 @@ return redirect()->route('superadmin.invoice.index');
 
     $pembayaran = $data->pembayaran;
 
-    $total = $subtotalafterdiscount + $ppn;
+    $biayakirim = $data->biaya_pengiriman;
+
+    $total = $subtotalafterdiscount + $ppn + $biayakirim;
     
 
     $sisatagihan = $total - $pembayaran;
@@ -720,6 +817,8 @@ return redirect()->route('superadmin.invoice.index');
             'pembayaran' => $pembayaran,
             'tipe' => $tipe,
             'discountasli' => $discountasli,
+            'biayakirim' => $biayakirim,
+            'quotedate' => $quotedate,
            
         ]);
      }
@@ -728,6 +827,7 @@ return redirect()->route('superadmin.invoice.index');
      {
 
         $data = Quotation::find($id);
+        $quotedate = $data -> quote_date;
         $customer = Customer::orderBy('nama_customer', 'asc')->get();
         $so = DetailQuotation::with('quotation')->where('quote_id', $id)->get();
         $produk = Produk::orderBy('nama_produk', 'asc')->get();
@@ -767,7 +867,9 @@ return redirect()->route('superadmin.invoice.index');
 
     $pembayaran = $data->pembayaran;
 
-    $total = $subtotalafterdiscount + $ppn;
+    $biayakirim = $data->biaya_pengiriman;
+
+    $total = $subtotalafterdiscount + $ppn + $biayakirim;
     
 
     $sisatagihan = $total - $pembayaran;
@@ -788,6 +890,8 @@ return redirect()->route('superadmin.invoice.index');
             'pembayaran' => $pembayaran,
             'tipe' => $tipe,
             'discountasli' => $discountasli,
+            'biayakirim' => $biayakirim,
+            'quotedate' => $quotedate,
            
         ]);
      }
@@ -825,7 +929,9 @@ public function tampilinvoice($id){
 
     $pembayaran = $invoice->pembayaran;
 
-    $total = $subtotalafterdiscount + $ppn;
+    $biayakirim = $invoice->biaya_pengiriman;
+
+    $total = $subtotalafterdiscount + $ppn + $biayakirim;
     
 
     $sisatagihan = $total - $pembayaran;
@@ -839,6 +945,7 @@ public function tampilinvoice($id){
         'ppn' => $ppn,
         'discount' => $discount,
         'sisatagihan' => $sisatagihan,
+        'biayakirim' => $biayakirim,
     ]);
 }
 public function superadmintampilinvoice($id){
@@ -875,7 +982,9 @@ public function superadmintampilinvoice($id){
 
     $pembayaran = $invoice->pembayaran;
 
-    $total = $subtotalafterdiscount + $ppn;
+    $biayakirim = $invoice->biaya_pengiriman;
+
+    $total = $subtotalafterdiscount + $ppn + $biayakirim;
     
 
     $sisatagihan = $total - $pembayaran;
@@ -890,6 +999,7 @@ public function superadmintampilinvoice($id){
         'ppn' => $ppn,
         'discount' => $discount,
         'sisatagihan' => $sisatagihan,
+        'biayakirim' => $biayakirim,
     ]);
 }
 
@@ -953,7 +1063,7 @@ public function superadmintampilinvoice($id){
         $invoice -> ppn = $request -> ppn;
         $invoice -> total = $request->total;
         $invoice -> created_by = $loggedInUsername;
-
+        $invoice -> biaya_pengiriman = $request->biaya_pengiriman;
        
         $invoice -> save();
 
@@ -984,7 +1094,7 @@ public function superadmintampilinvoice($id){
           
         }
 
-        $request->session()->flash('success', "Invoice berhasil dibuat");
+        $request->session()->flash('success', "Invoice berhasil dibuat.");
 
         return redirect()->route('admininvoice.invoice.index');
      }
@@ -1044,7 +1154,7 @@ public function superadmintampilinvoice($id){
         $invoice -> ppn = $request -> ppn;
         $invoice -> total = $request->total;
         $invoice -> created_by = $loggedInUsername;
-
+        $invoice -> biaya_pengiriman = $request->biaya_pengiriman;
        
         $invoice -> save();
 
@@ -1075,7 +1185,7 @@ public function superadmintampilinvoice($id){
           
         }
 
-        $request->session()->flash('success', "Invoice berhasil dibuat");
+        $request->session()->flash('success', "Invoice berhasil dibuat.");
 
         return redirect()->route('superadmin.invoice.index');
      }
@@ -1121,7 +1231,7 @@ public function superadmintampilinvoice($id){
         $invoice -> ppn = $request -> ppn;
         $invoice -> total = $request->total;
 $invoice -> created_by = $loggedInUsername;
-       
+$invoice -> biaya_pengiriman = $request->biaya_pengiriman;
         $invoice -> save();
 
         $invoiceDetails = [];
@@ -1151,7 +1261,7 @@ $invoice -> created_by = $loggedInUsername;
           
         }
 
-        $request->session()->flash('success', "Invoice berhasil dibuat");
+        $request->session()->flash('success', "Invoice berhasil dibuat.");
 
         return redirect()->route('admininvoice.invoice.index');
      }
@@ -1187,7 +1297,7 @@ $invoice -> created_by = $loggedInUsername;
         $invoice -> ppn = $request -> ppn;
         $invoice -> total = $request->total;
         $invoice -> created_by = $loggedInUsername;
-
+        $invoice -> biaya_pengiriman = $request->biaya_pengiriman;
         $quoteid = $quote->id;
         $detailsopo = DetailSoPo::where('quote_id', $quoteid)->get();
 
@@ -1228,7 +1338,7 @@ $invoice -> created_by = $loggedInUsername;
           
         }
 
-        $request->session()->flash('success', "Invoice berhasil dibuat");
+        $request->session()->flash('success', "Invoice berhasil dibuat.");
 
         return redirect()->route('superadmin.invoice.index');
      }

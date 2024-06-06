@@ -38,7 +38,7 @@ class KategoriController extends Controller
         $loggedInUsername = $loggedInUser->nama;  
        
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, kategori sudah ada");
+            $request->session()->flash('error', "Kategori sudah terdaftar.");
             return redirect()->route('manager.kategori.index');
         }
 
@@ -48,7 +48,7 @@ class KategoriController extends Controller
            
           ]);
 
-          $request->session()->flash('success', "Data kategori berhasil ditambahkan.");
+          $request->session()->flash('success', "Kategori berhasil ditambahkan.");
 
           return redirect()->route('manager.kategori.index');
 
@@ -76,7 +76,7 @@ class KategoriController extends Controller
         $loggedInUsername = $loggedInUser->nama; 
 
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, kategori sudah ada");
+            $request->session()->flash('error', "Kategori sudah terdaftar.");
             return redirect()->route('manager.kategori.index');
         }
 
@@ -85,7 +85,7 @@ class KategoriController extends Controller
         $data->updated_by = $loggedInUsername;
         $data -> save();
 
-        $request->session()->flash('success', "Data kategori berhasil diubah.");
+        $request->session()->flash('success', "Kategori berhasil diubah.");
 
         return redirect()->route('manager.kategori.index');
      }
@@ -133,7 +133,7 @@ class KategoriController extends Controller
        $existingname = Kategori::where('kategori',$kategori)->first();
       
        if($existingname !== null && $existingname) {
-           $request->session()->flash('error', "Data gagal disimpan, kategori sudah ada");
+           $request->session()->flash('error', "Kategori sudah terdaftar.");
            return redirect()->route('leader.kategori.index');
        }
 
@@ -143,7 +143,7 @@ class KategoriController extends Controller
           
          ]);
 
-         $request->session()->flash('success', "Data kategori berhasil ditambahkan.");
+         $request->session()->flash('success', "Kategori berhasil ditambahkan.");
 
          return redirect()->route('leader.kategori.index');
 
@@ -170,7 +170,7 @@ class KategoriController extends Controller
        ->first();
 
        if($existingname !== null && $existingname) {
-           $request->session()->flash('error', "Data gagal disimpan, kategori sudah ada");
+           $request->session()->flash('error', "Kategori sudah terdaftar.");
            return redirect()->route('leader.kategori.index');
        }
 
@@ -179,7 +179,7 @@ class KategoriController extends Controller
        $data -> updated_by = $loggedInUsername;
        $data -> save();
 
-       $request->session()->flash('success', "Data kategori berhasil diubah.");
+       $request->session()->flash('success', "Kategori berhasil diubah.");
 
        return redirect()->route('leader.kategori.index');
     }
@@ -229,7 +229,7 @@ public function superadminstore(Request $request)
    $existingname = Kategori::where('kategori',$kategori)->first();
   
    if($existingname !== null && $existingname) {
-       $request->session()->flash('error', "Data gagal disimpan, kategori sudah ada");
+       $request->session()->flash('error', "Kategori sudah terdaftar.");
        return redirect()->route('superadmin.kategori.index');
    }
 
@@ -239,7 +239,7 @@ public function superadminstore(Request $request)
       
      ]);
 
-     $request->session()->flash('success', "Data kategori berhasil ditambahkan.");
+     $request->session()->flash('success', "Kategori berhasil ditambahkan.");
 
      return redirect()->route('superadmin.kategori.index');
 
@@ -266,7 +266,7 @@ public function superadminupdate(Request $request, $id)
    ->first();
 
    if($existingname !== null && $existingname) {
-       $request->session()->flash('error', "Data gagal disimpan, kategori sudah ada");
+       $request->session()->flash('error', "Kategori sudah terdaftar.");
        return redirect()->route('superadmin.kategori.index');
    }
 
@@ -275,7 +275,7 @@ public function superadminupdate(Request $request, $id)
    $data -> updated_by = $loggedInUsername;
    $data -> save();
 
-   $request->session()->flash('success', "Data kategori berhasil diubah.");
+   $request->session()->flash('success', "Kategori berhasil diubah.");
 
    return redirect()->route('superadmin.kategori.index');
 }

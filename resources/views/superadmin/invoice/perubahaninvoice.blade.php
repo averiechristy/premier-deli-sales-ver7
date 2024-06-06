@@ -24,7 +24,14 @@
     <input name="invoice_date" id="invoice_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="{{$data->invoice_date}}" />
 </div>
 
-
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('invoice_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Customer</label>
@@ -66,11 +73,11 @@
 <div class="form-group mb-4 mt-4">
                            <div class="form-check form-check-inline">
                               <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discpersen" value="persen" {{ $data->is_persen == 'persen' ? 'checked' : '' }} >
-                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio1">Discount dalam %</label>
+                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio1">Diskon dalam %</label>
                             </div>
                             <div class="form-check form-check-inline">
                               <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discrp" value="amount"{{ $data->is_persen == 'amount' ? 'checked' : '' }}>
-                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio2">Discount dalam Rp</label>
+                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio2">Diskon dalam Rp</label>
                             </div>
 </div>
 <script>
@@ -81,7 +88,7 @@
    }
 </script>
 <div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">Discount</label>
+        <label for="" class="form-label" style="color:black;">Diskon</label>
     <input name="discount" type="number"  class="form-control " style="border-color: #01004C;" value="{{$data->discount}}" readonly />
 </div>
 
@@ -117,7 +124,7 @@
         
         <div class="col-md-2">
             <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
+                <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                 <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata -> qty}}" readonly />
             </div>
         </div>
@@ -125,7 +132,7 @@
 
             <label for="" class="form-label" style="color:black;">Action</label>
             <div class="form-group mb-4">
-            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1"  >Remove</button>
+            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1"  >Hapus</button>
              </div>
         </div>
     </div>
@@ -189,7 +196,7 @@
         </div>
         <div class="col-md-2">
             <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
+                <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                 <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" />
             </div>
         </div>
@@ -338,7 +345,7 @@ $(document).on('change', '.product-select', function() {
         // Validasi discount
         var discount = document.forms["saveform"]["discount"].value;
         if (discount == "") {
-            alert("Discount harus diisi");
+            alert("Diskon harus diisi");
             closeModal();
             return false;
         }

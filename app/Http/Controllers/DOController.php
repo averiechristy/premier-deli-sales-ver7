@@ -11,7 +11,15 @@ class DOController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function managertampildo($id){
+        $invoice = Inovice::find($id);
+        $detailinvoice = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();
 
+        return view('manager.invoice.tampildo',[
+            'invoice' => $invoice,
+            'detailinvoice' => $detailinvoice,
+        ]);
+     }
      public function tampildo($id){
         $invoice = Inovice::find($id);
         $detailinvoice = DetailInvoice::with('invoice')->where('invoice_id', $id)->get();

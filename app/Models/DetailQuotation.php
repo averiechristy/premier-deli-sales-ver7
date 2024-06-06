@@ -31,6 +31,6 @@ class DetailQuotation extends Model
     public function quotation()
     {
 
-        return $this->belongsTo(Quotation::class);
+        return $this->belongsTo(Quotation::class, 'quote_id');
     }
 }

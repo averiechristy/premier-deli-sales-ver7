@@ -16,7 +16,10 @@
                                         @csrf                       
 
 
-
+                                        <div class="form-group mb-4">
+    <label for="" class="form-label" style="color:black;">Tanggal Quotation</label>
+    <input name="quote_date" id="quote_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="{{$quotedate}}" readonly />
+</div>
     <input hidden name="quote_id" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->id}}" />
 
 
@@ -33,7 +36,14 @@
     <label for="" class="form-label" style="color:black;">Tanggal Invoice</label>
     <input name="invoice_date" id="invoce_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value=""  />
 </div>
-
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('invoice_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
 <script>
     // Mendapatkan elemen input tanggal
     var orderDateInput = document.getElementById('invoce_date');
@@ -110,7 +120,7 @@
 
         <div class="col-md-2">
             <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
+                <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                 <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata->qty}}" readonly />
             </div>
         </div>
@@ -142,20 +152,23 @@
         <label for="" class="form-label" style="color:black;">Sub Total</label>
     <input name="subtotal" type="number"  class="form-control " style="border-color: #01004C;" value="{{ $subtotal }}" readonly />
 </div>
-
+<div class="form-group mb-4 mt-3">
+        <label for="" class="form-label" style="color:black;">Biaya Pengiriman</label>
+    <input name="biaya_pengiriman" type="number"  class="form-control " style="border-color: #01004C;" value="{{$biayakirim}}" oninput="validasiNumber(this)" readonly />
+</div>
 <input hidden name="is_persen" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->is_persen}}" />
 
 
 @if ($tipe == 'persen')
        
 <div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">Discount (dalam %)</label>
+        <label for="" class="form-label" style="color:black;">Diskon (dalam %)</label>
         <input name="discount" type="number" class="form-control" style="border-color: #01004C;" value="{{ $discountasli }}" readonly />
 </div>
         @elseif ($tipe == 'amount')
 
         <div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">Discount</label>
+        <label for="" class="form-label" style="color:black;">Diskon</label>
         <input name="discount" type="number" class="form-control" style="border-color: #01004C;" value="{{ $discountasli }}" readonly />
 </div>
         @endif
@@ -194,8 +207,14 @@
 
 <script>
     function confirmSubmit() {
-        $('#confirmModal').modal('show'); // Tampilkan modal
-        return false; // Mengembalikan false untuk mencegah pengiriman form secara langsung
+        console.log(validateForm);
+        // Panggil fungsi untuk melakukan validasi form
+        if (validateForm()) {
+            // Jika validasi berhasil, tampilkan modal
+            $('#confirmModal').modal('show');
+        }
+        // Mengembalikan false untuk mencegah pengiriman form secara langsung
+        return false;
     }
 
     // Fungsi untuk menutup modal
@@ -210,8 +229,80 @@
         $('#confirmModal').modal('hide');
     });
 </script>
+
                                         </form>
                                     </div>
         
     </div>
+
+    <script>
+    function validateForm() {
+
+
+        var tanggalquote = document.forms["saveform"]["quote_date"].value;
+        var tanggalinvoice = document.forms["saveform"]["invoice_date"].value;
+
+        if ( tanggalinvoice < tanggalquote) {
+            alert("Tanggal invoice tidak boleh kurang dari tanggal quotation.");
+            return false;
+        }
+
+        var validdate = document.forms["saveform"]["invoice_date"].value;
+
+        if (validdate == "") {
+            alert("Tanggal Invoice harus dipilih");
+            closeModal();
+            return false;
+        }
+
+        var customerId = document.forms["saveform"]["cust_id"].value;
+
+        // Validasi Customer ID
+        if (customerId == "") {
+            alert("Customer harus dipilih");
+            closeModal();
+            return false;
+        }
+
+
+        // Jika semua validasi berhasil, return true
+        return true;
+    }
+
+    function closeModal() {
+        // Tutup modal secara manual
+        $('#confirmModal').modal('hide');
+    }
+</script>
+    <script>
+window.addEventListener('load', function () {
+    if (performance.navigation.type === 2) { // Detects if page is loaded from back/forward cache
+        resetFields();
+    }
+});
+
+window.addEventListener('popstate', function () {
+    resetFields();
+    window.location.reload(); // Ensure the page is refreshed
+});
+
+function resetFields() {
+    var inputFields = document.getElementsByTagName('input');
+    for (var i = 0; i < inputFields.length; i++) {
+        if (inputFields[i].name !== '_token' && inputFields[i].name !== 'valid_date') {
+            inputFields[i].value = '';
+        }
+    }
+
+    var textareaFields = document.getElementsByTagName('textarea');
+    for (var j = 0; j < textareaFields.length; j++) {
+        textareaFields[j].value = '';
+    }
+
+    var selectFields = document.getElementsByTagName('select');
+    for (var k = 0; k < selectFields.length; k++) {
+        selectFields[k].selectedIndex = 0; // Mengatur indeks pilihan ke 0
+    }
+}
+</script>
 @endsection

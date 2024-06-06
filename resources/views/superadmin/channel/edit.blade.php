@@ -5,7 +5,7 @@
                     
                                 <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
-                                        Tambahkan Channel
+                                        Edit Channel
                                     </div>
                                     <div class="card-body">
                                        <form name="saveform" action="/updatechannel/{{$data->id}}" method="post" onsubmit="return validateForm()">
@@ -37,7 +37,7 @@
       
   
 
-<script>
+            <script>
 
 
 function validateForm() {
@@ -47,24 +47,24 @@ function validateForm() {
 
 
     if(kodechannel == "") {
-    alert("Kode Channel harus diisi");
+    alert("Kode channel harus diisi.");
 return false;
 }
 
 else if (kodechannel.length != 2) {
-            alert("Kode produk harus terdiri dari 2 karakter");
+            alert("Kode channel harus 2 karakter.");
             return false;
         }
 
 else if(namachannel == ""){
-    alert("Nama Channel harus diisi");
+    alert("Nama channel harus diisi.");
+return false;
+} else if (kodechannel === namachannel){
+    alert("Kode dan nama channel harus berbeda.");
 return false;
 }
 
-else if (kodechannel === namachannel){
-    alert("Kode channel dan nama channel harus berbeda");
-return false;
-}
+
 }
 
 </script>

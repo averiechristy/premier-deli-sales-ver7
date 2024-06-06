@@ -29,6 +29,7 @@ class Quotation extends Model
         'catatan_id',
         'catatan',
         'kode_supplier',
+        'biaya_pengiriman',
     ];
 
     public function customer()

@@ -61,8 +61,8 @@
                 </div>
                 <div class="modal-body">Pilih "logout" jika anda yakin untuk mengakhiri sesi anda.</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Tidak</button>
+                    <a class="btn btn-primary" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Ya</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
     @csrf
 </form>
@@ -97,7 +97,10 @@
               title: `Apakah anda yakin untuk menghapus data ini?`,
               text: "Jika anda menghapus data ini, data ini akan hilang selamanya.",
               icon: "warning",
-              buttons: true,
+              buttons: {
+                  cancel: "Tidak",
+                  confirm: "Ya"
+              },
               dangerMode: true,
           })
           .then((willDelete) => {

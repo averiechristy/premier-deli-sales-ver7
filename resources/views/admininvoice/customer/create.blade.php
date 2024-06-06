@@ -10,7 +10,7 @@
                     
                                 <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
-                                        Tambahkan Customer Baru
+                                        Tambahkan Customer 
                                     </div>
                                     <div class="card-body">
                                     <form name="saveform" action="{{route('admininvoice.customer.simpan')}}" method="post" onsubmit="return validateForm()">

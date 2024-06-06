@@ -10,30 +10,33 @@
             <h2 style="color: #9B5718;">Sales Sistem Premier Deli</h2>
         </div>
         </div>
-        <div class="row justify-content-center align-items-center" style="margin-top: 50px;">
-        <!-- Request Card -->
-        <div class="col-md-4">
-            <div class="card request-card p-4" style="height: 200px;">
+        <div class="card request-card p-4">
+        <h4 style="color: black; font-weight: bold;">Pesanan dan Penawaran</h4>
+<div class="row">
+    <div class="col-md-4 mt-2">
+        <div class="card request-card p-4" >
             <a href="{{route('sales.rfo.index')}}">
                 <div class="card-body">
-                <i class="fa fa-th-list" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
-                    <h4 class="card-title mt-3" style="color: black;">Request Form Order</h4>
+                    <i class="fa fa-th-list" style="font-size: 30px; color: #9B5718;" aria-hidden="true"></i>
+                    <p class="card-title mt-3" style="color: black;">Request Form Order</p>
                 </div>
-                </a>
-            </div>
-        </div>
-        <!-- Quotation Card -->
-        <div class="col-md-4">
-            <div class="card quotation-card p-4" style="height: 200px;">
-            <a href="{{route('sales.quotation.index')}}">
-                <div class="card-body">
-                <i class="fa fa-list-alt" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
-                <h4 class="card-title mt-3" style="color: black;">Quotation</h4>
-                </div>
-                </a>
-            </div>
+            </a>
         </div>
     </div>
+    <!-- Quotation Card -->
+    <div class="col-md-4 mt-2">
+        <div class="card quotation-card p-4" >
+            <a href="{{route('sales.quotation.index')}}">
+                <div class="card-body">
+                    <i class="fa fa-list-alt" style="font-size: 30px; color: #9B5718;" aria-hidden="true"></i>
+                    <p class="card-title mt-3" style="color: black;">Quotation</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+        </div>
 </div>
 
 <style>

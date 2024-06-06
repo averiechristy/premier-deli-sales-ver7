@@ -16,7 +16,10 @@
                                     <form name="saveform" action="{{route('admininvoice.so.simpan')}}" method="post" onsubmit="return validateForm()">
                                         @csrf                       
 
-
+                                        <div class="form-group mb-4">
+    <label for="" class="form-label" style="color:black;">Tanggal RFO</label>
+    <input name="rfo_date" id="rfo_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="{{$rfodate}}" readonly />
+</div>
 
     <input hidden name="rfo_id" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->id}}" />
 
@@ -32,7 +35,14 @@
 </div>
 
 
-
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('so_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
 <script>
     // Mendapatkan elemen input tanggal
     var orderDateInput = document.getElementById('so_date');
@@ -46,6 +56,8 @@
     // Mengatur nilai input tanggal ke tanggal hari ini
     orderDateInput.value = formattedDate;
 </script>
+
+
 
 <div class="form-group mb-4">
     <label for="" class="form-label" style="color:black;">Customer</label>
@@ -88,6 +100,14 @@
     <input name="shipping_date" id="shipping_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="{{$data->shipping_date}}" />
 </div>
 
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('shipping_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
 
 <div id="product-fields">
 @foreach ($rfoGrouped as $kodeSupplier => $detailRFOs)
@@ -121,7 +141,7 @@
                 
                 <div class="col-md-2">
                 <div class="form-group mb-4">
-                            <label for="" class="form-label" style="color:black;">Quantity</label>
+                            <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                             <input name="quantity[{{$kodeSupplier}}][]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata->qty}}" readonly />
                         </div>
                 </div>
@@ -197,7 +217,7 @@
         </div>
         <div class="col-md-2">
             <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
+                <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                 <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" />
             </div>
         </div>
@@ -255,21 +275,27 @@ $(document).on('change', '.product-select', function() {
     });
     });
 </script>
+<div class="form-group mb-4 mt-3">
+        <label for="" class="form-label" style="color:black;">Biaya Pengiriman</label>
+    <input name="biaya_pengiriman" type="number"  class="form-control " style="border-color: #01004C;" value="0" oninput="validasiNumber(this)" />
+</div>
 
 <div class="form-group mb-4 mt-4">
+<label for="" class="form-label" style="color:black;">Opsi Diskon</label>
+<br>
                            <div class="form-check form-check-inline">
                               <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discpersen" value="persen">
-                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio1">Discount dalam %</label>
+                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio1">Diskon dalam %</label>
                             </div>
                             <div class="form-check form-check-inline">
                               <input class="form-check-input" type="radio" name="inlineRadioOptions" id="discrp" value="amount">
-                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio2">Discount dalam Rp</label>
+                              <label class="form-check-label"  style="margin-left: 5px;" for="inlineRadio2">Diskon dalam Rp</label>
                             </div>
 </div>
 
 <div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">Discount</label>
-    <input name="discount" type="number"  class="form-control " style="border-color: #01004C;" value="" />
+        <label for="" class="form-label" style="color:black;">Diskon</label>
+    <input name="discount" type="number"  class="form-control " style="border-color: #01004C;" value="0" />
 </div>
 
 <div class="form-group mb-4 mt-3">
@@ -279,7 +305,7 @@ $(document).on('change', '.product-select', function() {
 
 <div class="form-group mb-4 mt-3">
         <label for="" class="form-label" style="color:black;">Down Payment</label>
-    <input name="pembayaran" type="number"  class="form-control " style="border-color: #01004C;" value="" />
+    <input name="pembayaran" type="number"  class="form-control " style="border-color: #01004C;" value="0" />
 </div>
 
 <div class="form-group mb-4 mt-3">
@@ -303,9 +329,18 @@ $(document).on('change', '.product-select', function() {
     </div>
 </div>
 
-<script>
+
+                                        </form>
+                                    </div>
+        </div>
+    </div>
+
+
+    <script>
     function confirmSubmit() {
-        $('#confirmModal').modal('show'); // Tampilkan modal
+        if (validateForm()) {
+            $('#confirmModal').modal('show'); // Tampilkan modal jika validasi berhasil
+        }
         return false; // Mengembalikan false untuk mencegah pengiriman form secara langsung
     }
 
@@ -320,19 +355,20 @@ $(document).on('change', '.product-select', function() {
         // Menutup modal ketika tombol "Tidak" ditekan
         $('#confirmModal').modal('hide');
     });
-</script>
-                                        </form>
-                                    </div>
-        </div>
-    </div>
 
-
-    <script>
     function validateForm() {
+
+        var tanggalrfo = document.forms["saveform"]["rfo_date"].value;
+        var tanggalso = document.forms["saveform"]["so_date"].value;
+
+        if (tanggalrfo > tanggalso) {
+            alert("Tanggal SO tidak boleh kurang dari tanggal RFO.");
+            return false;
+        }
+      
         var alamat = document.forms["saveform"]["alamat"].value;
         if (alamat == "") {
             alert("Alamat harus diisi");
-            closeModal();
             return false;
         }
         var products = document.getElementsByName('product[]');
@@ -343,38 +379,58 @@ $(document).on('change', '.product-select', function() {
                 isValidProduct = true;
                 // Validasi jumlah produk
                 if (quantities[i].value == "") {
-                    alert("Harap isi jumlah untuk setiap produk yang dipilih");
-                    closeModal();
+                    alert("Jumlah produk harus diisi.");
                     return false;
                 }
             }
         }
-        
+        var biayakirim = document.forms["saveform"]["biaya_pengiriman"].value;
+        if (biayakirim == "") {
+            alert("Biaya pengiriman harus diisi.");
+            closeModal();
+            return false;
+        }
         // Validasi radiobutton
         var radioValue = document.querySelector('input[name="inlineRadioOptions"]:checked');
         if (!radioValue) {
-            alert("Harap pilih salah satu opsi diskon");
-            closeModal();
+            alert("Opsi diskon harus diisi.");
             return false;
         }
 
         // Validasi discount
-        var discount = document.forms["saveform"]["discount"].value;
-        if (discount == "") {
-            alert("Discount harus diisi");
-            closeModal();
-            return false;
-        }
+        var opsi = document.forms["saveform"]["inlineRadioOptions"].value;
+     
+     if(opsi === "persen") {
+       
+         var discountpersen = document.forms["saveform"]["discount"].value;
+
+         if (discountpersen > 15 ) {
+         alert("Diskon maksimal 15%.");
+         closeModal();
+         return false;
+           } else if (discountpersen =="" ) {
+             alert("Diskon harus diisi.");
+         closeModal();
+         return false;
+           } 
+     }
+     else if(opsi === "amount"){
+      
+     // Validasi discount
+     var discount = document.forms["saveform"]["discount"].value;
+     if (discount == "") {
+         alert("Diskon harus diisi.");
+         closeModal();
+         return false;
+     }
+ }
 
         // Validasi PPN
         var ppn = document.forms["saveform"]["ppn"].value;
         if (ppn == "") {
-            alert("PPN harus diisi");
-            closeModal();
+            alert("PPN harus diisi.");
             return false;
         }
-
-
 
         return true;
     }

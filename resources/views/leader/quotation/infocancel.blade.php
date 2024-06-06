@@ -6,7 +6,10 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">
+            <div class="card-header ">
+                    <a href="{{ url()->previous() }}" class="btn btn-link" style="color:black;">
+                        <i class="fas fa-arrow-left"></i> 
+                    </a>
                     <h2 class="text-center" style="color:black;">Pengajuan Cancel {{$dataquote->no_quote}}</h2>
                 </div>
                 <div class="card-body">

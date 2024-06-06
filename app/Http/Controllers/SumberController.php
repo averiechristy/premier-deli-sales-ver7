@@ -35,7 +35,7 @@ class SumberController extends Controller
         $existingname = Sumber::where('sumber',$sumber)->first();
        
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, sumber sudah ada");
+            $request->session()->flash('error', "Sumber sudah terdaftar.");
             return redirect()->route('manager.sumber.index');
         }
 
@@ -45,7 +45,7 @@ class SumberController extends Controller
            
           ]);
 
-          $request->session()->flash('success', "Data sumber berhasil ditambahkan.");
+          $request->session()->flash('success', "Sumber berhasil ditambahkan.");
 
           return redirect()->route('manager.sumber.index');
 
@@ -74,7 +74,7 @@ class SumberController extends Controller
         ->first();
 
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, sumber sudah ada");
+            $request->session()->flash('error', "Sumber sudah terdaftar.");
             return redirect()->route('manager.sumber.index');
         }
 
@@ -84,7 +84,7 @@ class SumberController extends Controller
         $data -> save();
 
 
-  $request->session()->flash('success', "Data sumber berhasil diubah.");
+  $request->session()->flash('success', "Sumber berhasil diubah.");
 
         return redirect()->route('manager.sumber.index');
      }
@@ -130,7 +130,7 @@ class SumberController extends Controller
        $existingname = Sumber::where('sumber',$sumber)->first();
       
        if($existingname !== null && $existingname) {
-           $request->session()->flash('error', "Data gagal disimpan, sumber sudah ada");
+           $request->session()->flash('error', "Sumber sudah terdaftar.");
            return redirect()->route('leader.sumber.index');
        }
 
@@ -140,7 +140,7 @@ class SumberController extends Controller
           
          ]);
 
-         $request->session()->flash('success', "Data sumber berhasil ditambahkan.");
+         $request->session()->flash('success', "Sumber berhasil ditambahkan.");
 
          return redirect()->route('leader.sumber.index');
 
@@ -169,7 +169,7 @@ class SumberController extends Controller
        ->first();
 
        if($existingname !== null && $existingname) {
-           $request->session()->flash('error', "Data gagal disimpan, sumber sudah ada");
+           $request->session()->flash('error', "Sumber sudah terdaftar.");
            return redirect()->route('leader.sumber.index');
        }
 
@@ -179,7 +179,7 @@ class SumberController extends Controller
        $data -> save();
 
 
- $request->session()->flash('success', "Data sumber berhasil diubah.");
+ $request->session()->flash('success', "Sumber berhasil diubah.");
 
        return redirect()->route('leader.sumber.index');
     }
@@ -225,7 +225,7 @@ public function superadminstore(Request $request)
    $existingname = Sumber::where('sumber',$sumber)->first();
   
    if($existingname !== null && $existingname) {
-       $request->session()->flash('error', "Data gagal disimpan, sumber sudah ada");
+       $request->session()->flash('error', "Sumber sudah terdaftar.");
        return redirect()->route('superadmin.sumber.index');
    }
 
@@ -235,7 +235,7 @@ public function superadminstore(Request $request)
       
      ]);
 
-     $request->session()->flash('success', "Data sumber berhasil ditambahkan.");
+     $request->session()->flash('success', "Sumber berhasil ditambahkan.");
 
      return redirect()->route('superadmin.sumber.index');
 
@@ -264,7 +264,7 @@ public function superadminupdate(Request $request, $id)
    ->first();
 
    if($existingname !== null && $existingname) {
-       $request->session()->flash('error', "Data gagal disimpan, sumber sudah ada");
+       $request->session()->flash('error', "Sumber sudah terdaftar.");
        return redirect()->route('superadmin.sumber.index');
    }
 
@@ -274,7 +274,7 @@ public function superadminupdate(Request $request, $id)
    $data -> save();
 
 
-$request->session()->flash('success', "Data sumber berhasil diubah.");
+$request->session()->flash('success', "Sumber berhasil diubah.");
 
    return redirect()->route('superadmin.sumber.index');
 }

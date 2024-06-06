@@ -40,7 +40,7 @@ entries
             <table  class="table table-bordered "  width="100%" cellspacing="0" style="border-radius: 10px;">
                 <thead>
                     <tr>                           
-                    <th>No Quotation</th>            
+                        <th>No Quotation</th>            
                         <th>Nama Customer</th>
                         <th>Nama PIC</th>
                         <th>Produk</th>
@@ -48,84 +48,85 @@ entries
                         <th>Status Update</th>
                         <th>Tanggal Kirim</th>
                         <th>Tanggal Bayar</th>
+                        <th>Pembuat</th>
                         <th>Action</th>
-                        <th></th>
-                        <th></th>
+                       
                     </tr>
 
                 </thead>
                 
                 <tbody>
-                <th colspan="10" style="color:black; text-align: center; font-size:24px;">Quotation</th>                
+                <th colspan="11" style="color:black; text-align: center; font-size:24px;">Quotation</th>                
 
                 @foreach ($quote as $data)
             <tr>
                 <td>{{$data->no_quote}}</td>
                   <td>{{$data->nama_customer}}</td>
-                  <td>{{$data->nama_penerima}}</td>
+                  <td>{{$data->nama_pic}}</td>
                   <td>    
                   <a href="{{route('managertampilpesananquote',$data->id)}}"><button type="button" class="btn btn-link">
-    Lihat Detail Pesanan
+    Lihat Detail Produk
 </button></a>
 </td>
 <td>{{$data->status_quote}}</td>
 <td>{{$data -> updated_at}}</td>
 <td>{{ \Carbon\Carbon::parse($data->shipping_date)->format('d-m-Y') }}</td>
 <td>{{ \Carbon\Carbon::parse($data->payment_date)->format('d-m-Y') }}</td>
-<td>    
-<a href="{{route('managertampilquote',$data->id)}}">
-    Cetak Quotation
-</a>
+<td>{{$data -> nama_pembuat}}</td>
 
-</td>
-<td>
-    @if($data->is_download == "Yes")
-      <span>Quotation Sudah didownload </span> <i class="fas fa-check-circle" style="color:green;"></i> 
-    @else
-       Quotation Belum didownload
+<td>    
+    <a id="cetakSalesOrder{{$data->id}}" href="{{route('managertampilquote',$data->id)}}" data-toggle="tooltip" class="btn" title='Cetak Quotation' style="display: flex; justify-content: center; align-items: center;">
+        <i class="fa fa-print" style="color:blue;" aria-hidden="true"></i>
+    </a>
+    @if($data->status_quote == "Proses PO" || $data->status_quote == "Terbit Invoice" || $data->status_quote == "Cancelled" || $data->status_quote == "Menunggu Persetujuan Cancel")
+        <a href="#" class="btn" style="cursor: not-allowed; display: flex; justify-content: center; align-items: center;" disabled>
+            <i class="fa fa-times"></i>
+        </a>
+    @elseif($data->status_quote == "Quotation Dibuat")
+        <a href="#" class="btn" data-toggle="modal" data-target="#exampleModal{{$data->id}}" data-toggle="tooltip" title='Batalkan Quotation' style="display: flex; justify-content: center; align-items: center;">
+            <i class="fa fa-times" style="color:red"></i>
+        </a>
     @endif
-</td>
-<td>
-@if($data->status_quote =="Proses PO")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan Quotation
-</button>
+
+    @if($data->status_quote =="Proses PO")
+
+<a data-toggle="tooltip" class="btn disabled" title='Edit' style="pointer-events: none; cursor: default;">
+    <i class="fas fa-fw fa-edit" style="color:gray"></i>
+</a>
 
 
 @elseif($data->status_quote =="Terbit Invoice")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan Quotation
-</button>
+
+<a data-toggle="tooltip" class="btn disabled" title='Edit' style="pointer-events: none; cursor: default;">
+    <i class="fas fa-fw fa-edit" style="color:gray"></i>
+</a>
+
 
 @elseif($data->status_quote =="Cancelled")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan Quotation
-</button>
 
+<a data-toggle="tooltip" class="btn disabled" title='Edit' style="pointer-events: none; cursor: default;">
+    <i class="fas fa-fw fa-edit" style="color:gray"></i>
+</a>
 
 @elseif($data->status_quote =="Menunggu Persetujuan Cancel")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan Quotation
-</button>
+<a data-toggle="tooltip" class="btn disabled" title='Edit' style="pointer-events: none; cursor: default;">
+    <i class="fas fa-fw fa-edit" style="color:gray"></i>
+</a>
+
 
 @elseif($data->status_quote =="Quotation Dibuat")
-
-<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Batalkan Quotation
-</button>
-
-
+<a href="{{route('managereditquote', $data->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 
 
 @endif
-</td>
 
+</td>
 
 </tr>      
 <div class="modal fade" id="exampleModal{{$data->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Cancel {{$data->no_quote}}</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle" style="color:black;">Cancel {{$data->no_rfo}}</h5>
        
       </div>
       <div class="modal-body">
@@ -136,7 +137,7 @@ entries
                 
       </div>
       <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
                 <button type="submit" class="btn btn-primary">Ya</button>
             </div>
             </form>
@@ -146,7 +147,7 @@ entries
 @endforeach
 
 <tr>
-<th colspan="10" style="color:black; text-align: center; font-size:24px;">Quotation dari leader</th>
+<th colspan="11" style="color:black; text-align: center; font-size:24px;">Quotation dari leader</th>
 
 @foreach ($quotedarisales as $data)
              <tr>
@@ -155,29 +156,29 @@ entries
                   <td>{{$data->nama_penerima}}</td>
                   <td>    
                   <a href="{{route('managertampilpesananquote',$data->id)}}"><button type="button" class="btn btn-link">
-    Lihat Detail Pesanan
+    Lihat Detail Produk
 </button></a>
 </td>
 <td>{{$data->status_quote}}</td>
 <td>{{$data -> updated_at}}</td>
 <td>{{ \Carbon\Carbon::parse($data->shipping_date)->format('d-m-Y') }}</td>
 <td>{{ \Carbon\Carbon::parse($data->payment_date)->format('d-m-Y') }}</td>
-<!-- <td>    
-<a href="{{route('managertampilquote',$data->id)}}">
-    Cetak Quotation
-</a>
+<td>{{$data -> nama_pembuat}}</td>
 
-</td> -->
-
-<td>
+<td>    
+    <div>
+        <a href="{{route('managertampilquote',$data->id)}}" style="display: flex; justify-content: center; center; align-items: center;">
+            <i class="fa fa-print" style="color:blue;" aria-hidden="true"data-toggle="tooltip" title="Cetak Quotation"></i>
+        </a>
+    </div>
     
-    @if($data->status_quote =="Menunggu Persetujuan Cancel")
- <a href="{{route('managerinfocancelquotation', $data->id)}}">
-<button type="button" class="btn btn-danger btn-sm" >
-      Penganjuan Cancel
-</button>
-</a>
-@endif
+    @if($data->status_quote == "Menunggu Persetujuan Cancel")
+        <div style="margin-top: 20px;">
+            <a href="{{route('managerinfocancelquotation', $data->id)}}"data-toggle="tooltip"  title="Persetujuan Cancel" style="display: flex; justify-content: center; center; align-items: center;">
+                <i class="fas fa-info-circle"></i>
+            </a>
+        </div>
+    @endif
 </td>
 
 </tr>      

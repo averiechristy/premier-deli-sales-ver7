@@ -17,6 +17,8 @@ class Produk extends Model
         'kode_supplier',
         'nama_supplier',
         'supplier_id',
+        'gambar_produk',
+       
         'created_by',
         'updated_by',
     ];

@@ -42,12 +42,12 @@ class ChannelController extends Controller
         $existingname = Channel::where('nama_channel', $namachannel)->first();
 
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            $request->session()->flash('error', "Kode channel sudah terdaftar.");
             return redirect()->route('superadmin.channel.index');
         }
 
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            $request->session()->flash('error', "Nama channel sudah terdaftar.");
             return redirect()->route('superadmin.channel.index');
         }
 
@@ -57,7 +57,7 @@ class ChannelController extends Controller
            'created_by' => $loggedInUsername,
         ]);
 
-        $request->session()->flash('success', 'Channel berhasil ditambahkan');
+        $request->session()->flash('success', 'Channel berhasil ditambahkan.');
 
         return redirect(route('superadmin.channel.index'));
     }
@@ -89,12 +89,12 @@ class ChannelController extends Controller
                                ->first();
     
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            $request->session()->flash('error', "Kode channel sudah terdaftar.");
             return redirect()->route('superadmin.channel.index');
         }
     
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            $request->session()->flash('error', "Nama channel sudah terdaftar.");
             return redirect()->route('superadmin.channel.index');
         }
     
@@ -102,19 +102,17 @@ class ChannelController extends Controller
         $data->nama_channel = $request->nama_channel;
         $data->updated_by = $loggedInUsername;
         $data->save();
-        $request->session()->flash('success', 'Channel berhasil diubah');
+        $request->session()->flash('success', 'Channel berhasil diubah.');
     
         return redirect(route('superadmin.channel.index'));
     }
     
-
     public function adminprodukdestroy(Request $request, $id)
     {
         $channel = Channel::find($id);
         $channel -> delete();
 
-
-         $request->session()->flash('success', 'Channel berhasil dihapus');
+         $request->session()->flash('success', 'Channel berhasil dihapus.');
 
         return redirect(route('superadmin.channel.index'));
     }
@@ -152,12 +150,12 @@ class ChannelController extends Controller
         $existingname = Channel::where('nama_channel', $namachannel)->first();
 
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            $request->session()->flash('error', "Kode channel sudah terdaftar.");
             return redirect()->route('leader.channel.index');
         }
 
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            $request->session()->flash('error', "Nama channel sudah terdaftar.");
             return redirect()->route('leader.channel.index');
         }
 
@@ -167,7 +165,7 @@ class ChannelController extends Controller
            'created_by' => $loggedInUsername,
         ]);
 
-        $request->session()->flash('success', 'Channel berhasil ditambahkan');
+        $request->session()->flash('success', 'Channel berhasil ditambahkan.');
 
         return redirect(route('leader.channel.index'));
     }
@@ -198,19 +196,19 @@ class ChannelController extends Controller
                                ->first();
     
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            $request->session()->flash('error', "Kode channel sudah terdaftar.");
             return redirect()->route('leader.channel.index');
         }
     
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            $request->session()->flash('error', "Nama channel sudah terdaftar.");
             return redirect()->route('leader.channel.index');
         }
         $data->kode_channel = $request->kode_channel;
         $data -> nama_channel = $request -> nama_channel;
         $data -> updated_by = $loggedInUsername;
         $data->save();
-        $request->session()->flash('success', 'Channel berhasil diubah');
+        $request->session()->flash('success', 'Channel berhasil diubah.');
 
         return redirect(route('leader.channel.index'));
     }
@@ -220,8 +218,7 @@ class ChannelController extends Controller
         $channel = Channel::find($id);
         $channel -> delete();
 
-
-         $request->session()->flash('success', 'Channel berhasil dihapus');
+         $request->session()->flash('success', 'Channel berhasil dihapus.');
 
         return redirect(route('leader.channel.index'));
     }
@@ -259,12 +256,12 @@ class ChannelController extends Controller
         $existingname = Channel::where('nama_channel', $namachannel)->first();
 
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            $request->session()->flash('error', "Kode channel sudah terdaftar.");
             return redirect()->route('manager.channel.index');
         }
 
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            $request->session()->flash('error', "Nama channel sudah terdaftar.");
             return redirect()->route('manager.channel.index');
         }
 
@@ -274,7 +271,7 @@ class ChannelController extends Controller
            'created_by' => $loggedInUsername,
         ]);
 
-        $request->session()->flash('success', 'Channel berhasil ditambahkan');
+        $request->session()->flash('success', 'Channel berhasil ditambahkan.');
 
         return redirect(route('manager.channel.index'));
     }
@@ -304,19 +301,19 @@ class ChannelController extends Controller
                                ->first();
     
         if($existingcode !== null && $existingcode) {
-            $request->session()->flash('error', "Data gagal disimpan, kode channel sudah ada");
+            $request->session()->flash('error', "Kode channel sudah terdaftar.");
             return redirect()->route('manager.channel.index');
         }
     
         if($existingname !== null && $existingname) {
-            $request->session()->flash('error', "Data gagal disimpan, nama channel sudah ada");
+            $request->session()->flash('error', "Nama channel sudah terdaftar.");
             return redirect()->route('manager.channel.index');
         }
         $data->kode_channel = $request->kode_channel;
         $data -> nama_channel = $request -> nama_channel;
         $data -> updated_by = $loggedInUsername;
         $data->save();
-        $request->session()->flash('success', 'Channel berhasil diubah');
+        $request->session()->flash('success', 'Channel berhasil diubah.');
 
         return redirect(route('manager.channel.index'));
     }
@@ -327,7 +324,7 @@ class ChannelController extends Controller
         $channel -> delete();
 
 
-         $request->session()->flash('success', 'Channel berhasil dihapus');
+         $request->session()->flash('success', 'Channel berhasil dihapus.');
 
         return redirect(route('manager.channel.index'));
     }

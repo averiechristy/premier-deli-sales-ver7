@@ -34,7 +34,7 @@ class CatatanController extends Controller
         $existingdata = Catatan::where('judul_catatan', $judul)->first();
 
         if($existingdata){
-            $request->session()->flash('error', "Gagal menyimpan data, judul catatan sudah ada.");
+            $request->session()->flash('error', "Catatan sudah terdaftar.");
     
             return redirect()->route('superadmin.catatan.index');
         }
@@ -46,7 +46,7 @@ class CatatanController extends Controller
          ]);
 
          
-        $request->session()->flash('success', 'Catatan Quotation berhasil ditambahkan');
+        $request->session()->flash('success', 'Catatan quotation berhasil ditambahkan.');
 
         return redirect(route('superadmin.catatan.index'));
      }
@@ -83,7 +83,7 @@ $judul = $request->judul_catatan;;
         }
         $data->save();
 
-        $request->session()->flash('success', 'Catatan Quotation berhasil diubah');
+        $request->session()->flash('success', 'Catatan quotation berhasil diubah.');
 
         return redirect(route('superadmin.catatan.index'));
      }
@@ -94,7 +94,7 @@ $judul = $request->judul_catatan;;
         $catatan = Catatan::find($id);
         $catatan->delete();
 
-        $request->session()->flash('success', "Catatan Quotation berhasil dihapus.");
+        $request->session()->flash('success', "Catatan quotation berhasil dihapus.");
    
         return redirect()->route('superadmin.catatan.index');
      }
@@ -126,7 +126,7 @@ $judul = $request->judul_catatan;;
         $existingdata = Catatan::where('judul_catatan', $judul)->first();
 
         if($existingdata){
-            $request->session()->flash('error', "Gagal menyimpan data, judul catatan sudah ada.");
+            $request->session()->flash('error', "Catatan sudah terdaftar.");
     
             return redirect()->route('admininvoice.catatan.index');
         }
@@ -138,7 +138,7 @@ $judul = $request->judul_catatan;;
          ]);
 
          
-        $request->session()->flash('success', 'Catatan Quotation berhasil ditambahkan');
+        $request->session()->flash('success', 'Catatan quotation berhasil ditambahkan.');
 
         return redirect(route('admininvoice.catatan.index'));
      }
@@ -175,7 +175,7 @@ $judul = $request->judul_catatan;;
         }
         $data->save();
 
-        $request->session()->flash('success', 'Catatan Quotation berhasil diubah');
+        $request->session()->flash('success', 'Catatan quotation berhasil diubah.');
 
         return redirect(route('admininvoice.catatan.index'));
      }
@@ -186,7 +186,7 @@ $judul = $request->judul_catatan;;
         $catatan = Catatan::find($id);
         $catatan->delete();
 
-        $request->session()->flash('success', "Catatan Quotation berhasil dihapus.");
+        $request->session()->flash('success', "Catatan quotation berhasil dihapus.");
    
         return redirect()->route('admininvoice.catatan.index');
      }
@@ -217,7 +217,7 @@ $judul = $request->judul_catatan;;
         $existingdata = Catatan::where('judul_catatan', $judul)->first();
 
         if($existingdata){
-            $request->session()->flash('error', "Gagal menyimpan data, judul catatan sudah ada.");
+            $request->session()->flash('error', "Catatan sudah terdaftar.");
     
             return redirect()->route('manager.catatan.index');
         }
@@ -229,7 +229,7 @@ $judul = $request->judul_catatan;;
          ]);
 
          
-        $request->session()->flash('success', 'Catatan Quotation berhasil ditambahkan');
+        $request->session()->flash('success', 'Catatan quotation berhasil ditambahkan.');
 
         return redirect(route('manager.catatan.index'));
      }
@@ -266,7 +266,7 @@ $judul = $request->judul_catatan;;
         $data->updated_by = $loggedInUsername;
         $data->save();
 
-        $request->session()->flash('success', 'Catatan Quotation berhasil diubah');
+        $request->session()->flash('success', 'Catatan quotation berhasil diubah.');
 
         return redirect(route('manager.catatan.index'));
      }
@@ -277,7 +277,7 @@ $judul = $request->judul_catatan;;
         $catatan = Catatan::find($id);
         $catatan->delete();
 
-        $request->session()->flash('success', "Catatan Quotation berhasil dihapus.");
+        $request->session()->flash('success', "Catatan quotation berhasil dihapus.");
    
         return redirect()->route('manager.catatan.index');
      }

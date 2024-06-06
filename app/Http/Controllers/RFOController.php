@@ -39,7 +39,7 @@ $id=$request->rfo_id;
 $datarfo = RFO::find($id);
 $datarfo -> status_rfo ="Cancelled";
 $datarfo->save();
-$request->session()->flash('success', "RFO berhasil dibatalkan");
+$request->session()->flash('success', "RFO berhasil dibatalkan.");
 
 return redirect()->route('manager.rfo.index');
 
@@ -224,7 +224,7 @@ if ($currentYearMonth != $lastYearMonth) {
         $existingdata = RFO::where('no_rfo', $rfonumber)->first();
 
         if($existingdata !== null && $existingdata) {
-            $request->session()->flash('error', "Data gagal disimpan, RFO sudah ada");
+            $request->session()->flash('error', "RFO sudah terdaftar.");
             return redirect()->route('sales.rfo.index');
         }
 
@@ -265,7 +265,7 @@ if ($currentYearMonth != $lastYearMonth) {
             DetailRFO::insert($rfoDetails); 
         }
         
-        $request->session()->flash('success', "RFO berhasil dibuat");
+        $request->session()->flash('success', "RFO berhasil dibuat.");
 
         return redirect()->route('sales.rfo.index');
         
@@ -283,7 +283,7 @@ if ($currentYearMonth != $lastYearMonth) {
         $existingdata = RFO::where('no_rfo', $rfonumber)->first();
 
         if($existingdata !== null && $existingdata) {
-            $request->session()->flash('error', "Data gagal disimpan, RFO sudah ada");
+            $request->session()->flash('error', "RFO sudah terdaftar.");
             return redirect()->route('superadmin.rfo.index');
         }
 
@@ -322,7 +322,7 @@ if ($currentYearMonth != $lastYearMonth) {
             DetailRFO::insert($rfoDetails); 
         }
         
-        $request->session()->flash('success', "RFO berhasil dibuat");
+        $request->session()->flash('success', "RFO berhasil dibuat.");
 
         return redirect()->route('superadmin.rfo.index');
         
@@ -340,7 +340,7 @@ if ($currentYearMonth != $lastYearMonth) {
         $existingdata = RFO::where('no_rfo', $rfonumber)->first();
 
         if($existingdata !== null && $existingdata) {
-            $request->session()->flash('error', "Data gagal disimpan, RFO sudah ada");
+            $request->session()->flash('error', "RFO sudah terdaftar.");
             return redirect()->route('leader.rfo.index');
         }
         $rfo -> nama_penerima = $request->nama_penerima;
@@ -377,7 +377,7 @@ if ($currentYearMonth != $lastYearMonth) {
             DetailRFO::insert($rfoDetails); 
         }
         
-        $request->session()->flash('success', "RFO berhasil dibuat");
+        $request->session()->flash('success', "RFO berhasil dibuat.");
 
         return redirect()->route('leader.rfo.index');
         
@@ -395,7 +395,7 @@ if ($currentYearMonth != $lastYearMonth) {
         $existingdata = RFO::where('no_rfo', $rfonumber)->first();
 
         if($existingdata !== null && $existingdata) {
-            $request->session()->flash('error', "Data gagal disimpan, RFO sudah ada");
+            $request->session()->flash('error', "RFO sudah terdaftar.");
             return redirect()->route('manager.rfo.index');
         }
 
@@ -434,7 +434,7 @@ if ($currentYearMonth != $lastYearMonth) {
             DetailRFO::insert($rfoDetails); 
         }
         
-        $request->session()->flash('success', "RFO berhasil dibuat");
+        $request->session()->flash('success', "RFO berhasil dibuat.");
 
         return redirect()->route('manager.rfo.index');
         
@@ -493,7 +493,7 @@ if ($currentYearMonth != $lastYearMonth) {
         $cancelreq -> report_role = $roleid;
         $cancelreq -> save();
 
-        $request->session()->flash('success', "Request Cancel terkirim");
+        $request->session()->flash('success', "Cancel RFO terkirim.");
         return redirect(route('sales.rfo.index',[
             'rfo' => $rfo,
         ]));
@@ -530,7 +530,7 @@ if ($currentYearMonth != $lastYearMonth) {
         
         
 
-        $request->session()->flash('success', "RFO berhasil dibatalkan");
+        $request->session()->flash('success', "RFO berhasil dibatalkan.");
         return redirect(route('superadmin.rfo.index',[
             'rfo' => $rfo,
         ]));
@@ -574,7 +574,7 @@ if ($currentYearMonth != $lastYearMonth) {
         $cancelreq -> report_role = $roleid;
         $cancelreq -> save();
 
-        $request->session()->flash('success', "Request Cancel terkirim");
+        $request->session()->flash('success', "Cancel RFO terkirim.");
         return redirect(route('leader.rfo.index',[
             'rfo' => $rfo,
         ]));
@@ -611,7 +611,7 @@ if ($currentYearMonth != $lastYearMonth) {
         
 
 
-        $request->session()->flash('success', "Request Cancel terkirim");
+        $request->session()->flash('success', "Cancel RFO terkirim.");
         return redirect(route('sales.rfo.index',[
             'rfo' => $rfo,
         ]));

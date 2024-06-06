@@ -12,7 +12,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title">Filter</h5>
+                    <h5 class="card-title">Pilih Bulan</h5>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('filter') }}" method="GET">
@@ -28,7 +28,7 @@
 </select>
                             </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary">Filter</button>
+                                <button type="submit" class="btn btn-primary">Pilih</button>
                             </div>
                         </div>
                     </form>

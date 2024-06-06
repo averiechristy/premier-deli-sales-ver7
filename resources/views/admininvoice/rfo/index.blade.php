@@ -56,7 +56,7 @@ entries
                   <td>{{$data->nama_penerima}}</td>
                   <td>    
                     <a href="{{route('admininvoicetampilpesanan', $data->id)}}"><button type="button" class="btn btn-link">
-    Lihat Detail Pesanan
+    Lihat Detail Produk
 </button></a>
 </td>
                   <td>{{$data->shipping_date}}</td>

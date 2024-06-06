@@ -59,7 +59,7 @@
 </div>
 </div>         
                                         
-                                        <button type="submit" class="btn btn-pd btn-user btn-block">Login</button>
+                                        <button type="submit" class="btn btn-pd btn-user btn-block">Masuk</button>
                                       
                                        
                                     </form>

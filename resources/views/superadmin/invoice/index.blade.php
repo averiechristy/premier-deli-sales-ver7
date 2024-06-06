@@ -54,21 +54,24 @@ entries
 
                             <table  class="table table-bordered"  width="100%" cellspacing="0" style="border-radius: 10px;">
                 <thead>
-                    <tr>                                       
+                <tr>                                       
                     <th>No Invoice</th>
                     <th>SO / Quotation</th>
                     <th>Nama Customer</th>
                     <th>Tanggal Invoice</th>
                     <th>Produk</th>
                     <th>Status</th>
-                    <th>Created By</th>
+             
+                      <th>Cetak</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                      
+                  
+
+                      <th>Created By</th>
                     <th>Created At</th>
                     <th>Updated By</th>
                     <th>Updated At</th>
-                      <th>Action</th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
                     </tr>
                 </thead>
                 
@@ -81,15 +84,11 @@ entries
                 <td>{{$data -> invoice_date}}</td>
                 <td>    
                     <a href="{{route('superadmintampilpesananinvoice', $data->id)}}"><button type="button"  class="btn btn-link">
-    Lihat Detail Pesanan
+    Lihat Detail Produk
 </button></a>
 </td>
 <td> {{$data->status_invoice}}</td>
-<td>{{$data -> created_by}}</td>
-<td>{{$data -> created_at}}</td>
 
-<td>{{$data -> updated_by}}</td>
-<td>{{$data -> updated_at}}</td>
 <td>  
 
 <a href="{{route('superadmintampilinvoice',$data->id)}}">
@@ -104,11 +103,28 @@ entries
 </a>
 
 </td>
+
+<td>
+    @if($data->is_download == "Yes")
+    <span>Invoice Sudah didownload </span><i class="fas fa-check-circle" style="color:green;"></i>    
+    @else
+        Invoice Belum didownload
+    @endif
+
+    <br>
+    <br>
+    @if($data->is_download_do == "Yes")
+    <span>DO Sudah didownload </span><i class="fas fa-check-circle" style="color:green;"></i>    
+    @else
+        DO Belum didownload
+    @endif
+</td>
+
 <td>
 
 @if($data->status_invoice =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Invoice
+    Batal
 </button>
 
 @elseif($data->status_invoice =="Menunggu Persetujuan Cancel")
@@ -117,23 +133,21 @@ entries
       Penganjuan Cancel
 </button> -->
 <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Invoice
+    Batal
 </button>
 @elseif ($data->is_closing =="Yes")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Invoice
+    Batal
 </button>
 @else
   
 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Cancel Invoice
+      Batal
 </button>
 @endif
 
-</td>
+<div class="mt-3">
 
-
-<td>
 @if($data->status_invoice =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
     Closing
@@ -154,27 +168,40 @@ entries
       Closing
 </button>
 @endif
-</td>
-<td>
+</div>
+
+
+
+<div class="mt-3">
+
 
 @if($data->status_invoice =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-     Request Perubahan Invoice
+     Edit
 </button>
 
 @elseif ($data->status_invoice =="Menunggu Persetujuan Cancel")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-     Request Perubahan Invoice
+     Edit
 </button>
 @elseif ($data->is_closing =="Yes")
 <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Request Perubahan Invoice
+    Edit
 </button>
 @else    
-<a href="{{route('superadmin.perubahaninvoice', $data->id)}}"><button class="btn btn-sm btn-primary">Request Perubahan Invoice</button></a></td>
+<a href="{{route('superadmin.perubahaninvoice', $data->id)}}"><button class="btn btn-sm btn-primary">Edit</button></a></td>
 @endif
+</div>
 
 </td>
+
+
+
+<td>{{$data -> created_by}}</td>
+<td>{{$data -> created_at}}</td>
+
+<td>{{$data -> updated_by}}</td>
+<td>{{$data -> updated_at}}</td>
 </tr>
 
 <div class="modal fade" id="exampleModal{{$data->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

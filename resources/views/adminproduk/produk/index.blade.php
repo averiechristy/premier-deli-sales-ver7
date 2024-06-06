@@ -9,15 +9,15 @@
 
                 <p style="color:black;">Unggah file untuk menambahkan produk baru, atau tambahkan ke kumpulan data produk yang sudah ada. <br> Anda dapat mengunggah file Excel</p>
                 <div class="button mt-2 mb-4">
-                <a href="{{route('adminproduk.produk.create')}}" class="btn btn-pd btn-sm">Tambah Data</a>
-                    <a href="{{ route('download.template') }}" class="btn btn-info btn-sm" download>Download Template</a>
+                <a href="{{route('adminproduk.produk.create')}}" class="btn btn-pd btn-sm">Tambah Produk</a>
+                    <a href="{{ route('download.template') }}" class="btn btn-info btn-sm" download>Unduh Template</a>
 </div>
 
 <div class="importdata mb-3">
 <form action="{{ route('import.products') }}" method="post" enctype="multipart/form-data" style="display: flex; align-items: center;">
     @csrf
     <input type="file" name="file" accept=".xlsx, .xls" style="margin-right: 10px;" required>
-    <button class="btn btn-warning btn-sm" type="submit">Import Data</button>
+    <button class="btn btn-warning btn-sm" type="submit">Unggah File</button>
 </form>
 
            </div>
@@ -54,13 +54,14 @@ entries
                                 <table  class="table table-bordered"  width="100%" cellspacing="0" style="border-radius: 10px;">
                                     <thead>
                                         <tr>          
-
+                                        <th>Kode Supplier</th>
+                                            <th>Nama Supplier</th>
                                             <th>Kode Produk</th>
                                             <th>Nama Produk</th>
+                                            <th>Gambar Produk</th>
                                             <th>Harga Beli</th>
                                             <th>Harga Jual</th>
-                                            <th>Kode Supplier</th>
-                                            <th>Nama Supplier</th>
+                                          
                                             <th>Created At</th>
 <th>Created By</th>
 <th>Updated At</th>
@@ -73,13 +74,20 @@ entries
                                     <tbody>
                                         @foreach ($produk as $data)
                                  <tr>
-
+                                 <td>{{$data -> kode_supplier}}</td>
+                                    <td>{{$data -> nama_supplier}}</td>
                                     <td>{{$data -> kode_produk}}</td>
+                                    <td>
+                            @if($data->gambar_produk)
+                                <img src="{{asset('images/produk/'.$data->gambar_produk)}}" alt="Gambar Produk" style="width: 50px; height: 50px;">
+                            @else
+                                Tidak ada gambar
+                            @endif
+                        </td>
                                     <td>{{$data -> nama_produk}}</td>
                                     <td>{{$data -> harga_beli}}</td>
                                     <td>{{$data -> harga_jual}}</td>
-                                    <td>{{$data -> kode_supplier}}</td>
-                                    <td>{{$data -> nama_supplier}}</td>
+                                   
                                     <td>{{$data -> created_at}}</td>
     <td>{{$data -> created_by}}</td>
     <td>{{$data -> updated_at}}</td>

@@ -61,15 +61,16 @@ entries
                     <th>Tanggal Invoice</th>
                     <th>Produk</th>
                     <th>Status</th>
-                    <th>Created By</th>
+             
+                      <th>Cetak</th>
+                      <th>Status</th>
+                     
+                      <th>Action</th>
+
+                      <th>Created By</th>
                     <th>Created At</th>
                     <th>Updated By</th>
                     <th>Updated At</th>
-                      <th>Action</th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
                     </tr>
                 </thead>
                 
@@ -82,16 +83,12 @@ entries
                 <td>{{$data -> invoice_date}}</td>
                 <td>    
             <a href="{{route('tampilpesananinvoice', $data->id)}}"><button type="button"  class="btn btn-link">
-    Lihat Detail Pesanan
+    Lihat Detail Produk
 </button>
 </a>
 </td>
 <td> {{$data->status_invoice}}</td>
-<td>{{$data -> created_by}}</td>
-<td>{{$data -> created_at}}</td>
 
-<td>{{$data -> updated_by}}</td>
-<td>{{$data -> updated_at}}</td>
 <td>  
 
 <a  id="cetakSalesOrder{{$data->id}}" href="{{route('tampilinvoice',$data->id)}}">
@@ -122,32 +119,37 @@ entries
         DO Belum didownload
     @endif
 </td>
-<td>
 
+
+
+<td>
 
 @if($data->status_invoice =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Invoice
+    Batal
 </button>
 
+@elseif($data->status_invoice =="Menunggu Persetujuan Cancel")
+ <!-- <a href="{{route('superadmininfocancelinvoice', $data->id)}}">
+<button type="button" class="btn btn-danger btn-sm" >
+      Penganjuan Cancel
+</button> -->
+<button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
+    Batal
+</button>
 @elseif ($data->is_closing =="Yes")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Invoice
-</button>
-
-@elseif ($data->status_invoice =="Menunggu Persetujuan Cancel")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Cancel Invoice
+    Batal
 </button>
 @else
   
 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Cancel Invoice
+      Batal
 </button>
 @endif
 
+<div class="mt-3">
 
-<td>
 @if($data->status_invoice =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
     Closing
@@ -168,28 +170,39 @@ entries
       Closing
 </button>
 @endif
-</td>
+</div>
 
-<td>
+
+
+<div class="mt-3">
+
 
 @if($data->status_invoice =="Cancelled")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-     Request Perubahan Invoice
+     Edit
 </button>
 
 @elseif ($data->status_invoice =="Menunggu Persetujuan Cancel")
     <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-     Request Perubahan Invoice
+     Edit
 </button>
 @elseif ($data->is_closing =="Yes")
 <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Request Perubahan Invoice
+    Edit
 </button>
 @else    
-<a href="{{route('admininvoice.perubahaninvoice', $data->id)}}"><button class="btn btn-sm btn-primary">Request Perubahan Invoice</button></a></td>
+<a href="{{route('admininvoice.perubahaninvoice', $data->id)}}"><button class="btn btn-sm btn-primary">Edit</button></a></td>
 @endif
+</div>
 
 </td>
+
+
+<td>{{$data -> created_by}}</td>
+<td>{{$data -> created_at}}</td>
+
+<td>{{$data -> updated_by}}</td>
+<td>{{$data -> updated_at}}</td>
 </tr>
 
 <div class="modal fade" id="exampleModal{{$data->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

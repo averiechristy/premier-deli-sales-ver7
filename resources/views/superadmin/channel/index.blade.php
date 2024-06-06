@@ -12,7 +12,7 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <a href="{{route('superadmin.channel.create')}}" class="btn btn-pd btn-sm">Tambah Data</a>
+                            <a href="{{route('superadmin.channel.create')}}" class="btn btn-pd btn-sm">Tambah Channel</a>
                         </div>
                         <div class="card-body">
                         <div class="dataTables_length mb-3" id="myDataTable_length">
@@ -60,13 +60,13 @@ entries
     <td>{{$data -> updated_by}}</td>
                                         <td> 
                                            
-                                           <a href="{{route('tampilchannel', $data->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 
+                                           <a href="{{route('tampilchannel', $data->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange;display: flex; justify-content: center; align-items: center;" ></i></a>                 
                               
                            
                            <form method="POST" action="{{route('deletechannel', $data->id)}}">
         @csrf
         <input name="_method" type="hidden" value="DELETE">
-        <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red"></i></button>
+        <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red;" style="display: flex; justify-content: center; align-items: center;"></i></button>
     </form>             
 
  </td>

@@ -15,5 +15,6 @@ class CancelApprovalSA extends Model
         'alasan',
         'report_to',
         'status_cancel',
+        'diajukan_oleh',
       ];
 }

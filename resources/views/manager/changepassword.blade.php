@@ -25,7 +25,7 @@
             <hr>
             <div class="form-group mb-4">
     <div class="password-container position-relative">
-        <input id="current_password" type="password" name="current_password" class="form-control" placeholder="Current Password">
+        <input id="current_password" type="password" name="current_password" class="form-control" placeholder="Password lama">
        
         <i class="toggle-password fas fa-eye eye-toggle"></i>
     </div>
@@ -36,7 +36,7 @@
 
 <div class="form-group mb-4">
     <div class="password-container position-relative">
-        <input id="new_password" type="password" name="new_password" class="form-control" placeholder="New Password">
+        <input id="new_password" type="password" name="new_password" class="form-control" placeholder="Password baru">
       
         <i class="toggle-password1 fas fa-eye eye-toggle"></i>
         
@@ -48,7 +48,7 @@
 
 <div class="form-group mb-4">
     <div class="password-container position-relative">
-        <input id="new_password_confirmation" type="password" name="new_password_confirmation" class="form-control" placeholder="Confirm New Password">
+        <input id="new_password_confirmation" type="password" name="new_password_confirmation" class="form-control" placeholder="Konfirmasi password baru">
         <i class="toggle-password2 fas fa-eye eye-toggle"></i>
     </div>
     @if($errors->has('new_password_confirmation'))
@@ -57,6 +57,7 @@
         <p class="text-danger">{{ $errors->first('new_password') }}</p>
     @endif
 </div>
+
 
 
        

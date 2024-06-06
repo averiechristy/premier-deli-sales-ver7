@@ -12,7 +12,7 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <a href="{{route('manager.catatan.create')}}" class="btn btn-pd btn-sm">Tambah Data</a>
+                            <a href="{{route('manager.catatan.create')}}" class="btn btn-pd btn-sm">Tambah Catatan</a>
                         </div>
                         <div class="card-body">
                         <div class="dataTables_length mb-3" id="myDataTable_length">
@@ -38,7 +38,7 @@ entries
                                 <table  class="table table-bordered"  width="100%" cellspacing="0" style="border-radius: 10px;">
                                     <thead>
                                         <tr>                 
-                                          <th>Judul Catatan</th>                    
+                                          <th>Catatan</th>                    
                                           <th>Isi Catatan</th>
                                           <th>Created At</th>
 <th>Created By</th>

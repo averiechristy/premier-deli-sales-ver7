@@ -10,88 +10,156 @@
             <h2 style="color: #9B5718;">Sales Sistem Premier Deli</h2>
         </div>
         </div>
-        <div class="row">
-        <!-- Request Card -->
 
 
-        <div class="col-md-3 mt-2">
-            <div class="card request-card p-4" style="height: 200px;">
+
+
+
+
+
+    <!-- NEW TAMPILAN -->
+
+    <div class="card request-card p-4">
+        <h4 style="color: black; font-weight: bold;">Pesanan dan Penawaran</h4>
+
+<div class="row">
+    <div class="col-md-4 mt-2">
+        <div class="card request-card p-4" >
             <a href="{{route('manager.rfo.index')}}">
                 <div class="card-body">
-                <i class="fa fa-th-list" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
-                    <h4 class="card-title mt-3" style="color: black;">Request Form Order</h4>
+                    <i class="fa fa-th-list" style="font-size: 30px; color: #9B5718;" aria-hidden="true"></i>
+                    <p class="card-title mt-3" style="color: black;">Request Form Order</p>
                 </div>
-                </a>
-            </div>
+            </a>
         </div>
-        <!-- Quotation Card -->
-        <div class="col-md-3 mt-2">
-            <div class="card quotation-card p-4" style="height: 200px;">
+    </div>
+    <!-- Quotation Card -->
+    <div class="col-md-4 mt-2">
+        <div class="card quotation-card p-4" >
             <a href="{{route('manager.quotation.index')}}">
                 <div class="card-body">
-                <i class="fa fa-list-alt" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
-                <h4 class="card-title mt-3" style="color: black;">Quotation</h4>
+                    <i class="fa fa-list-alt" style="font-size: 30px; color: #9B5718;" aria-hidden="true"></i>
+                    <p class="card-title mt-3" style="color: black;">Quotation</p>
                 </div>
-                </a>
-            </div>
+            </a>
         </div>
-        <div class="col-md-3 mt-2">
-            <div class="card quotation-card p-4" style="height: 200px;">
-            <a href="{{route('manager.customer.index')}}">
-                    <div class="card-body">
-                        <i class="fa fa-building" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
-                        <h4 class="card-title mt-3" style="color: black;">Customer</h4>
-                    </div>
-                </a>
-            </div>
+    </div>
+</div>
+
         </div>
 
-        <div class="col-md-3 mt-2">
-            <div class="card quotation-card p-4" style="height: 200px;">
+
+        <div class="card request-card p-4 mt-5">
+        <h5 style="color: black; font-weight: bold;">Master Data</h5>
+        <div class="row">
+     
+
+        <div class="col-md-4 mt-2">
+        <div class="card quotation-card p-4" >
+            <a href="{{route('manager.customer.index')}}">
+                <div class="card-body">
+                    <i class="fa fa-building" style="font-size: 30px; color: #9B5718;" aria-hidden="true"></i>
+                    <p class="card-title mt-3" style="color: black;">Customer</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+        <div class="col-md-4 mt-2">
+            <div class="card quotation-card p-4" >
             <a href="{{route('manager.channel.index')}}">
                 <div class="card-body">
-                <i class="fa fa-shopping-cart" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
-                <h4 class="card-title mt-3" style="color: black;">Channel</h4>
+                <i class="fa fa-shopping-cart"  style="font-size: 30px; color: #9B5718;" aria-hidden="true"></i>
+                <p class="card-title mt-3" style="color: black;">Channel</p>
                 </div>
                 </a>
             </div>
         </div>
 
-        <div class="col-md-3 mt-2">
-            <div class="card quotation-card p-4" style="height: 200px;">
+
+
+        <div class="col-md-4 mt-2">
+            <div class="card quotation-card p-4" >
             <a href="{{route('manager.kategori.index')}}">
                 <div class="card-body">
-                <i class="fas fa-table" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
-                <h4 class="card-title mt-3" style="color: black;">Kategori</h4>
+                <i class="fas fa-table" style="font-size: 30px; color: #9B5718; "aria-hidden="true"></i>
+                <p class="card-title mt-3" style="color: black;">Kategori</p>
                 </div>
                 </a>
             </div>
         </div>
 
-        <div class="col-md-3 mt-2">
-            <div class="card quotation-card p-4" style="height: 200px;">
+        <div class="col-md-4 mt-2">
+            <div class="card quotation-card p-4" >
             <a href="{{route('manager.sumber.index')}}">
                 <div class="card-body">
-                <i class="fa fa-newspaper-o" style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
-                <h4 class="card-title mt-3" style="color: black;">Sumber Data Customer</h4>
+                <i class="fa fa-newspaper-o" style="font-size: 30px; color: #9B5718; "aria-hidden="true"></i>
+                <p class="card-title mt-3" style="color: black;">Sumber Data Customer</p>
                 </div>
                 </a>
             </div>
         </div>
 
 
-        <div class="col-md-3 mt-2">
-            <div class="card quotation-card p-4" style="height: 200px;">
+        <div class="col-md-4 mt-2">
+            <div class="card quotation-card p-4" >
             <a href="{{route('manager.catatan.index')}}">
                 <div class="card-body">
-                <i class="fa fa-clipboard"  style="font-size: 40px; color: #9B5718; "aria-hidden="true"></i>
-                <h4 class="card-title mt-3" style="color: black;">Catatan Quotation</h4>
+                <i class="fa fa-clipboard"  style="font-size: 30px; color: #9B5718; "aria-hidden="true"></i>
+                <p class="card-title mt-3" style="color: black;">Catatan Quotation</p>
                 </div>
                 </a>
             </div>
         </div>
 
-    </div>
+
+        </div>
+        </div>
+
+        <div class="card request-card p-4 mt-5 mb-5">
+        <h5 style="color: black; font-weight: bold;">Sistem Penjualan dan Pembelian</h5>
+        <div class="row">
+
+        <div class="col-md-4 mt-2">
+            <div class="card quotation-card p-4" >
+            <a href="{{route('manager.so.index')}}">
+                <div class="card-body">
+                <i class="fa fa-shopping-basket" style="font-size: 30px; color: #9B5718; "aria-hidden="true"></i>
+                <p class="card-title mt-3" style="color: black;">Sales Order</p>
+                </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4 mt-2">
+            <div class="card quotation-card p-4" >
+            <a href="{{route('manager.po.index')}}">
+                <div class="card-body">
+                <i class="fa fa-shopping-cart" style="font-size: 30px; color: #9B5718; "aria-hidden="true"></i>
+                <p class="card-title mt-3" style="color: black;">Purchase Order</p>
+                </div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mt-2">
+            <div class="card quotation-card p-4" >
+            <a href="{{route('manager.invoice.index')}}">
+                <div class="card-body">
+                <i class="fa fa-file-text" style="font-size: 30px; color: #9B5718; "aria-hidden="true"></i>
+                <p class="card-title mt-3" style="color: black;">Invoice</p>
+                </div>
+                </a>
+            </div>
+        </div>
+
+        </div>
+
+
+</div>        
+
+
+
 </div>
 <style>
     .request-card,

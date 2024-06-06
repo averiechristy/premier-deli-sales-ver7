@@ -5,7 +5,7 @@
                     
                                 <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
-                                        Tambahkan Channel
+                                        Edit Channel
                                     </div>
                                     <div class="card-body">
                                        <form name="saveform" action="/leaderupdatechannel/{{$data->id}}" method="post" onsubmit="return validateForm()">

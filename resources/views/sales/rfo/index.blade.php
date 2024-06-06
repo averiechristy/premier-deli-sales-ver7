@@ -10,7 +10,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
     <h1 class="h3 mb-2 text-gray-800">Form Order</h1>
-    <a href="{{route('sales.createrfo')}}" class="btn btn-pd btn-sm">Tambah RFO</a>
+    <a href="{{route('sales.createrfo')}}" class="btn btn-pd btn-sm">Buat RFO</a>
 
     </div>
     <div class="card-body">
@@ -46,7 +46,7 @@ entries
                         <th>Status Update</th>
                         <th>Tanggal Kirim</th>
                         <th>Tanggal Bayar</th>
-                        <th></th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 
@@ -58,7 +58,7 @@ entries
                   <td>{{$data->nama_penerima}}</td>
                   <td>    
                     <a href="{{route('tampilpesanan',$data->id)}}"><button type="button" class="btn btn-link">
-    Lihat Detail Pesanan
+    Lihat Detail Produk
 </button></a>
 </td>
 <td>{{$data->status_rfo}}</td>
@@ -67,41 +67,18 @@ entries
 <td>{{ \Carbon\Carbon::parse($data->payment_date)->format('d-m-Y') }}</td>
 
 <td>
-@if($data->status_rfo =="Proses PO")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan RFO
-</button>
 
 
-@elseif($data->status_rfo =="Terbit Invoice")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan RFO
-</button>
 
-@elseif($data->status_rfo =="Cancelled")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan RFO
-</button>
-
-
-@elseif($data->status_rfo =="Menunggu Persetujuan Cancel")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan RFO
-</button>
-
-@elseif($data->status_rfo =="Request Terkirim")
-
-<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Batalkan RFO
-</button>
-
-@elseif($data->status_rfo =="Terbit SO")
-
-<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Batalkan RFO
-</button>
-
-@endif
+@if($data->status_rfo == "Proses PO" || $data->status_rfo == "Terbit Invoice" || $data->status_rfo == "Cancelled" || $data->status_rfo == "Menunggu Persetujuan Cancel")
+        <a href="#" class="btn" style="cursor: not-allowed; display: flex; justify-content: center; align-items: center;" disabled>
+            <i class="fa fa-times"></i>
+        </a>
+    @elseif($data->status_rfo == "Request Terkirim" || $data->status_rfo == "Terbit SO")
+        <a href="#" class="btn" data-toggle="modal" data-target="#exampleModal{{$data->id}}" data-toggle="tooltip" title='Batalkan RFO' style="display: flex; justify-content: center; align-items: center;">
+            <i class="fa fa-times" style="color:red"></i>
+        </a>
+    @endif
 </td>
 
 
@@ -151,8 +128,8 @@ entries
                 
       </div>
       <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <button type="submit" class="btn btn-primary">Ya</button>
             </div>
             </form>
     </div>

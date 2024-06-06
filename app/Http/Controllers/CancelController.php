@@ -81,6 +81,7 @@ class CancelController extends Controller
 
         $datapo = PurchaseOrder::find($id);
         $datacancel = CancelApprovalSA::where('po_id',$id)->first();
+        
       
 
         return view('manager.infocancel',[
@@ -136,7 +137,7 @@ foreach ($dataso as $so) {
 }
 
 
-$request->session()->flash('successdua', "Pembatalan Disetujui");
+$request->session()->flash('successdua', "Cancel RFO disetujui.");
 
 return redirect()->route('leader.rfo.index');
 
@@ -166,7 +167,7 @@ foreach ($dataso as $so) {
 }
 
 
-$request->session()->flash('successdua', "Pembatalan Disetujui");
+$request->session()->flash('successdua', "Cancel RFO disetujui.");
 
 return redirect()->route('manager.rfo.index');
 
@@ -189,7 +190,7 @@ return redirect()->route('manager.rfo.index');
         
       
         
-        $request->session()->flash('successdua', "Pembatalan Disetujui");
+        $request->session()->flash('successdua', "Cancel quotation disetujui.");
         
         return redirect()->route('leader.quotation.index');
         
@@ -213,7 +214,7 @@ return redirect()->route('manager.rfo.index');
                 
               
                 
-                $request->session()->flash('successdua', "Pembatalan Disetujui");
+                $request->session()->flash('successdua', "Cancel quotation disetujui.");
                 
                 return redirect()->route('manager.quotation.index');
                 
@@ -257,7 +258,7 @@ foreach ($datacancel as $cancel) {
         $podata -> status_po = "Cancelled";
         $podata -> save();
 
-        $request->session()->flash('success', "Pembatalan Disetujui");
+        $request->session()->flash('success', "Cancel purchase order disetujui.");
         
         return redirect()->route('superadmin.po.index');
         
@@ -307,7 +308,7 @@ foreach ($datacancel as $cancel) {
                 $podata -> status_po = "Cancelled";
                 $podata -> save();
         
-                $request->session()->flash('success', "Pembatalan Disetujui");
+                $request->session()->flash('success', "Cancel purchase order disetujui.");
                 
                 return redirect()->route('managerapproval');
                 
@@ -339,7 +340,7 @@ foreach ($datacancel as $cancel) {
                 }
                 
                 
-                $request->session()->flash('success', "Pembatalan Disetujui");
+                $request->session()->flash('success', "Cancel invoice disetujui.");
                 
                 return redirect()->route('superadmin.invoice.index');
                 
@@ -403,7 +404,7 @@ foreach ($datacancel as $cancel) {
 
                        
                         
-                        $request->session()->flash('success', "Pembatalan Disetujui");
+                        $request->session()->flash('success', "Cancel invoice disetujui.");
                         
                         return redirect()->route('managerapproval');
                         

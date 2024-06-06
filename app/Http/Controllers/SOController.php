@@ -15,6 +15,88 @@ class SOController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
+     public function managerindex(){
+
+        $so = SalesOrder::orderBy('created_at', 'desc')->get();
+        $rfo = RFO::where('status_rfo', 'Request Terkirim')->orderBy('created_at', 'desc')->count();
+    
+        $rfo_ids = $so->pluck('rfo_id')->toArray();
+       
+        return view ('manager.so.index',[
+            'so' => $so,
+            'rfo' => $rfo,
+        ]);
+    }
+    
+    
+      public function managertampilpesananso($id)
+        {
+        
+           $pesanan = DetailSO::with('salesorder')->where('so_id', $id)->get();
+           $so = SalesOrder::find($id);
+           $noSO = $so->no_so;
+          
+           return view('manager.so.tampilpesanan',[
+               'pesanan' =>$pesanan,
+               'noSO' => $noSO,
+           ]);
+    
+    
+        }
+    
+    
+        public function managertampilso($id){
+    
+            $so = SalesOrder::find($id);
+            $detailso = DetailSO::with('salesorder')->orWhereNull('keterangan')->where('so_id', $id)->get();
+    
+            $discountasli = $so->discount;
+            $tipe = $so->is_persen;
+    
+          
+            
+        $subtotal = 0;
+        foreach ($detailso as $detail) {
+            $subtotal += $detail->total_price;
+        }
+    
+        if ($tipe == 'persen') {
+            $discount =  ($discountasli / 100) * $subtotal;
+        } elseif ($tipe == 'amount'){
+            $discount = $so->discount;
+        }
+    
+        $subtotalafterdiscount = $subtotal - $discount;
+    
+      $ppnpersen = $so -> ppn;
+      
+      $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
+    
+    
+        $pembayaran = $so->pembayaran;
+    
+        $total = $subtotalafterdiscount + $ppn;
+        
+    
+        $sisatagihan = $total - $pembayaran;
+    
+    
+            return view('manager.so.tampilso',[
+                'subtotal' => $subtotal,
+                'discount' => $discount,
+                'ppn' => $ppn,
+                'total' => $total,
+                'sisatagihan' => $sisatagihan,
+                'so' => $so,
+                'detailso' => $detailso,
+                'pembayaran' => $pembayaran,
+                'tipe' => $tipe,
+                'discountasli' => $discountasli,
+                'ppnpersen' => $ppnpersen,
+            ]);
+        }
     public function index()
     {
         //
@@ -41,7 +123,7 @@ $dataso->save();
             $item->status_rfo = "Cancelled";
             $item->save();
         }
-        $request->session()->flash('success', "Sales Order berhasil dibatalkan");
+        $request->session()->flash('success', "Sales order berhasil dibatalkan.");
         return redirect(route('superadmin.so.index',[
             'so' => $so,
         ]));
@@ -75,6 +157,7 @@ public function superadminindex(){
 public function admininvoicecreate($id)
 {
     $data = RFO::find($id);
+    $rfodate = $data -> tanggal_order;
     $customer = Customer::orderBy('nama_customer', 'asc')->get();
     $rfoGrouped = DetailRFO::with('rfo')->where('rfo_id', $id)->get()->groupBy('kode_supplier');
     $produk = Produk::orderBy('nama_produk', 'asc')->get();
@@ -118,7 +201,8 @@ public function admininvoicecreate($id)
         'rfoGrouped' => $rfoGrouped,
         'customer' => $customer,
         'produk' => $produk,
-        'orderNumbers' => $orderNumbers
+        'orderNumbers' => $orderNumbers,
+        'rfodate' => $rfodate,
     ]);
 }
 
@@ -126,6 +210,9 @@ public function admininvoicecreate($id)
     public function superadmincreate($id)
     {
         $data = RFO::find($id);
+
+        $rfodate = $data -> tanggal_order;
+
         $customer = Customer::orderBy('nama_customer', 'asc')->get();
         $rfoGrouped = DetailRFO::with('rfo')->where('rfo_id', $id)->get()->groupBy('kode_supplier');
         $produk = Produk::orderBy('nama_produk', 'asc')->get();
@@ -166,7 +253,8 @@ public function admininvoicecreate($id)
             'rfoGrouped' => $rfoGrouped,
             'customer' => $customer,
             'produk' => $produk,
-            'orderNumbers' => $orderNumbers
+            'orderNumbers' => $orderNumbers,
+            'rfodate' => $rfodate,
         ]);
 
     }
@@ -238,6 +326,8 @@ public function admininvoicecreate($id)
 
     }
     public function admininvoicestore(Request $request){
+
+        
       
         $kodeSuppliers = $request->input('kode_supplier');
         $jenisdiskon = $request -> inlineRadioOptions;
@@ -250,7 +340,7 @@ public function admininvoicecreate($id)
             $nilaidiskon = $request->discount;
           
             if($nilaidiskon > 15){
-                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                $request->session()->flash('error', "Diskon maksimal 15%.");
                 return redirect()->route('admininvoice.so.index');
             }
             
@@ -259,7 +349,7 @@ public function admininvoicecreate($id)
 
             $produk = $request->product;
            
-            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+            if ($request->has('product') && $request->has('quantity') ) {
  
                 foreach ($kodeSuppliers as $kodeSupplier => $soData) {
                 foreach ($request->product[$kodeSupplier] as $index => $productId) {
@@ -283,7 +373,7 @@ public function admininvoicecreate($id)
             $maxAllowedDiscount = 0.15 * $subtotal;
     
             if ($diskonAmount > $maxAllowedDiscount) {
-                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                $request->session()->flash('error', "Diskon maksimal 15% dari total harga.");
                 return redirect()->route('admininvoice.so.index');
             }
         }
@@ -296,6 +386,11 @@ public function admininvoicecreate($id)
         $namacust = $customer->nama_customer;
 
         $rfo = RFO::find($request->rfo_id);
+
+
+        
+
+       
 
         $prices = $request->input('price');
         $quantities = $request->input('quantity');
@@ -333,7 +428,7 @@ public function admininvoicecreate($id)
             $so -> status_so = "PO Belum Dikerjakan";
             $so -> kode_supplier = $kodeSuppliers[$kodeSupplier][0];
             $so->created_by = $loggedInUsername;
-            
+            $so -> biaya_pengiriman = $request->biaya_pengiriman;
     
             $so -> save();
     
@@ -383,7 +478,7 @@ public function admininvoicecreate($id)
         
     
 
-        $request->session()->flash('success', "Sales Order berhasil dibuat");
+        $request->session()->flash('success', "Sales order berhasil dibuat.");
 
         return redirect()->route('admininvoice.so.index');
     }
@@ -399,7 +494,7 @@ public function admininvoicecreate($id)
             $nilaidiskon = $request->discount;
           
             if($nilaidiskon > 15){
-                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                $request->session()->flash('error', "Diskon maksimal 15%.");
                 return redirect()->route('superadmin.so.index');
             }
             
@@ -408,7 +503,7 @@ public function admininvoicecreate($id)
 
             $produk = $request->product;
            
-            if ($request->has('product') && $request->has('quantity') && $request->has('price')) {
+            if ($request->has('product') && $request->has('quantity') ) {
  
                 foreach ($kodeSuppliers as $kodeSupplier => $soData) {
                 foreach ($request->product[$kodeSupplier] as $index => $productId) {
@@ -432,7 +527,7 @@ public function admininvoicecreate($id)
             $maxAllowedDiscount = 0.15 * $subtotal;
     
             if ($diskonAmount > $maxAllowedDiscount) {
-                $request->session()->flash('error', "Sales Order gagal dibuat, diskon melebihi 15%");
+                $request->session()->flash('error', "Diskon maksimal 15% dari total harga.");
                 return redirect()->route('superadmin.so.index');
             }
         }
@@ -483,7 +578,7 @@ public function admininvoicecreate($id)
             $so -> kode_supplier = $kodeSuppliers[$kodeSupplier][0];
             $so->created_by = $loggedInUsername;
     
-            
+            $so -> biaya_pengiriman = $request->biaya_pengiriman;
     
             $so -> save();
     
@@ -530,7 +625,7 @@ public function admininvoicecreate($id)
 
       
 
-        $request->session()->flash('success', "Sales Order berhasil dibuat");
+        $request->session()->flash('success', "Sales order berhasil dibuat.");
 
         return redirect()->route('superadmin.so.index');
     }
@@ -564,12 +659,14 @@ public function admininvoicecreate($id)
   $ppn = ($ppnpersen / 100) * $subtotalafterdiscount;
 
 
+  
     $pembayaran = $so->pembayaran;
-
-    $total = $subtotalafterdiscount + $ppn;
+    $biayakirim = $so -> biaya_pengiriman;
+    $total = $subtotalafterdiscount + $ppn +$biayakirim;
     
 
     $sisatagihan = $total - $pembayaran;
+
 
 
         return view('admininvoice.so.tampilso',[
@@ -584,6 +681,7 @@ public function admininvoicecreate($id)
             'tipe' => $tipe,
             'discountasli' => $discountasli,
             'ppnpersen' => $ppnpersen,
+            'biayakirim' => $biayakirim,
         ]);
     }
 
@@ -617,7 +715,8 @@ public function admininvoicecreate($id)
 
     $pembayaran = $so->pembayaran;
 
-    $total = $subtotalafterdiscount + $ppn;
+    $biayakirim = $so -> biaya_pengiriman;
+    $total = $subtotalafterdiscount + $ppn +$biayakirim;
     
 
     $sisatagihan = $total - $pembayaran;
@@ -635,6 +734,7 @@ public function admininvoicecreate($id)
             'tipe' => $tipe,
             'discountasli' => $discountasli,
             'ppnpersen' => $ppnpersen,
+            'biayakirim' => $biayakirim,
         ]);
     }
     public function showrfo() {

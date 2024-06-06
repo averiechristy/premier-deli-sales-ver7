@@ -9,9 +9,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-    <h1 class="h3 mb-2 text-gray-800">Quotation</h1>
-    <a href="{{route('manager.createquote')}}" class="btn btn-pd btn-sm">Buat Quotation</a>
-
+    
 
     </div>
     <div class="card-body">

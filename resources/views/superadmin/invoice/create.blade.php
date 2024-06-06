@@ -16,13 +16,16 @@
                                         @csrf                       
 
 
-
+                                        <div class="form-group mb-4">
+    <label for="" class="form-label" style="color:black;">Tanggal SO</label>
+    <input name="so_date" id="so_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value="{{$sodate}}" readonly />
+</div>
     <input hidden name="so_id" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->id}}" />
 
 
 
                                         <div class="form-group mb-4">
-    <label for="" class="form-label" style="color:black;">No Sales Order</label>
+    <label for="" class="form-label" style="color:black;">No Invoice</label>
     <input name="invoice_no" type="text" class="form-control" style="border-color: #01004C; width:50%;" value="{{ $invoicenumber }}" readonly />
 </div>
 
@@ -33,6 +36,14 @@
     <label for="" class="form-label" style="color:black;">Tanggal Invoice</label>
     <input name="invoice_date" id="invoice_date" type="date" class="form-control" style="border-color: #01004C; width:50%;" value=""  />
 </div>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('invoice_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
 
 <script>
     // Mendapatkan elemen input tanggal
@@ -110,7 +121,7 @@
 
         <div class="col-md-2">
             <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
+                <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                 <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="{{$detaildata->qty}}" readonly />
             </div>
         </div>
@@ -143,19 +154,27 @@
     <input name="subtotal" type="number"  class="form-control " style="border-color: #01004C;" value="{{ $subtotal }}" readonly />
 </div>
 
+
+<div class="form-group mb-4 mt-3">
+        <label for="" class="form-label" style="color:black;">Biaya Pengiriman</label>
+    <input name="biaya_pengiriman" type="number"  class="form-control " style="border-color: #01004C;" value="{{$biayakirim}}" oninput="validasiNumber(this)" readonly />
+</div>
+
 <input hidden name="is_persen" type="text"  class="form-control " style="border-color: #01004C;" value="{{$data->is_persen}}" />
+
+
 
 
 @if ($tipe == 'persen')
        
 <div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">Discount (dalam %)</label>
+        <label for="" class="form-label" style="color:black;">Diskon (dalam %)</label>
         <input name="discount" type="number" class="form-control" style="border-color: #01004C;" value="{{ $discountasli }}" readonly />
 </div>
         @elseif ($tipe == 'amount')
 
         <div class="form-group mb-4 mt-3">
-        <label for="" class="form-label" style="color:black;">Discount</label>
+        <label for="" class="form-label" style="color:black;">Diskon</label>
         <input name="discount" type="number" class="form-control" style="border-color: #01004C;" value="{{ $discountasli }}" readonly />
 </div>
         @endif
@@ -192,10 +211,17 @@
     </div>
 </div>
 
+
 <script>
     function confirmSubmit() {
-        $('#confirmModal').modal('show'); // Tampilkan modal
-        return false; // Mengembalikan false untuk mencegah pengiriman form secara langsung
+       
+        // Panggil fungsi untuk melakukan validasi form
+        if (validateForm()) {
+            // Jika validasi berhasil, tampilkan modal
+            $('#confirmModal').modal('show');
+        }
+        // Mengembalikan false untuk mencegah pengiriman form secara langsung
+        return false;
     }
 
     // Fungsi untuk menutup modal
@@ -210,6 +236,7 @@
         $('#confirmModal').modal('hide');
     });
 </script>
+
                                         </form>
                                     </div>
         
@@ -217,6 +244,16 @@
 
     <script>
     function validateForm() {
+
+
+        var tanggalso = document.forms["saveform"]["so_date"].value;
+        var tanggalinvoice = document.forms["saveform"]["invoice_date"].value;
+
+        if ( tanggalinvoice < tanggalso) {
+            alert("Tanggal invoice tidak boleh kurang dari tanggal SO.");
+            return false;
+        }
+
         var validdate = document.forms["saveform"]["invoice_date"].value;
 
         if (validdate == "") {
@@ -234,114 +271,6 @@
             return false;
         }
 
-        var alamat = document.forms["saveform"]["alamat"].value;
-        if (alamat == "") {
-            alert("Alamat harus diisi");
-            closeModal();
-            return false;
-        }
-
-        var namapenerima = document.forms["saveform"]["nama_penerima"].value;
-
-        if (namapenerima == "") {
-            alert("Nama PIC harus diisi");
-            closeModal();
-            return false;
-        }
-        // Mendapatkan nilai dari input Tanggal Order
-   // Mendapatkan nilai dari input Tanggal Order
-var orderDate = document.forms["saveform"]["quote_date"].value;
-
-// Mendapatkan nilai dari input Tanggal Pengiriman
-var shippingDate = document.forms["saveform"]["shipping_date"].value;
-
-// Mendapatkan nilai dari input Tanggal Pembayaran
-var paymentDate = document.forms["saveform"]["payment_date"].value;
-
-        // Validasi Tanggal Order
-        if (orderDate == "") {
-            alert("Tanggal Order harus diisi");
-            closeModal();
-            return false;
-        }
-
-        // Validasi Tanggal Pengiriman
-        if (shippingDate == "") {
-            alert("Tanggal Pengiriman harus diisi");
-            closeModal();
-            return false;
-        }
-
-        // Validasi Tanggal Pembayaran
-        if (paymentDate == "") {
-            alert("Tanggal Pembayaran harus diisi");
-            closeModal();
-            return false;
-        }
-
-        if(shippingDate < paymentDate) {
-            alert("Tanggal pengiriman tidak boleh kurang dari tanggal pembayaran");
-            closeModal();
-            return false;
-        }
-
-        var products = document.getElementsByName('product[]');
-        var quantities = document.getElementsByName('quantity[]');
-        var isValidProduct = false;
-        var selectedProducts = [];
-        for (var i = 0; i < products.length; i++) {
-            if (products[i].value != "") {
-                isValidProduct = true;
-                // Validasi jumlah produk
-                if (quantities[i].value == "") {
-                    alert("Harap isi jumlah untuk setiap produk yang dipilih");
-                    closeModal();
-                    return false;
-                }
-
-                if (selectedProducts.includes(products[i].value)) {
-                alert("Produk yang sama tidak boleh dipilih lebih dari satu kali.");
-                closeModal();
-                return false;
-            } else {
-                selectedProducts.push(products[i].value);
-            }
-            }
-        }
-        if (!isValidProduct) {
-            alert("Minimal satu produk harus dipilih");
-            closeModal();
-            return false;
-        }
-        // Validasi radiobutton
-        var radioValue = document.querySelector('input[name="inlineRadioOptions"]:checked');
-        if (!radioValue) {
-            alert("Harap pilih salah satu opsi diskon");
-            closeModal();
-            return false;
-        }
-
-        // Validasi discount
-        var discount = document.forms["saveform"]["discount"].value;
-        if (discount == "") {
-            alert("Discount harus diisi");
-            closeModal();
-            return false;
-        }
-
-        // Validasi PPN
-        var ppn = document.forms["saveform"]["ppn"].value;
-        if (ppn == "") {
-            alert("PPN harus diisi");
-            closeModal();
-            return false;
-        }
-
-        // Validasi jumlah produk minimal satu
-     
-
-        // Tutup modal secara langsung
-        // closeModal();
 
         // Jika semua validasi berhasil, return true
         return true;

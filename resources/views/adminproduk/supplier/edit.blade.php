@@ -5,7 +5,7 @@
                     
                                 <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
-                                        Tambahkan Supplier
+                                        Edit Supplier
                                     </div>
                                     <div class="card-body">
                                        <form name="saveform"  action="/updatesupplier/{{$data->id}}" method="post" onsubmit="return validateForm()">
@@ -51,26 +51,27 @@
      
 
         if(kodesupplier == "") {
-        alert("Kode supplier tidak boleh kosong");
+        alert("Kode supplier harus diisi.");
     return false;
     }
+
     else if (kodesupplier.length != 3) {
-            alert("Kode supplier harus terdiri dari 3 karakter");
+            alert("Kode supplier harus 3 karakter.");
             return false;
         }
+
     else if(namasupplier == "") {
-        alert("Nama supplier tidak boleh kosong");
+        alert("Nama supplier harus diisi.");
     return false;
     }
 
     else if(alamatsupplier == "") {
-        alert("Alamat supplier tidak boleh kosong");
+        alert("Alamat supplier harus diisi.");
     return false;
     }
 
 
      }
 </script>
-
 
 @endsection

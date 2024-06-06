@@ -32,17 +32,18 @@ class ProductImport implements ToModel, WithStartRow, WithHeadingRow
     {             
       
         $expectedHeaders = [
+            'kode_supplier',
             'kode_produk',
             'nama_produk',
             'harga_beli',
             'harga_jual',
-            'kode_supplier',
+           
         ];
     
         // Check if headers match the expected headers
         $diff = array_diff($expectedHeaders, array_keys($row));
         if (!empty($diff)) {
-            throw new Exception("Template tidak sesuai");
+            throw new Exception("File tidak sesuai");
         }
 
       
@@ -52,7 +53,7 @@ class ProductImport implements ToModel, WithStartRow, WithHeadingRow
        
         if (!in_array($sup, $this->allowedSupplier)) {
             $allowedSupplierStr = implode(', ', $this->allowedSupplier);
-            throw new Exception("Supplier $sup tidak valid, hanya boleh $allowedSupplierStr");
+            throw new Exception("Supplier $sup tidak valid.");
         }
 
         $supplier = Supplier::where('kode_supplier', $row['kode_supplier'])->first();
@@ -71,13 +72,17 @@ class ProductImport implements ToModel, WithStartRow, WithHeadingRow
             return null;
         }
         
+        $hargabeli = $row['harga_beli'];
+
+        $hargajual = $row['harga_jual'];
+
         if (!is_numeric($row['harga_beli'])) {
-            throw new Exception('Harga beli harus berupa angka.');
+            throw new Exception("Format harga beli $hargabeli tidak valid.");
         }
     
         // Periksa apakah harga jual adalah angka
         if (!is_numeric($row['harga_jual'])) {
-            throw new Exception('Harga jual harus berupa angka.');
+            throw new Exception("Format harga jual $hargajual tidak valid.");
         }
 
        

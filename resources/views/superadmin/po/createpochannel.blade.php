@@ -2,8 +2,9 @@
 @section('content')
 <div class="container">
     <div class="card mt-3">
-    <div class="card-header" style="color:black;">                                
-    </div>
+    <div class="card-header" style="color:black;">
+                                        Buat Purchase Order
+                                    </div>
                                     <div class="card-body">
                                        <form name="saveform" action="{{route('superadmin.po.simpanpochannel')}}" method="post" onsubmit="return validateForm()">
                                         @csrf                       
@@ -48,6 +49,14 @@
     orderDateInput.value = formattedDate;
 </script>
 
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dateInput = document.getElementById('po_date');
+            dateInput.addEventListener('click', function() {
+                this.showPicker();
+            });
+        });
+    </script>
 
 <div id="product-fields">
 
@@ -72,15 +81,22 @@
 
         <div class="col-md-2">
             <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
+                <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                 <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" />
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group mb-4">
+                <label for="" class="form-label" style="color:black;">Diskon</label>
+                <input name="discount[]" type="number" class="form-control" style="border-color: #01004C;" value="0" />
             </div>
         </div>
 
         <div class="col-md-1">
         <div class="form-group mb-4">
             <label for="" class="form-label" style="color:black;">Action</label>
-            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Remove</button>
+            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Hapus</button>
             </div>
         </div>
     </div>
@@ -127,13 +143,19 @@
         </div>
         <div class="col-md-2">
             <div class="form-group mb-4">
-                <label for="" class="form-label" style="color:black;">Quantity</label>
+                <label for="" class="form-label" style="color:black;">Jumlah Produk</label>
                 <input name="quantity[]" type="number" class="form-control" style="border-color: #01004C;" value="" />
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group mb-4">
+                <label for="" class="form-label" style="color:black;">Diskon</label>
+                <input name="discount[]" type="number" class="form-control" style="border-color: #01004C;" value="0" />
             </div>
         </div>
         <div class="col-md-1">
             <label for="" class="form-label" style="color:black;">Action</label>
-            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Remove</button>
+            <button type="button" class="btn btn-sm btn-danger remove-product-field mt-1">Hapus</button>
         </div>
     </div>
 </div>`;
@@ -163,6 +185,12 @@ $(document).on('change', '.product-select', function() {
 
 
         function fetchProductsBySupplier(supplierId, productField) {
+    var productSelect = productField.find('.product-select');
+    
+    // Show loading indicator
+    productSelect.empty();
+    productSelect.append('<option value="" disabled selected>Loading...</option>');
+    
     $.ajax({
         url: '/superadmin-get-products-by-supplier', // Adjust URL according to your route
         type: 'GET',
@@ -170,15 +198,20 @@ $(document).on('change', '.product-select', function() {
             supplier_id: supplierId
         },
         success: function(response) {
-            productField.find('.product-select').empty();
-            productField.find('.product-select').append('<option value="" disabled selected>-- Pilih Produk --</option>');
+            productSelect.empty();
+            productSelect.append('<option value="" disabled selected>-- Pilih Produk --</option>');
+            
             $.each(response.products, function(index, product) {
-                productField.find('.product-select').append('<option value="' + product.id + '">' + product.kode_produk + ' - ' + product.nama_produk + '</option>');
+                productSelect.append('<option value="' + product.id + '">' + product.kode_produk + ' - ' + product.nama_produk + '</option>');
             });
         },
-        
+        error: function() {
+            productSelect.empty();
+            productSelect.append('<option value="" disabled selected>Error loading products</option>');
+        }
     });
 }
+
 
 
         // Remove Product Field
@@ -273,12 +306,12 @@ $(document).on('change', '.product-select', function() {
         let channel = document.forms["saveform"]["channel_id"].value;
 
         if(supplier == "") {
-        alert("Supplier harus dipilih");
+        alert("Supplier harus diisi.");
         closeModal()
     return false;
     }
        else if(channel == "") {
-        alert("Channel harus dipilih");
+        alert("Channel harus diisi.");
         closeModal()
     return false;
     }
@@ -287,7 +320,7 @@ $(document).on('change', '.product-select', function() {
         var numProducts = productFields.length;
 
         if (numProducts === 0) {
-        alert('Minimal satu produk harus dipilih');
+        alert('Produk harus diisi.');
         closeModal();
         return false;
     }
@@ -296,10 +329,11 @@ $(document).on('change', '.product-select', function() {
             var productSelect = document.querySelector('select[name="product[]"]');
             var priceInput = document.querySelector('input[name="price[]"]');
             var quantityInput = document.querySelector('input[name="quantity[]"]');
+            var diskoninput = document.querySelector('input[name="discount[]"]');
 
             // Validasi produk
             if (productSelect.value === null || productSelect.value === '') {
-                alert('Produk harus dipilih');
+                alert('Produk harus diisi.');
                 closeModal()
                 return false;
                 
@@ -307,14 +341,20 @@ $(document).on('change', '.product-select', function() {
 
             // Validasi harga
             if (priceInput.value === '' || isNaN(priceInput.value) || priceInput.value <= 0) {
-                alert('Harga harus diisi ');
+                alert('Harga harus diisi. ');
                 closeModal()
                 return false;
             }
 
             // Validasi quantity
             if (quantityInput.value === '' || isNaN(quantityInput.value) || quantityInput.value <= 0) {
-                alert('Quantity harus diisi');
+                alert('Jumlah produk harus diisi.');
+                closeModal()
+                return false;
+            }
+
+            if (diskoninput.value === '' || isNaN(diskoninput.value) || diskoninput.value < 0) {
+                alert('Diskon harus diisi.');
                 closeModal()
                 return false;
             }
@@ -348,27 +388,36 @@ $(document).on('change', '.product-field .supplier-select', function() {
 });
 
 // Fungsi untuk mengambil daftar produk berdasarkan supplier_id
+
+
 function fetchProductsBySupplier(supplierId, productField) {
+    var productSelect = productField.find('.product-select');
+    
+    // Show loading indicator
+    productSelect.empty();
+    productSelect.append('<option value="" disabled selected>Loading...</option>');
+    
     $.ajax({
-        url: '/superadmin-get-products-by-supplier', // Ganti dengan URL yang benar sesuai dengan route Anda
+        url: '/superadmin-get-products-by-supplier', // Adjust URL according to your route
         type: 'GET',
         data: {
             supplier_id: supplierId
         },
         success: function(response) {
-            // Bersihkan opsi produk sebelum menambahkan yang baru
-            productField.find('.product-select').empty();
-
-            // Tambahkan opsi produk yang baru berdasarkan respons dari backend
-            productField.find('.product-select').append('<option value="" disabled selected>-- Pilih Produk --</option>');
-
+            productSelect.empty();
+            productSelect.append('<option value="" disabled selected>-- Pilih Produk --</option>');
+            
             $.each(response.products, function(index, product) {
-                productField.find('.product-select').append('<option value="' + product.id + '">' + product.kode_produk + ' - ' + product.nama_produk + '</option>');
+                productSelect.append('<option value="' + product.id + '">' + product.kode_produk + ' - ' + product.nama_produk + '</option>');
             });
         },
-    
+        error: function() {
+            productSelect.empty();
+            productSelect.append('<option value="" disabled selected>Error loading products</option>');
+        }
     });
 }
+
     });
 </script>
 
@@ -377,7 +426,7 @@ function fetchProductsBySupplier(supplierId, productField) {
 window.onload = function () {
     var inputFields = document.getElementsByTagName('input');
     for (var i = 0; i < inputFields.length; i++) {
-        if (inputFields[i].name !== 'po_date' && inputFields[i].name !== '_token' && inputFields[i].name !== 'valid_date') 
+        if (inputFields[i].name !== 'po_date' && inputFields[i].name !== '_token'&& inputFields[i].name !== 'discount[]' && inputFields[i].name !== 'valid_date') 
         {
             inputFields[i].value = '';
         }

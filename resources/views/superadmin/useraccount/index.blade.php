@@ -10,7 +10,7 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <a href="{{route('superadmin.useraccount.create')}}" class="btn btn-pd btn-sm">Tambah Data</a>
+                            <a href="{{route('superadmin.useraccount.create')}}" class="btn btn-pd btn-sm">Tambah Akun User</a>
                         </div>
                         <div class="card-body">
                         <div class="dataTables_length mb-3" id="myDataTable_length">
@@ -63,14 +63,14 @@ entries
                                             <td> 
                 <form action="{{ route('superadmin.reset-password', ['user' => $data->id]) }}" method="POST">
                 @csrf
-                <button type="submit" class="btn show_confirm2" data-toggle="tooltip" title='Reset Password'><i class="fas fa-fw fa-redo"  style="color:#06234F" ></i></button>
+                <button type="submit" class="btn show_confirm2" data-toggle="tooltip" title='Reset Password' style="display: flex; justify-content: center; align-items: center;"><i class="fas fa-fw fa-redo"  style="color:#06234F" ></i></button>
             </form>
             
-                                               <a href="{{route('tampiluser', $data->id)}}" data-toggle="tooltip" title='Edit' class="btn"><i class="fas fa-fw fa-edit"  style="color:orange;" ></i></a>                 
+                                               <a href="{{route('tampiluser', $data->id)}}" data-toggle="tooltip" title='Edit' class="btn" style="display: flex; justify-content: center; align-items: center;"><i class="fas fa-fw fa-edit"  style="color:orange;" ></i></a>                 
                                                <form method="POST" action="{{ route('deleteuser', $data->id) }}">
                             @csrf
                             <input name="_method" type="hidden" value="DELETE">
-                            <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red;" ></i></button>
+                            <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus' style="display: flex; justify-content: center; align-items: center;"><i class="fas fa-fw fa-trash" style="color:red;" ></i></button>
                         </form>                                            
                                                
                                                 </td> 

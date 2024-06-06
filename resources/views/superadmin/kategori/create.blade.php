@@ -31,9 +31,6 @@
 
             </div>
       
-  
-
-
             <script>
 window.onload = function () {
     var inputFields = document.getElementsByTagName('input');
@@ -62,4 +59,16 @@ window.onload = function () {
 
 </script>
 
+<script>
+
+function validateForm() {
+    let kategori = document.forms["saveform"]["kategori"].value;
+    if (kategori == "") {
+            alert("Kategori harus diisi.");
+            return false;
+        }
+
+}
+
+</script>
 @endsection

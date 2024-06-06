@@ -46,11 +46,9 @@
 </div>
 
 
-
-
 </div>
 
-<hr style=" border: 1px solid black;">
+<hr style=" border: 1px solid black; margin-top:-50px;">
 
 
     <div class ="informasi" style="display: flex;">
@@ -97,21 +95,36 @@
             </thead>
             <tbody>
             @php
-        $counter = 1; // Inisialisasi nomor urutan
-        @endphp
+                $counter = 1; // Inisialisasi nomor urutan
+                $breakPoint = count($detailinvoice) > 10 ? 11 : 5;
+                @endphp
                 @foreach ($detailinvoice as $detail)
+
+                @if($loop->iteration % 10 == 0)
+                            </tbody>
+                            </table>
+                            <div style="page-break-before: always;"></div>
+                            <table class="table table-bordered mt-5">
+                            <thead style="text-align: center;">
+                            <tr>
+                    <th  scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">No</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Kode Produk</th>
+
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Nama Produk</th>
+
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Jumlah Produk</th>
+               
+                </tr>
+                            </thead>
+                            <tbody>
+                        @endif
+
                 <tr>
                 <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width:1px;text-align:center;">{{ $counter++ }}</td>
                 <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width:10px;">{{$detail -> kode_produk}}</td>
  
                 <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 450px;">
-    <?php
-    $nama_produk = $detail->nama_produk;
-    if (strlen($nama_produk) > 200) {
-        $nama_produk = wordwrap($nama_produk, 200, "<br>", true);
-    }
-    echo $nama_produk;
-    ?>
+                {{$detail->nama_produk}}
 </td>                                     <td style="color:black; font-family: Arial, sans-serif; font-size: 10px;width:10px;text-align:center;">{{$detail->qty}}</td>
                 </tr>
                @endforeach 
@@ -119,7 +132,7 @@
             </tbody>
             <tfoot>
     <tr>
-    <td colspan="4" style="color:black; font-family: Arial, sans-serif; font-size: 10px; height: 100px;">
+    <td colspan="4" style="color:black; font-family: Arial, sans-serif; font-size: 10px; height: 90px;">
                 <!-- Isi kolom catatan dengan panjang yang cukup panjang -->
             Catatan: 
         </td>
@@ -135,9 +148,7 @@
         <h6 style="color:black; font-family: Arial, sans-serif; font-weight:bold;font-size:10px;"> Pembeli  / Penerima </h6>
         <br>
         <br>
-        <br>
-        <br>
-
+       
         <p style="color:black;">----------------------------</p>
     </div>
     
@@ -147,26 +158,14 @@
         <!-- Tempat untuk tanda tangan -->
         <br>
         <br>
-        <br>
-        <br>
-
+    
         <p  style="color:black;">----------------------------</p>
     </div>
 </div>
-
-
 </div>
     </div>
-
 </div>
-
 <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
-
-
-
-
-
-
 <script>
    document.getElementById('exportPdfButton').addEventListener('click', function() {
     var salesOrderId = '<?php echo $invoice->id; ?>'; // Ganti ini dengan cara yang sesuai untuk mendapatkan ID sales order
@@ -191,6 +190,11 @@
             var options = {
                 filename: 'DO - ' + '<?php echo $invoice->invoice_no; ?>' + ' - ' + '<?php echo $invoice->nama_customer; ?>' + '.pdf',
                 margin: [5, 5, 5, 5],
+                jsPDF: {
+                    orientation: 'landscape'
+                },
+               
+
                 // konfigurasi untuk unduhan PDF
             };
             html2pdf(chartContainer, options);
@@ -216,15 +220,19 @@ document.getElementById('printButton').addEventListener('click', function() {
     // Set up the original contents
     var originalContents = document.body.innerHTML;
     
-    // Event listener to refresh the page after printing or canceling
-    window.onafterprint = function() {
-        document.body.innerHTML = originalContents;
-        window.location.reload();
-    };
-
     // Print the cloned chart container
     document.body.innerHTML = chartContainer.innerHTML;
+
+    // Event listener to refresh the page after printing or canceling
+    window.onafterprint = function() {
+        setTimeout(function() {
+            document.body.innerHTML = originalContents;
+            window.location.reload();
+        }, 10);
+    };
+
     window.print();
 });
+
 </script>
 @endsection

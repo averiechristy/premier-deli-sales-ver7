@@ -98,11 +98,11 @@ entries
                         <th>SO / Quotation</th>
                        <th>Tanggal PO</th>
                        <th>Produk</th>
-                      <th>Action</th>
-                      <th></th>
+                    
+                      <th>Status</th>
                       <th>Created By</th>
                       <th>Created At</th>
-                      <th></th>
+                      <th>Action</th>
                     
                     </tr>
                 </thead>
@@ -125,12 +125,6 @@ entries
             </a>
 </td>  
      
-<td>    
-                    <a href="{{route('superadmintampilpo',$item->id)}}">
-    Cetak Purchase Order
-</a>
-
-</td>
 
 
 <td>{{$item->status_po}}</td>
@@ -138,26 +132,21 @@ entries
 <td>{{$item -> created_at}}</td>
 <td>
 
-@if($item->status_po =="Cancelled")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-   Batalkan PO
-</button>
+<a href="{{route('superadmintampilpo',$item->id)}}" data-toggle="tooltip" class="btn" title='Cetak PO' style="display: flex; justify-content: center; align-items: center;">
+                    <i class="fa fa-print" style="color:blue;" aria-hidden="true"></i>
+</a>
 
-@elseif($item->status_po =="Menunggu Persetujuan Cancel")
- <!-- <a href="{{route('superadmininfocancel', $item->id)}}">
-<button type="button" class="btn btn-danger btn-sm" >
-      Penganjuan Cancel
-</button> -->
-<button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-   Batalkan PO
-</button>
 
-@else
-  
-<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$item->id}}">
-     Batalkan PO
-</button>
-@endif
+@if( $item->status_po == "Cancelled" || $item->status_po == "Menunggu Persetujuan Cancel")
+        <a href="#" class="btn" style="cursor: not-allowed; display: flex; justify-content: center; align-items: center;" disabled>
+            <i class="fa fa-times"></i>
+        </a>
+    @else
+        <a href="#" class="btn" data-toggle="modal" data-target="#exampleModal{{$item->id}}" data-toggle="tooltip" title='Batalkan PO' style="display: flex; justify-content: center; align-items: center;">
+            <i class="fa fa-times" style="color:red"></i>
+        </a>
+    @endif
+
 
 </td>
 </tr>

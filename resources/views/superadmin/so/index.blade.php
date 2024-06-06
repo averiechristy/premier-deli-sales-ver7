@@ -62,13 +62,13 @@ entries
                         <th>Nama Customer</th>
                         <th>Tanggal SO</th>
                         <th>Produk</th>
-                        <th>Status</th>
-                        
+                        <th>Status</th> 
+                    
                         <th>Status Update</th>
                         <th>Created By</th>
                         <th>Created At</th>
                         <th>Action</th>
-                        <th></th>
+                      
                         <!-- <th></th> -->
                     </tr>
                 </thead>
@@ -80,7 +80,7 @@ entries
                 <td>{{$data  -> nama_customer}}</td>
                 <td>{{ \Carbon\Carbon::parse($data->so_date)->format('d-m-Y') }}</td>                <td>    
                 <a href="{{route('superadmintampilpesananso', $data->id)}}"><button type="button" class="btn btn-link">
-         Lihat Detail Pesanan
+         Lihat Detail Produk
                 
             </a>
 </td>
@@ -91,42 +91,24 @@ entries
 <td>{{$data -> created_by}}</td>
 <td>{{$data -> created_at}}</td>
 <td>
-    <a id="cetakSalesOrder{{$data->id}}" href="{{route('superadmintampilso',$data->id)}}">
-        Cetak Sales Order
+    <a id="cetakSalesOrder{{$data->id}}" href="{{route('superadmintampilso',$data->id)}}" style="display: flex; justify-content: center; align-items: center;" >
+    <i class="fa fa-print" style="color:blue;" aria-hidden="true"></i>
     </a>
+    @if($data->status_so =="Terbit Invoice" || $data->status_so =="Cancelled")
+    <a href="#" class="btn " style="cursor: not-allowed;display: flex; justify-content: center; align-items: center;" disabled>
+        <i class="fas fa-times"></i> 
+    </a>
+@else
+    <a href="#" class="btn " data-toggle="modal" data-target="#exampleModal{{$data->id}}" style="display: flex; justify-content: center; align-items: center;">
+        <i class="fas fa-times" style="color:red;"data-toggle="tooltip" class="btn" title='Batalkan SO'></i> 
+    </a>
+@endif
 
   
 </td>
-<script>
-    $(document).ready(function(){
-        // Cek apakah cookie sudah ada
-        if (document.cookie.indexOf('salesOrderClicked{{$data->id}}=true') !== -1) {
-            $('#cetakSalesOrder{{$data->id}}').html('Cetak Sales Order <i class="fas fa-check-circle" style="color:green"></i> ');
-        }
 
-        $('#cetakSalesOrder{{$data->id}}').click(function(){
-            $(this).html(' Cetak Sales Order <i class="fas fa-check-circle" style="color:green"></i>');
-            // Set cookie saat tombol diklik
-            document.cookie = 'salesOrderClicked{{$data->id}}=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
-        });
-    });
-</script>
 
-<td>    
-@if($data->status_so =="Terbit Invoice")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan SO
-</button>
-@elseif($data->status_so =="Cancelled")
-    <button type="button" class="btn btn-light btn-sm" style="cursor: not-allowed;" disabled>
-    Batalkan SO
-</button>
-    @else
-<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$data->id}}">
-      Batalkan SO
-</button>
-@endif
-</td> 
+
 
 
 <!-- <td>

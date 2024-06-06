@@ -12,7 +12,7 @@
                                         @csrf                       
                                       
 <div class="form-group mb-4">
-        <label for="" class="form-label" style="color:black;">Judul Catatan</label>
+        <label for="" class="form-label" style="color:black;">Catatan</label>
     <input name="judul_catatan" type="text"  class="form-control " style="border-color: #01004C;" value="" />
 </div>
 
@@ -36,8 +36,7 @@
             </div>
       
   
-
-<script>
+            <script>
 
 
 function validateForm() {
@@ -47,14 +46,14 @@ function validateForm() {
 
 
     if(judul == "") {
-    alert("Judul Catatan harus diisi");
+    alert("Catatan harus diisi.");
 return false;
 }
 
 
 
 else if(isi == ""){
-    alert("Isi Catatan harus diisi");
+    alert("Isi catatan harus diisi.");
 return false;
 } 
 

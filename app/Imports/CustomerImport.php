@@ -34,6 +34,7 @@ class CustomerImport implements ToModel, WithStartRow, WithHeadingRow
 
     public function model(array $row)
     {            
+
         $expectedHeaders = [
             'nama_customer',
             'kategori',
@@ -48,27 +49,33 @@ class CustomerImport implements ToModel, WithStartRow, WithHeadingRow
     
         $diff = array_diff($expectedHeaders, array_keys($row));
         if (!empty($diff)) {
-            throw new \Exception("Template tidak sesuai");
+            throw new \Exception("File tidak sesuai.");
         }
 
+        $nohp = $row['no_hp'];
+        if (!is_numeric($nohp)) {
+            throw new \Exception("Format no handphone $nohp tidak valid.");
+        }
+        
         // Validasi format email
         $email = $row['email'];
+       
         if ($email !== null && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new \Exception("Format email $email tidak valid");
+            throw new \Exception("Format email $email tidak valid.");
         }
         
         $kategori = $row['kategori'];
 
         if (!in_array($kategori, $this->allowedCategories)) {
             $allowedCategoriesStr = implode(', ', $this->allowedCategories);
-            throw new \Exception("Kategori $kategori tidak valid, hanya boleh $allowedCategoriesStr");
+            throw new \Exception("Kategori $kategori tidak valid.");
         }
 
         $sumber = $row['sumber'];
 
         if (!in_array($sumber, $this->allowedSumber)) {
             $allowedSumberStr = implode(', ', $this->allowedCategories);
-            throw new \Exception("Sumber $sumber tidak valid, hanya boleh $allowedSumberStr");
+            throw new \Exception("Sumber $sumber tidak valid.");
         }
 
         $datakategori = Kategori::where('kategori', $kategori)->first();
@@ -77,7 +84,11 @@ class CustomerImport implements ToModel, WithStartRow, WithHeadingRow
 
         $datasumber = Sumber::where('sumber', $sumber)->first();
         $sumberid = $datasumber->id;
+
        
+       
+        
+        
 
         $existingCust = Customer::where('nama_customer', $row['nama_customer'])->first();
 

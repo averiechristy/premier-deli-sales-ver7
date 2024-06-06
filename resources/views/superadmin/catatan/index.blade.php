@@ -12,7 +12,7 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <a href="{{route('superadmin.catatan.create')}}" class="btn btn-pd btn-sm">Tambah Data</a>
+                            <a href="{{route('superadmin.catatan.create')}}" class="btn btn-pd btn-sm">Tambah Catatan</a>
                         </div>
                         <div class="card-body">
                         <div class="dataTables_length mb-3" id="myDataTable_length">
@@ -38,7 +38,7 @@ entries
                                 <table  class="table table-bordered"  width="100%" cellspacing="0" style="border-radius: 10px;">
                                     <thead>
                                         <tr>                 
-                                          <th>Judul Catatan</th>                    
+                                          <th>Catatan</th>                    
                                           <th>Isi Catatan</th>
                                           <th>Created At</th>
                                           <th>Created By</th>
@@ -59,13 +59,13 @@ entries
     <td>{{$data -> updated_by}}</td>
     <td> 
                                            
-                                           <a href="{{route('superadmintampilcatatan', $data->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange" ></i></a>                 
+                                           <a href="{{route('superadmintampilcatatan', $data->id)}}"data-toggle="tooltip" class="btn" title='Edit'><i class="fas fa-fw fa-edit" style="color:orange;display: flex; justify-content: center; align-items: center;" ></i></a>                 
                               
                            
                            <form method="POST" action="{{route('superadmindeletecatatan', $data->id)}}">
         @csrf
         <input name="_method" type="hidden" value="DELETE">
-        <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red"></i></button>
+        <button type="submit" class="btn show_confirm" data-toggle="tooltip" title='Hapus'><i class="fas fa-fw fa-trash" style="color:red;display: flex; justify-content: center; align-items: center;"></i></button>
     </form>             
 
  </td>

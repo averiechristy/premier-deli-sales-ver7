@@ -61,4 +61,17 @@ window.onload = function () {
 };
 
 </script>
+
+<script>
+
+function validateForm() {
+    let sumber = document.forms["saveform"]["sumber"].value;
+    if (sumber == "") {
+            alert("Sumber harus diisi.");
+            return false;
+        }
+
+}
+
+</script>
 @endsection

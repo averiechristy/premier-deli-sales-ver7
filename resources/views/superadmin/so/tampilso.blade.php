@@ -88,24 +88,52 @@
                 </tr>
             </thead>
             <tbody>
-        @php
-        $counter = 1; // Inisialisasi nomor urutan
-        @endphp
+            @php
+                $counter = 1; // Inisialisasi nomor urutan
+                $breakPoint = count($detailso) > 7 ? 12 : 8;
+                @endphp
         
         @foreach ($detailso as $detail)
-                <tr>
-                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 1px;text-align: center;">{{ $counter++ }}</td> 
-                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 10px;">{{$detail -> kode_produk}}</td>
-                <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 350px;">
-                {{$detail->nama_produk}}
+        
+
+        @if($loop->iteration % $breakPoint == 0)
+                            </tbody>
+                            </table>
+                            <div style="page-break-before: always;"></div>
+                            <table class="table table-bordered mt-5">
+                            <thead style="text-align: center;">
+                            <tr>
+                    <th  scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">No</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Kode Produk</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top; width: 200px;">Nama Produk</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Jumlah Produk</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Harga Jual</th>
+                    <th scope="col" style="color:black; font-family: Arial, sans-serif; font-size: 10px;vertical-align: top;">Total Harga</th>
+                </tr>
+                            </thead>
+                            <tbody>
+                        @endif
+
+
+                <tr style="height:50px;">
+                <td style="color:black; height:50px; font-family: Arial, sans-serif; font-size: 10px; text-align: center;">{{ $counter++ }}</td> 
+                <td style="color:black; height:50px; font-family: Arial, sans-serif; font-size: 10px; ">{{$detail -> kode_produk}}</td>
+                <td style="color:black; height:50px; font-family: Arial, sans-serif; font-size: 10px; width: 350px;">
+                <?php
+                            $nama_produk = $detail->nama_produk;
+                            if (strlen($nama_produk) > 100) {
+                                $nama_produk = substr($nama_produk, 0, 100) . '...';
+                            }
+                            echo htmlspecialchars($nama_produk, ENT_QUOTES, 'UTF-8');
+                        ?>
                 </td>      
 
-<td style="color:black; font-family: Arial, sans-serif; font-size: 10px; width: 10px;text-align: center;">{{$detail->qty}}</td>
-<td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+<td style="color:black; height:50px; font-family: Arial, sans-serif; font-size: 10px;text-align: center; width:5px;">{{$detail->qty}}</td>
+<td style="color:black; height:50px; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
     <span style="float: left;">Rp</span>
     {{ number_format($detail->so_price, 0, ',', '.') }}
 </td>                 
-<td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+<td style="color:black; height:50px; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
     <span style="float: left;">Rp</span>
     {{ number_format($detail->total_price, 0, ',', '.') }}
 </td>             
@@ -125,12 +153,22 @@
     </tr>
     <tr>
         <td colspan="4"></td>
-        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold; ">Discount</td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold; ">Diskon</td>
       
         <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
     <span style="float: left;">Rp</span>
     {{ number_format($discount, 0, ',', '.') }}
 </td>      
+    </tr>
+
+    <tr>
+        <td colspan="4"></td>
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; font-weight: bold;">Biaya Pengiriman</td>
+       
+        <td style="color:black; font-family: Arial, sans-serif; font-size: 10px; text-align: right;">
+    <span style="float: left;">Rp</span>
+    {{ number_format($biayakirim, 0, ',', '.') }}
+    </td>      
     </tr>
     <tr>
         <td colspan="4"></td>
@@ -207,6 +245,8 @@
             var options = {
                 filename: 'SO - <?php echo $so->no_so; ?> - <?php echo $so->customer->nama_customer; ?>.pdf',
               
+                margin: [5, 0, 0, 0]
+
                 // konfigurasi untuk unduhan PDF
             };
             html2pdf(chartContainer, options);
@@ -232,15 +272,19 @@ document.getElementById('printButton').addEventListener('click', function() {
     // Set up the original contents
     var originalContents = document.body.innerHTML;
     
-    // Event listener to refresh the page after printing or canceling
-    window.onafterprint = function() {
-        document.body.innerHTML = originalContents;
-        window.location.reload();
-    };
-
     // Print the cloned chart container
     document.body.innerHTML = chartContainer.innerHTML;
+
+    // Event listener to refresh the page after printing or canceling
+    window.onafterprint = function() {
+        setTimeout(function() {
+            document.body.innerHTML = originalContents;
+            window.location.reload();
+        }, 10);
+    };
+
     window.print();
 });
+
 </script>
 @endsection

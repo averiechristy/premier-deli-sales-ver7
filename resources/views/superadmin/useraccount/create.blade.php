@@ -6,7 +6,7 @@
                     
                                 <div class="card mt-3">
                                     <div class="card-header" style="color:black;">
-                                        Tambahkan Akun User Baru
+                                        Tambahkan Akun User
                                     </div>
                                     <div class="card-body">
                                        <form name="saveform" action="{{route('superadmin.useraccount.simpan')}}" method="post" onsubmit="return validateForm()">
@@ -109,30 +109,30 @@ function validateForm() {
    
     
   if (koderole == "" ) {
-    alert("Role tidak boleh kosong");
+    alert("Role harus diisi.");
     return false;
   } else if (namauser == "" ){
-    alert("Nama user tidak boleh kosong");
+    alert("Nama user harus diisi.");
     return false;
   } else if (email == "" ){
-    alert("Email tidak boleh kosong");
+    alert("Email harus diisi.");
     return false;
   } else if (nohp == ""){
-    alert("No handphone tidak boleh kosong");
+    alert("No handphone harus diisi.");
     return false;
   } 
 
   if ( koderole == 5 ) {
        
         if (reportA == "") {
-            alert("Report To tidak boleh kosong");
+            alert("Report to harus diisi.");
             return false;
         }
     }
     if ( koderole == 2 || koderole == 4 ) {
        
        if (reportB == "") {
-           alert("Report To tidak boleh kosong");
+           alert("Report to harus diisi.");
            return false;
        }
    }

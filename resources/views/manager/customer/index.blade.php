@@ -10,15 +10,15 @@
 
 <p style="color:black;">Unggah file untuk menambahkan customer baru, atau tambahkan ke kumpulan data customer yang sudah ada. <br> Anda dapat mengunggah file Excel</p>
 <div class="button mt-2 mb-4">
-<a href="{{route('manager.customer.create')}}" class="btn btn-pd btn-sm">Tambah Data</a>
-<a href="{{ route('managerdownload.templatecustomer') }}" class="btn btn-info btn-sm" download>Download Template</a>
+<a href="{{route('manager.customer.create')}}" class="btn btn-pd btn-sm">Tambah Customer</a>
+<a href="{{ route('managerdownload.templatecustomer') }}" class="btn btn-info btn-sm" download>Unduh Template</a>
 </div>
 
 <div class="importdata mb-3">
 <form action="{{ route('managerimport.customer') }}" method="post" enctype="multipart/form-data" style="display: flex; align-items: center;">
 @csrf
 <input type="file" name="file" accept=".xlsx, .xls" style="margin-right: 10px;" required>
-<button class="btn btn-warning btn-sm" type="submit">Import Data</button>
+<button class="btn btn-warning btn-sm" type="submit">Unggah File</button>
 </form>
 
 </div>
